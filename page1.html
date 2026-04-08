@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerGrabber — The Watchtower</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0f;
+    color: #c8c8d0;
+    overflow-x: hidden;
+  }
+
+  /* Animated radar sweep background */
+  .radar-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .radar-bg::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 200vmax; height: 200vmax;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(233,69,96,0.06) 30deg, transparent 60deg);
+    animation: radarSweep 8s linear infinite;
+  }
+
+  @keyframes radarSweep {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .radar-bg .ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    border: 1px solid rgba(233,69,96,0.08);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-1 { width: 300px; height: 300px; }
+  .ring-2 { width: 600px; height: 600px; }
+  .ring-3 { width: 900px; height: 900px; }
+  .ring-4 { width: 1200px; height: 1200px; }
+
+  .content { position: relative; z-index: 1; }
+
+  /* Navigation */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    border-bottom: 1px solid rgba(233,69,96,0.15);
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #e94560;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  nav a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  nav a:hover { color: #e94560; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    border: 1px solid #e94560;
+    color: #e94560;
+    padding: 6px 20px;
+    border-radius: 2px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .hero h1 span {
+    color: #e94560;
+  }
+
+  .hero p {
+    font-size: 1.15rem;
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.7;
+    color: #888;
+    margin-bottom: 48px;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: #e94560;
+    color: #fff;
+    padding: 14px 36px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    background: #ff6b81;
+    box-shadow: 0 0 40px rgba(233,69,96,0.4);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: #e94560;
+    padding: 14px 36px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid #e94560;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-ghost:hover {
+    background: rgba(233,69,96,0.1);
+  }
+
+  /* Threat Display */
+  .threat-section {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #e94560;
+    margin-bottom: 16px;
+  }
+
+  .threat-section h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: #fff;
+    margin-bottom: 48px;
+    font-weight: 700;
+  }
+
+  .threat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .threat-card {
+    background: rgba(233,69,96,0.03);
+    border: 1px solid rgba(233,69,96,0.1);
+    padding: 36px 28px;
+    transition: all 0.3s;
+  }
+
+  .threat-card:hover {
+    background: rgba(233,69,96,0.08);
+    border-color: #e94560;
+  }
+
+  .threat-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .threat-card h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #e94560;
+    margin-bottom: 12px;
+  }
+
+  .threat-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #777;
+  }
+
+  /* Live Feed Simulation */
+  .feed-section {
+    padding: 80px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .feed {
+    background: #0d0d14;
+    border: 1px solid rgba(233,69,96,0.15);
+    border-radius: 4px;
+    padding: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    line-height: 2;
+    overflow: hidden;
+    max-height: 360px;
+  }
+
+  .feed-line {
+    opacity: 0;
+    animation: feedIn 0.5s ease forwards;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .feed-line:nth-child(1) { animation-delay: 0.2s; }
+  .feed-line:nth-child(2) { animation-delay: 0.8s; }
+  .feed-line:nth-child(3) { animation-delay: 1.4s; }
+  .feed-line:nth-child(4) { animation-delay: 2.0s; }
+  .feed-line:nth-child(5) { animation-delay: 2.6s; }
+  .feed-line:nth-child(6) { animation-delay: 3.2s; }
+  .feed-line:nth-child(7) { animation-delay: 3.8s; }
+  .feed-line:nth-child(8) { animation-delay: 4.4s; }
+
+  @keyframes feedIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .ts { color: #555; }
+  .method { color: #e94560; font-weight: bold; }
+  .url { color: #58a6ff; }
+  .status-ok { color: #22c55e; }
+  .status-warn { color: #fbbf24; }
+  .redacted { color: #e94560; background: rgba(233,69,96,0.15); padding: 1px 6px; }
+
+  /* Stats */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  .stat-box {
+    background: rgba(233,69,96,0.03);
+    border: 1px solid rgba(233,69,96,0.1);
+    padding: 40px 28px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #e94560;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #666;
+  }
+
+  /* Footer */
+  footer {
+    padding: 60px 48px;
+    text-align: center;
+    border-top: 1px solid rgba(233,69,96,0.1);
+    margin-top: 120px;
+  }
+
+  footer .logo { margin-bottom: 16px; display: block; }
+  footer p { color: #444; font-size: 0.85rem; }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 24px;
+    color: #e94560;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .threat-section, .feed-section { padding: 60px 20px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="radar-bg">
+  <div class="ring ring-1"></div>
+  <div class="ring ring-2"></div>
+  <div class="ring ring-3"></div>
+  <div class="ring ring-4"></div>
+</div>
+
+<div class="content">
+  <nav>
+    <div class="logo">PowerGrabber</div>
+    <a href="index.html">&larr; All Concepts</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">LLM Traffic Command Center</div>
+    <h1>Every AI call.<br><span>Intercepted.</span></h1>
+    <p>PowerGrabber sits between your browser and every LLM API endpoint on the internet. Every prompt sent. Every response received. Every token spent. Nothing leaves your network unseen.</p>
+    <div class="cta-group">
+      <a href="#" class="btn-primary">Deploy Now</a>
+      <a href="#" class="btn-ghost">View Intel</a>
+    </div>
+  </section>
+
+  <section class="threat-section">
+    <div class="section-label">Threat Surface</div>
+    <h2>Your employees are talking to AI. Do you know what they're saying?</h2>
+
+    <div class="threat-grid">
+      <div class="threat-card">
+        <span class="threat-icon">&#9888;</span>
+        <h3>Data Exfiltration</h3>
+        <p>Source code, customer PII, financial data, trade secrets — pasted into ChatGPT, Claude, Gemini. PowerGrabber captures every request to every LLM endpoint before it leaves the browser.</p>
+      </div>
+      <div class="threat-card">
+        <span class="threat-icon">&#128274;</span>
+        <h3>Credential Leaks</h3>
+        <p>Authorization headers, API keys, session tokens — automatically redacted from captured traffic. 8 sensitive header types and 14 query parameter patterns scrubbed in real time.</p>
+      </div>
+      <div class="threat-card">
+        <span class="threat-icon">&#128202;</span>
+        <h3>Shadow AI Spend</h3>
+        <p>Untracked API calls to OpenAI, Anthropic, Google, Cohere, Mistral. PowerGrabber shows exactly which endpoints are being called, how often, and from which tabs.</p>
+      </div>
+      <div class="threat-card">
+        <span class="threat-icon">&#9889;</span>
+        <h3>Real-Time Streaming</h3>
+        <p>WebSocket connection between browser extension and Rust backend. Sub-millisecond latency. Events flow as they happen — not batched, not delayed, not sampled.</p>
+      </div>
+      <div class="threat-card">
+        <span class="threat-icon">&#128737;</span>
+        <h3>Token Authentication</h3>
+        <p>Cryptographically random 32-character auth token generated at startup. Extensions must authenticate within 10 seconds or get disconnected. No unauthorized data streams.</p>
+      </div>
+      <div class="threat-card">
+        <span class="threat-icon">&#127760;</span>
+        <h3>Every Browser. One Extension.</h3>
+        <p>Chrome, Firefox, Edge, Safari, Opera, Brave, Vivaldi, Arc. Single codebase. Manifest V3 for Chromium, Manifest V2 for Firefox. Full coverage.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="feed-section">
+    <div class="section-label">Live Intercept Feed</div>
+    <div class="feed">
+      <div class="feed-line"><span class="ts">14:23:01.442</span> <span class="method">POST</span> <span class="url">api.openai.com/v1/chat/completions</span> <span class="status-ok">200</span> Authorization: <span class="redacted">[REDACTED]</span></div>
+      <div class="feed-line"><span class="ts">14:23:01.891</span> <span class="method">POST</span> <span class="url">api.anthropic.com/v1/messages</span> <span class="status-ok">200</span> X-API-Key: <span class="redacted">[REDACTED]</span></div>
+      <div class="feed-line"><span class="ts">14:23:02.103</span> <span class="method">GET</span> <span class="url">generativelanguage.googleapis.com/v1beta/models</span> <span class="status-ok">200</span></div>
+      <div class="feed-line"><span class="ts">14:23:02.556</span> <span class="method">POST</span> <span class="url">api.cohere.ai/v1/generate</span> <span class="status-warn">429</span> Cookie: <span class="redacted">[REDACTED]</span></div>
+      <div class="feed-line"><span class="ts">14:23:03.012</span> <span class="method">POST</span> <span class="url">api.mistral.ai/v1/chat/completions</span> <span class="status-ok">200</span></div>
+      <div class="feed-line"><span class="ts">14:23:03.234</span> <span class="method">POST</span> <span class="url">api.openai.com/v1/embeddings</span> <span class="status-ok">200</span> Authorization: <span class="redacted">[REDACTED]</span></div>
+      <div class="feed-line"><span class="ts">14:23:04.001</span> <span class="method">POST</span> <span class="url">api.anthropic.com/v1/messages</span> <span class="status-ok">200</span> X-API-Key: <span class="redacted">[REDACTED]</span></div>
+      <div class="feed-line"><span class="ts">14:23:04.778</span> <span class="method">GET</span> <span class="url">huggingface.co/api/models?token=<span class="redacted">[REDACTED]</span>&model=llama</span> <span class="status-ok">200</span></div>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stat-box">
+      <span class="stat-number">&lt;1ms</span>
+      <span class="stat-label">Capture Latency</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">6</span>
+      <span class="stat-label">Browsers Supported</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">500/s</span>
+      <span class="stat-label">Rate Limit</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">0</span>
+      <span class="stat-label">Dependencies (Runtime)</span>
+    </div>
+  </div>
+
+  <footer>
+    <span class="logo">PowerGrabber</span>
+    <p>Browser-native LLM traffic interception. Built in Rust.</p>
+    <a href="index.html" class="back-link">&larr; Back to all concepts</a>
+  </footer>
+</div>
+
+</body>
+</html>

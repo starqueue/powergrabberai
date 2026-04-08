@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerGrabber — The Universal Shield</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #020617;
+    color: #cbd5e1;
+    overflow-x: hidden;
+  }
+
+  /* Star field */
+  .stars {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #818cf8;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite alternate;
+  }
+
+  .star:nth-child(1) { top: 8%; left: 15%; animation-delay: 0s; }
+  .star:nth-child(2) { top: 22%; left: 65%; animation-delay: 0.5s; width: 3px; height: 3px; }
+  .star:nth-child(3) { top: 45%; left: 30%; animation-delay: 1s; }
+  .star:nth-child(4) { top: 12%; left: 85%; animation-delay: 1.5s; width: 3px; height: 3px; }
+  .star:nth-child(5) { top: 65%; left: 50%; animation-delay: 0.3s; }
+  .star:nth-child(6) { top: 80%; left: 20%; animation-delay: 0.8s; }
+  .star:nth-child(7) { top: 35%; left: 90%; animation-delay: 1.2s; }
+  .star:nth-child(8) { top: 55%; left: 75%; animation-delay: 0.6s; width: 3px; height: 3px; }
+  .star:nth-child(9) { top: 90%; left: 45%; animation-delay: 1.8s; }
+  .star:nth-child(10) { top: 15%; left: 40%; animation-delay: 0.2s; }
+  .star:nth-child(11) { top: 72%; left: 88%; animation-delay: 1.1s; }
+  .star:nth-child(12) { top: 38%; left: 12%; animation-delay: 0.9s; width: 3px; height: 3px; }
+
+  @keyframes twinkle {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+  }
+
+  .content { position: relative; z-index: 1; }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+  }
+
+  .logo {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #a5b4fc;
+    letter-spacing: 1px;
+  }
+
+  nav a { color: #6366f1; text-decoration: none; font-size: 0.85rem; }
+
+  /* Hero with browser constellation */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, #818cf8, #6366f1, #4f46e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto 40px;
+  }
+
+  /* Browser grid — the star of this page */
+  .browser-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  .browser-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .browser-section .subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 48px;
+  }
+
+  .browser-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .browser-card {
+    background: rgba(99,102,241,0.04);
+    border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 16px;
+    padding: 32px 20px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .browser-card:hover {
+    border-color: #6366f1;
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(99,102,241,0.15);
+  }
+
+  .browser-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #6366f1, transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .browser-card:hover::before { opacity: 1; }
+
+  .browser-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .browser-card h3 {
+    color: #e2e8f0;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .browser-card .manifest {
+    display: inline-block;
+    background: rgba(99,102,241,0.12);
+    color: #a5b4fc;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .browser-card p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #64748b;
+  }
+
+  .browser-card.wide {
+    grid-column: span 2;
+  }
+
+  /* How one codebase works everywhere */
+  .how-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 32px;
+  }
+
+  .how-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .how-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .how-card {
+    background: rgba(99,102,241,0.04);
+    border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 12px;
+    padding: 28px 24px;
+  }
+
+  .how-card h3 {
+    color: #a5b4fc;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .how-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #94a3b8;
+  }
+
+  .how-card code {
+    background: rgba(99,102,241,0.1);
+    color: #a5b4fc;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+
+  /* Manifest comparison */
+  .manifest-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  .manifest-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .manifest-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .manifest-box {
+    background: #0f172a;
+    border: 1px solid rgba(99,102,241,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .manifest-header {
+    background: rgba(99,102,241,0.08);
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #a5b4fc;
+    border-bottom: 1px solid rgba(99,102,241,0.1);
+  }
+
+  .manifest-body {
+    padding: 16px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: #94a3b8;
+  }
+
+  .manifest-body .key { color: #a5b4fc; }
+  .manifest-body .val { color: #86efac; }
+
+  /* Extension features */
+  .ext-features {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  .ext-features h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .feat-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .feat-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 20px;
+    border: 1px solid rgba(99,102,241,0.08);
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+
+  .feat-item:hover {
+    border-color: rgba(99,102,241,0.2);
+    background: rgba(99,102,241,0.03);
+  }
+
+  .feat-check {
+    color: #818cf8;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .feat-item h4 {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+
+  .feat-item p {
+    font-size: 0.8rem;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 100px 32px;
+  }
+
+  .cta-section h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-bottom: 16px;
+  }
+
+  .cta-section h2 span {
+    color: #818cf8;
+  }
+
+  .cta-section p {
+    color: #64748b;
+    margin-bottom: 32px;
+    font-size: 1rem;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #fff;
+    padding: 14px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+  }
+  .cta-btn:hover {
+    box-shadow: 0 8px 32px rgba(99,102,241,0.5);
+    transform: translateY(-2px);
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid rgba(99,102,241,0.1);
+    color: #334155;
+    font-size: 0.85rem;
+  }
+  footer a { color: #6366f1; text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .browser-grid { grid-template-columns: 1fr 1fr; }
+    .browser-card.wide { grid-column: span 1; }
+    .how-cards { grid-template-columns: 1fr; }
+    .manifest-compare { grid-template-columns: 1fr; }
+    .feat-list { grid-template-columns: 1fr; }
+    nav { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars">
+  <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+  <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+  <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+</div>
+
+<div class="content">
+  <nav>
+    <div class="logo">POWERGRABBER</div>
+    <a href="index.html">&larr; All Concepts</a>
+  </nav>
+
+  <section class="hero">
+    <h1>One extension.<br><span>Every browser.</span></h1>
+    <p>PowerGrabber runs on Chrome, Firefox, Edge, Safari, Opera, Brave, Vivaldi, and Arc. A single extension codebase adapts to each browser's extension model — MV3 for Chromium, MV2 for Firefox.</p>
+  </section>
+
+  <section class="browser-section">
+    <h2>Full Browser Coverage</h2>
+    <p class="subtitle">Every major browser. Same capture. Same backend. Same security.</p>
+
+    <div class="browser-grid">
+      <div class="browser-card">
+        <span class="browser-icon">&#127760;</span>
+        <h3>Chrome</h3>
+        <span class="manifest">Manifest V3</span>
+        <p>Service worker background. Full webRequest API support. Market leader.</p>
+      </div>
+      <div class="browser-card">
+        <span class="browser-icon">&#128038;</span>
+        <h3>Firefox</h3>
+        <span class="manifest">Manifest V2</span>
+        <p>Persistent background page. WebExtensions API. gecko ID for AMO distribution.</p>
+      </div>
+      <div class="browser-card">
+        <span class="browser-icon">&#9881;</span>
+        <h3>Edge</h3>
+        <span class="manifest">Manifest V3</span>
+        <p>Chromium-based. Identical extension model to Chrome. Enterprise-focused.</p>
+      </div>
+      <div class="browser-card">
+        <span class="browser-icon">&#129517;</span>
+        <h3>Safari</h3>
+        <span class="manifest">MV3 + Xcode</span>
+        <p>Requires Xcode wrapper for distribution. Same webRequest API underneath.</p>
+      </div>
+      <div class="browser-card wide">
+        <span class="browser-icon">&#127911; &#129409; &#127926; &#127912;</span>
+        <h3>Opera, Brave, Vivaldi, Arc</h3>
+        <span class="manifest">Manifest V3</span>
+        <p>All Chromium-based. Load the same extension as Chrome. No modifications needed. Full compatibility.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <h2>One Codebase, Two Manifests</h2>
+    <div class="how-cards">
+      <div class="how-card">
+        <h3>Shared Code</h3>
+        <p><code>background.js</code> and <code>popup/</code> are identical across all browsers. The <code>api</code> shim detects <code>browser</code> vs <code>chrome</code> namespace automatically.</p>
+      </div>
+      <div class="how-card">
+        <h3>Chrome Manifest</h3>
+        <p><code>manifest.json</code> — MV3 format. Uses <code>service_worker</code> for background, <code>action</code> for popup, <code>host_permissions</code> for URL access.</p>
+      </div>
+      <div class="how-card">
+        <h3>Firefox Manifest</h3>
+        <p><code>manifest.firefox.json</code> — MV2 format. Uses <code>scripts</code> array for background, <code>browser_action</code> for popup, flat permissions array.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="manifest-section">
+    <h2>Manifest Comparison</h2>
+    <div class="manifest-compare">
+      <div class="manifest-box">
+        <div class="manifest-header">manifest.json (Chrome/Edge/Safari)</div>
+        <div class="manifest-body">
+          <span class="key">"manifest_version"</span>: <span class="val">3</span><br>
+          <span class="key">"background"</span>: {<br>
+          &nbsp;&nbsp;<span class="key">"service_worker"</span>: <span class="val">"background.js"</span><br>
+          }<br>
+          <span class="key">"action"</span>: { ... }<br>
+          <span class="key">"host_permissions"</span>: [<span class="val">"&lt;all_urls&gt;"</span>]
+        </div>
+      </div>
+      <div class="manifest-box">
+        <div class="manifest-header">manifest.firefox.json (Firefox)</div>
+        <div class="manifest-body">
+          <span class="key">"manifest_version"</span>: <span class="val">2</span><br>
+          <span class="key">"background"</span>: {<br>
+          &nbsp;&nbsp;<span class="key">"scripts"</span>: [<span class="val">"background.js"</span>]<br>
+          }<br>
+          <span class="key">"browser_action"</span>: { ... }<br>
+          <span class="key">"permissions"</span>: [..., <span class="val">"&lt;all_urls&gt;"</span>]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ext-features">
+    <h2>Extension Capabilities</h2>
+    <div class="feat-list">
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>5 webRequest Event Hooks</h4>
+          <p>onBeforeRequest, onSendHeaders, onHeadersReceived, onCompleted, onErrorOccurred</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Request/Header Merging</h4>
+          <p>Pending request map combines onBeforeRequest + onSendHeaders with 500ms periodic flush</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Tab URL Resolution</h4>
+          <p>Bounded LRU-style tab cache (500 entries) maps tab IDs to URLs for context</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Offline Buffering</h4>
+          <p>1000-event buffer when WebSocket is disconnected. Events sent on reconnect.</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Self-Traffic Filtering</h4>
+          <p>Extension ignores its own WebSocket traffic to prevent capture loops</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Browser Detection</h4>
+          <p>userAgentData API with fallback UA sniffing. Identifies Chrome, Firefox, Edge, Safari, Opera, Brave</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Configurable Backend</h4>
+          <p>Backend URL and auth token stored in chrome.storage.local, editable from popup</p>
+        </div>
+      </div>
+      <div class="feat-item">
+        <span class="feat-check">&#10003;</span>
+        <div>
+          <h4>Exponential Backoff</h4>
+          <p>WebSocket reconnection from 1s to 30s max. Automatic recovery on disconnect.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Your users don't all use <span>one browser</span>.</h2>
+    <p>Your LLM monitoring shouldn't either.</p>
+    <a href="#" class="cta-btn">Deploy Across All Browsers</a>
+  </section>
+
+  <footer>
+    <a href="index.html">&larr; Back to all concepts</a> &middot; PowerGrabber — Universal browser LLM monitoring
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerGrabber AI — Marketing Concepts</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    min-height: 100vh;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #00ff88, #00bbff, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: #888;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 24px 80px;
+  }
+
+  .card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .card-inner {
+    padding: 32px 28px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-number {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  .card h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+
+  .card .arrow {
+    align-self: flex-end;
+    font-size: 1.5rem;
+    margin-top: 16px;
+    transition: transform 0.2s;
+  }
+
+  .card:hover .arrow {
+    transform: translateX(6px);
+  }
+
+  /* Each card gets a unique style */
+  .card-1 .card-inner {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 1px solid #0f3460;
+  }
+  .card-1 h2 { color: #e94560; }
+
+  .card-2 .card-inner {
+    background: linear-gradient(160deg, #0d1117, #161b22);
+    border: 1px solid #30363d;
+  }
+  .card-2 h2 { color: #58a6ff; }
+
+  .card-3 .card-inner {
+    background: linear-gradient(135deg, #1b0a2e, #2d1b69);
+    border: 1px solid #7c3aed;
+  }
+  .card-3 h2 { color: #c084fc; }
+
+  .card-4 .card-inner {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    border: 1px solid #2dd4bf;
+  }
+  .card-4 h2 { color: #2dd4bf; }
+
+  .card-5 .card-inner {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border: 1px solid #fbbf24;
+  }
+  .card-5 h2 { color: #fbbf24; }
+
+  .card-6 .card-inner {
+    background: linear-gradient(135deg, #0c0c1d, #1a1a3e);
+    border: 1px solid #f43f5e;
+  }
+  .card-6 h2 { color: #fb7185; }
+
+  .card-7 .card-inner {
+    background: linear-gradient(135deg, #071e07, #0a2f0a);
+    border: 1px solid #22c55e;
+  }
+  .card-7 h2 { color: #4ade80; }
+
+  .card-8 .card-inner {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border: 1px solid #818cf8;
+  }
+  .card-8 h2 { color: #a5b4fc; }
+
+  .card-9 .card-inner {
+    background: linear-gradient(160deg, #18181b, #27272a);
+    border: 1px solid #f97316;
+  }
+  .card-9 h2 { color: #fb923c; }
+
+  .card-10 .card-inner {
+    background: linear-gradient(135deg, #042f2e, #134e4a);
+    border: 1px solid #5eead4;
+  }
+  .card-10 h2 { color: #99f6e4; }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #555;
+    font-size: 0.85rem;
+    border-top: 1px solid #1a1a1a;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>PowerGrabber AI</h1>
+  <p>10 marketing concepts for the browser-native LLM gatekeeper that monitors, intercepts, and governs AI traffic in real time.</p>
+</div>
+
+<div class="grid">
+  <a href="page1.html" class="card card-1">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 01</div>
+        <h2>The Watchtower</h2>
+        <p>Cinematic dark theme. Positions PowerGrabber as a military-grade surveillance layer for LLM API calls.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page2.html" class="card card-2">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 02</div>
+        <h2>The Developer Tool</h2>
+        <p>GitHub-inspired developer aesthetic. Speaks to engineers who want visibility into AI API traffic.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page3.html" class="card card-3">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 03</div>
+        <h2>The Compliance Shield</h2>
+        <p>Enterprise purple gradient. Targets CISOs and compliance teams worried about shadow AI.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page4.html" class="card card-4">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 04</div>
+        <h2>The Data Flow</h2>
+        <p>Teal wireframe aesthetic with animated network topology. Shows real-time traffic interception.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page5.html" class="card card-5">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 05</div>
+        <h2>The Cost Controller</h2>
+        <p>Gold and black financial dashboard style. Focuses on LLM spend visibility and budget enforcement.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page6.html" class="card card-6">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 06</div>
+        <h2>The Privacy Guardian</h2>
+        <p>Rose-tinted security aesthetic. Emphasizes automatic redaction and data leak prevention.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page7.html" class="card card-7">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 07</div>
+        <h2>The Green Light</h2>
+        <p>Matrix-inspired terminal aesthetic. Targets security researchers and red teamers.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page8.html" class="card card-8">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 08</div>
+        <h2>The Universal Shield</h2>
+        <p>Indigo constellation map. Highlights cross-browser support — Chrome, Firefox, Edge, Safari, Opera.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page9.html" class="card card-9">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 09</div>
+        <h2>The Speed Demon</h2>
+        <p>Orange racing stripes. Emphasizes Rust performance — sub-millisecond capture, zero overhead.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+
+  <a href="page10.html" class="card card-10">
+    <div class="card-inner">
+      <div>
+        <div class="card-number">Concept 10</div>
+        <h2>The Open Standard</h2>
+        <p>Clean teal open-source aesthetic. Positions PowerGrabber as community-driven transparent tooling.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </div>
+  </a>
+</div>
+
+<footer>
+  PowerGrabber AI &mdash; Browser-native LLM traffic governance
+</footer>
+
+</body>
+</html>

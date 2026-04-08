@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerGrabber — The Green Light</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Share Tech Mono', monospace;
+    background: #000;
+    color: #00ff41;
+    overflow-x: hidden;
+  }
+
+  /* CRT scanline effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1000;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.05) 2px,
+      rgba(0,0,0,0.05) 4px
+    );
+  }
+
+  /* Flicker */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 999;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+    background: rgba(0,255,65,0.01);
+  }
+
+  @keyframes flicker {
+    0% { opacity: 0.97; }
+    5% { opacity: 0.95; }
+    10% { opacity: 0.98; }
+    15% { opacity: 0.96; }
+    20% { opacity: 0.99; }
+    100% { opacity: 0.98; }
+  }
+
+  .terminal {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 32px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Terminal chrome */
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #003300;
+    margin-bottom: 20px;
+  }
+
+  .term-dots { display: flex; gap: 6px; }
+  .term-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #00ff41; }
+  .term-dot.filled { background: #00ff41; }
+
+  .term-title {
+    color: #006600;
+    font-size: 0.8rem;
+  }
+
+  .term-nav {
+    margin-left: auto;
+  }
+  .term-nav a {
+    color: #006600;
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  .term-nav a:hover { color: #00ff41; }
+
+  /* Prompt styling */
+  .prompt { color: #006600; }
+  .prompt-text { color: #00ff41; }
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: #00ff41;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .output {
+    color: #00cc33;
+    line-height: 1.8;
+    margin: 8px 0 24px;
+    font-size: 0.9rem;
+  }
+
+  .output .dim { color: #004400; }
+  .output .bright { color: #00ff41; font-weight: bold; }
+  .output .warn { color: #ffff00; }
+  .output .error { color: #ff3333; }
+  .output .info { color: #00aaff; }
+
+  .line { margin: 4px 0; }
+
+  /* ASCII art */
+  .ascii-art {
+    color: #009900;
+    line-height: 1.2;
+    margin: 24px 0;
+    font-size: 0.7rem;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Section dividers */
+  .divider {
+    color: #003300;
+    margin: 32px 0 16px;
+    font-size: 0.85rem;
+  }
+
+  /* Typed output animation */
+  .typed {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 2s steps(60) forwards;
+    max-width: 0;
+    display: inline-block;
+  }
+
+  @keyframes typing {
+    to { max-width: 100%; }
+  }
+
+  /* Table-like output */
+  .table-output {
+    margin: 12px 0;
+    border: 1px solid #003300;
+    padding: 12px;
+  }
+
+  .table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #001a00;
+  }
+  .table-row:last-child { border-bottom: none; }
+
+  .table-key { color: #006600; }
+  .table-val { color: #00ff41; }
+  .table-val.hot { color: #ff3333; }
+  .table-val.safe { color: #00ff41; }
+
+  /* Box drawing */
+  .box {
+    border: 1px solid #003300;
+    padding: 16px;
+    margin: 16px 0;
+  }
+
+  .box-title {
+    color: #00ff41;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .box-content {
+    color: #009900;
+    line-height: 1.6;
+    font-size: 0.85rem;
+  }
+
+  /* Command list */
+  .cmd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .cmd-item {
+    border: 1px solid #003300;
+    padding: 12px;
+    transition: all 0.2s;
+  }
+
+  .cmd-item:hover {
+    border-color: #00ff41;
+    background: rgba(0,255,65,0.02);
+  }
+
+  .cmd-name {
+    color: #00ff41;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+
+  .cmd-desc {
+    color: #006600;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 640px) {
+    .terminal { padding: 12px 16px 60px; }
+    .cmd-grid { grid-template-columns: 1fr; }
+    .ascii-art { font-size: 0.45rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="terminal">
+  <div class="term-bar">
+    <div class="term-dots">
+      <span class="term-dot filled"></span>
+      <span class="term-dot"></span>
+      <span class="term-dot"></span>
+    </div>
+    <span class="term-title">powergrabber@localhost ~ </span>
+    <div class="term-nav"><a href="index.html">[all concepts]</a></div>
+  </div>
+
+<pre class="ascii-art">
+ ____                        ____           _     _
+|  _ \ _____      _____ _ __|  _ \ _ __ __ _| |__ | |__   ___ _ __
+| |_) / _ \ \ /\ / / _ \ '__| | _)| '__/ _` | '_ \| '_ \ / _ \ '__|
+|  __/ (_) \ V  V /  __/ |  | |_) | | | (_| | |_) | |_) |  __/ |
+|_|   \___/ \_/\_/ \___|_|  |____/|_|  \__,_|_.__/|_.__/ \___|_|
+</pre>
+
+  <div class="output">
+    <div class="line"><span class="bright">[*]</span> PowerGrabber v0.2.1 — Browser LLM Traffic Interceptor</div>
+    <div class="line"><span class="bright">[*]</span> For security researchers, red teamers, and defenders</div>
+  </div>
+
+  <div class="divider">// ─── WHAT IS IT ──────────────────────────────────────────────</div>
+
+  <div class="line"><span class="prompt">$ </span><span class="prompt-text">powergrabber --explain</span></div>
+  <div class="output">
+    <div class="line">PowerGrabber is a browser extension + Rust backend that captures</div>
+    <div class="line">every HTTP request your browser makes to LLM API endpoints.</div>
+    <div class="line"></div>
+    <div class="line">It uses the <span class="info">webRequest API</span> — no proxy, no TLS interception,</div>
+    <div class="line">no MITM. The extension sits inside the browser and watches.</div>
+    <div class="line"></div>
+    <div class="line"><span class="warn">[!]</span> Think of it as <span class="bright">tcpdump for AI API calls</span>, but at the</div>
+    <div class="line">    application layer, with automatic credential redaction.</div>
+  </div>
+
+  <div class="divider">// ─── QUICK START ─────────────────────────────────────────────</div>
+
+  <div class="line"><span class="prompt">$ </span><span class="prompt-text">cargo run -- --listen 127.0.0.1:9876</span></div>
+  <div class="output">
+    <div class="line"><span class="bright">[+]</span> Auth token: <span class="info">kx7m9p2q4w6e8r1t3y5u0i8o7a6s5d4f</span></div>
+    <div class="line"><span class="bright">[+]</span> WebSocket server listening on <span class="info">ws://127.0.0.1:9876</span></div>
+    <div class="line"><span class="bright">[+]</span> Waiting for browser connections...</div>
+    <div class="line"></div>
+    <div class="line"><span class="dim">    Load the extension. Paste the token. Start browsing.</span></div>
+    <div class="line"><span class="dim">    Every AI API call will appear here in real time.</span></div>
+  </div>
+
+  <div class="divider">// ─── SECURITY MODEL ──────────────────────────────────────────</div>
+
+  <div class="line"><span class="prompt">$ </span><span class="prompt-text">powergrabber --show-security</span></div>
+  <div class="table-output">
+    <div class="table-row"><span class="table-key">Authentication</span><span class="table-val">32-char random token, required in hello</span></div>
+    <div class="table-row"><span class="table-key">Auth timeout</span><span class="table-val">10 seconds to authenticate or disconnect</span></div>
+    <div class="table-row"><span class="table-key">Rate limiting</span><span class="table-val">500 events/sec per connection</span></div>
+    <div class="table-row"><span class="table-key">Max message</span><span class="table-val">1 MB</span></div>
+    <div class="table-row"><span class="table-key">Max clients</span><span class="table-val">16 concurrent</span></div>
+    <div class="table-row"><span class="table-key">Connection tracking</span><span class="table-val">RAII guard (Drop impl)</span></div>
+    <div class="table-row"><span class="table-key">Header redaction</span><span class="table-val safe">8 sensitive header types</span></div>
+    <div class="table-row"><span class="table-key">URL redaction</span><span class="table-val safe">14 query param patterns</span></div>
+    <div class="table-row"><span class="table-key">Self-traffic filter</span><span class="table-val safe">Extension ignores own WS traffic</span></div>
+    <div class="table-row"><span class="table-key">Backpressure</span><span class="table-val safe">try_send with drop counting</span></div>
+  </div>
+
+  <div class="divider">// ─── USE CASES ───────────────────────────────────────────────</div>
+
+  <div class="line"><span class="prompt">$ </span><span class="prompt-text">powergrabber --list-scenarios</span></div>
+  <div class="output">
+    <div class="cmd-grid">
+      <div class="cmd-item">
+        <div class="cmd-name"><span class="bright">[01]</span> Shadow AI Discovery</div>
+        <div class="cmd-desc">Find every LLM endpoint your org is calling. OpenAI, Anthropic, Google, Cohere, Mistral, HuggingFace — identified automatically.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-name"><span class="bright">[02]</span> Data Exfiltration Detection</div>
+        <div class="cmd-desc">See what data leaves the browser to AI APIs. Capture request URLs and headers (with secrets redacted) for investigation.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-name"><span class="bright">[03]</span> API Debugging</div>
+        <div class="cmd-desc">Real-time view of API calls, status codes, response headers. Like browser DevTools but streamed to your terminal.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-name"><span class="bright">[04]</span> Compliance Monitoring</div>
+        <div class="cmd-desc">Generate audit trails of AI API usage. JSONL output feeds directly into your SIEM. Every event timestamped and attributed.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-name"><span class="bright">[05]</span> Pentesting</div>
+        <div class="cmd-desc">Map an organization's AI attack surface. Discover unprotected endpoints, leaked API keys (before redaction), shadow integrations.</div>
+      </div>
+      <div class="cmd-item">
+        <div class="cmd-name"><span class="bright">[06]</span> CTF / Research</div>
+        <div class="cmd-desc">Capture and replay AI API traffic for analysis. Understand prompt injection patterns, token usage, rate limit behavior.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">// ─── BROWSER SUPPORT ─────────────────────────────────────────</div>
+
+  <div class="line"><span class="prompt">$ </span><span class="prompt-text">powergrabber --check-browsers</span></div>
+  <div class="output">
+    <div class="line"><span class="bright">[+]</span> Chrome    <span class="safe">supported</span>  (Manifest V3)</div>
+    <div class="line"><span class="bright">[+]</span> Firefox   <span class="safe">supported</span>  (Manifest V2)</div>
+    <div class="line"><span class="bright">[+]</span> Edge      <span class="safe">supported</span>  (Manifest V3)</div>
+    <div class="line"><span class="bright">[+]</span> Safari    <span class="safe">supported</span>  (MV3 + Xcode)</div>
+    <div class="line"><span class="bright">[+]</span> Opera     <span class="safe">supported</span>  (Manifest V3)</div>
+    <div class="line"><span class="bright">[+]</span> Brave     <span class="safe">supported</span>  (Manifest V3)</div>
+    <div class="line"><span class="bright">[+]</span> Vivaldi   <span class="safe">supported</span>  (Manifest V3)</div>
+    <div class="line"><span class="bright">[+]</span> Arc       <span class="safe">supported</span>  (Manifest V3)</div>
+  </div>
+
+  <div class="divider">// ─── SAMPLE OUTPUT ───────────────────────────────────────────</div>
+
+  <div class="line"><span class="prompt">$ </span><span class="prompt-text">powergrabber --format json 2>/dev/null | head -3</span></div>
+  <div class="output">
+    <div class="line"><span class="dim">{"type":"request_started","method":"POST","url":"https://api.openai.com/v1/chat/completions","headers":{"Authorization":"[REDACTED]","Content-Type":"application/json"}}</span></div>
+    <div class="line"><span class="dim">{"type":"response_received","status_code":200,"url":"https://api.openai.com/v1/chat/completions","headers":{"x-ratelimit-remaining":"42","Set-Cookie":"[REDACTED]"}}</span></div>
+    <div class="line"><span class="dim">{"type":"loading_finished","request_id":"12345","from_cache":false,"status_code":200}</span></div>
+  </div>
+
+  <div class="divider">// ─── END ─────────────────────────────────────────────────────</div>
+
+  <div class="output">
+    <div class="line"></div>
+    <div class="line"><span class="bright">[*]</span> Built in Rust. No runtime dependencies.</div>
+    <div class="line"><span class="bright">[*]</span> Open source. Transparent. Auditable.</div>
+    <div class="line"></div>
+    <div class="line"><span class="prompt">$ </span><span class="cursor"></span></div>
+  </div>
+</div>
+
+</body>
+</html>
