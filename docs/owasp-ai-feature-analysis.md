@@ -581,6 +581,375 @@ This protocol enables building web dashboards, Grafana panels, SIEM integrations
 
 ---
 
+## Part 4: Organisation-Wide AI Usage, Account Tracking & Expense Management
+
+This section addresses a problem that is distinct from security: **financial and operational governance of AI usage across an organisation.** Security tells you whether AI usage is dangerous. This tells you who's using what, how much it costs, and whether the organisation is getting value for money.
+
+PowerGrabber is uniquely positioned to provide this because it sits at the browser layer — where the actual API calls happen. Unlike provider dashboards (which show usage per API key, not per person or team), PowerGrabber can attribute usage to specific browsers, tabs, applications, and time periods.
+
+### The Problem
+
+Organisations have no single pane of glass for AI spend. The reality looks like this:
+
+- **Engineering** has an OpenAI API key billed to a shared credit card. Three teams use it. Nobody knows which team generates which costs.
+- **Marketing** uses ChatGPT Plus subscriptions (per-seat). Some people also use the API directly via Zapier integrations. The API spend is invisible.
+- **Data Science** uses Anthropic via AWS Bedrock, Google via Vertex AI, and HuggingFace inference endpoints. Three different billing systems.
+- **Individual developers** use Claude Code, Cursor, Copilot, and Windsurf — each with different subscription models. Some use personal API keys expensed to the company. Some use the company's shared keys.
+- **Customer-facing products** make LLM API calls from browser-based frontends. The cost per customer interaction is unknown.
+
+The CFO asks "how much are we spending on AI?" and the honest answer is "we don't know, and we can't find out without checking 8 different dashboards, 4 credit cards, and asking every team lead."
+
+### What PowerGrabber Can Capture (Without Request Bodies)
+
+From HTTP headers and URLs alone, PowerGrabber can extract:
+
+**From Request Headers:**
+- `Authorization: Bearer sk-proj-*` → OpenAI project key (project identified by key prefix pattern, value redacted)
+- `x-api-key: sk-ant-*` → Anthropic key
+- `Authorization: Bearer gsk_*` → Groq key
+- Custom headers identifying the calling application or SDK version
+- `User-Agent` — identifies which client library, SDK, or tool made the call
+
+**From Response Headers (the gold mine for cost tracking):**
+
+OpenAI returns:
+```
+x-ratelimit-limit-requests: 10000
+x-ratelimit-remaining-requests: 9234
+x-ratelimit-limit-tokens: 2000000
+x-ratelimit-remaining-tokens: 1823456
+x-ratelimit-reset-requests: 6ms
+x-ratelimit-reset-tokens: 234ms
+openai-organization: org-abc123
+openai-processing-ms: 1245
+openai-version: 2020-10-01
+x-request-id: req_abc123
+```
+
+Anthropic returns:
+```
+x-ratelimit-limit-requests: 4000
+x-ratelimit-remaining-requests: 3891
+x-ratelimit-limit-tokens: 400000
+x-ratelimit-remaining-tokens: 389234
+anthropic-ratelimit-tokens-remaining: 389234
+request-id: req_abc123
+```
+
+Google returns:
+```
+x-goog-api-client: genai-js/0.x.x
+x-request-id: abc123
+```
+
+**From URLs:**
+- Model identifier: `/v1/chat/completions` with model in query params or path for some providers
+- Endpoint type: chat, embeddings, images, audio, moderation, fine-tuning
+- API version
+
+**From Response Status Codes:**
+- `200` — successful (billable) request
+- `429` — rate limited (not billed, but indicates capacity pressure)
+- `401/403` — authentication failure (credential issue)
+- `500/502/503` — provider error (not billed)
+
+### Feature: AI Usage Analytics Engine
+
+#### 4.1 Per-Provider Usage Tracking
+
+Track every AI API call with:
+
+```
+{
+  "timestamp": "2026-04-08T14:23:01.442Z",
+  "provider": "openai",
+  "endpoint_type": "chat",
+  "model": "gpt-4o",           // extracted from URL path where visible
+  "status": 200,
+  "billable": true,
+  "tab_url": "cursor://workspace/project-x",
+  "tab_title": "Cursor - project-x",
+  "tool": "cursor",             // detected AI coding tool
+  "ratelimit_remaining_tokens": 1823456,
+  "ratelimit_limit_tokens": 2000000,
+  "processing_ms": 1245,        // from openai-processing-ms header
+  "org_id": "org-abc123",       // from openai-organization header
+  "request_id": "req_abc123"
+}
+```
+
+Aggregation periods: per-minute, per-hour, per-day, per-week, per-month.
+
+Breakdowns by:
+- Provider (OpenAI, Anthropic, Google, Cohere, Mistral, etc.)
+- Endpoint type (chat, embedding, image, audio, moderation)
+- Model (where detectable from URL)
+- Originating tool (Cursor, Copilot, Claude Code, browser web UI, custom app)
+- Originating application/tab (which internal app or website)
+- Time of day / day of week
+- Success rate (2xx vs 4xx vs 5xx)
+
+#### 4.2 Token Consumption Tracking
+
+The key insight: **you don't need request bodies to track token consumption.** Rate-limit headers tell you remaining tokens, and the delta between consecutive responses gives you tokens consumed per request.
+
+**Method:**
+
+1. On each response from an AI provider, record `ratelimit_remaining_tokens`
+2. On the next response to the same provider (same rate-limit bucket), compute: `tokens_used = previous_remaining - current_remaining`
+3. If `current_remaining > previous_remaining`, a rate-limit window reset occurred — flag it and start a new tracking window
+
+This gives approximate per-request token usage without reading request/response bodies.
+
+**Limitations (be honest about them):**
+- Only works when rate-limit headers are present (most major providers include them)
+- Shared API keys mean multiple consumers affect the same counter — token deltas may include other users' consumption
+- Rate-limit window resets introduce gaps
+- Some providers use separate token pools for input vs output tokens — headers may not distinguish
+
+**Accuracy:** Good enough for trend analysis, budget alerts, and team-level attribution. Not accurate enough for per-request billing reconciliation. Should be presented as "estimated" with appropriate caveats.
+
+#### 4.3 Cost Estimation
+
+Maintain a configurable pricing table:
+
+```toml
+# pricing.toml — user-editable, ships with defaults
+
+[openai]
+"gpt-4o"           = { input_per_1k = 0.0025, output_per_1k = 0.01 }
+"gpt-4o-mini"      = { input_per_1k = 0.00015, output_per_1k = 0.0006 }
+"gpt-4.1"          = { input_per_1k = 0.002, output_per_1k = 0.008 }
+"o3"               = { input_per_1k = 0.01, output_per_1k = 0.04 }
+"text-embedding-3-small" = { input_per_1k = 0.00002 }
+"text-embedding-3-large" = { input_per_1k = 0.00013 }
+
+[anthropic]
+"claude-sonnet-4-6" = { input_per_1k = 0.003, output_per_1k = 0.015 }
+"claude-opus-4-6"   = { input_per_1k = 0.015, output_per_1k = 0.075 }
+"claude-haiku-4-5"  = { input_per_1k = 0.0008, output_per_1k = 0.004 }
+
+[google]
+"gemini-2.5-pro"    = { input_per_1k = 0.00125, output_per_1k = 0.01 }
+"gemini-2.5-flash"  = { input_per_1k = 0.00015, output_per_1k = 0.0006 }
+
+# Users add their own providers/models here
+```
+
+Cost = estimated_tokens * price_per_token. Displayed as running totals with configurable alert thresholds.
+
+**Cost reports:**
+
+```
+AI SPEND REPORT — 2026-04-08
+=============================
+Provider       Requests   Est. Tokens   Est. Cost    Trend
+─────────────────────────────────────────────────────────────
+OpenAI            2,847    4,123,000     $48.32       ▲ +23% vs yesterday
+Anthropic         1,203    1,890,000     $31.45       ▼ -8%
+Google              456      234,000      $1.12       ● stable
+Cohere               89       45,000      $0.34       ▲ new this week
+─────────────────────────────────────────────────────────────
+TOTAL             4,595    6,292,000     $81.23
+
+Top consumers by source:
+  Cursor (api2.cursor.sh)         $34.10  (42%)
+  ChatGPT web UI                  $22.40  (28%)
+  Claude Code (api.anthropic.com) $18.90  (23%)
+  Internal CRM AI features         $5.83   (7%)
+
+Budget status: $81.23 / $200.00 daily limit (41%)
+```
+
+#### 4.4 Account & API Key Tracking
+
+PowerGrabber redacts credential values but can still track credential **patterns** and **metadata**:
+
+- **Distinct key count:** How many different API keys are being used per provider (based on key prefix patterns — `sk-proj-` vs `sk-ant-` — without storing the actual key)
+- **Organisation ID tracking:** OpenAI's `openai-organization` response header identifies which org account is being billed
+- **Key rotation detection:** When a previously-seen key prefix pattern stops appearing and a new one starts
+- **Shared key detection:** Same provider being called from multiple distinct tools/tabs simultaneously (suggests shared API key)
+- **Personal vs corporate key heuristic:** API calls from `chat.openai.com` or `claude.ai` (web UI) likely use personal accounts. API calls from coding tools or internal apps likely use corporate keys.
+
+**Account inventory report:**
+
+```
+API KEY INVENTORY (by observable pattern)
+==========================================
+OpenAI:
+  - Key pattern: sk-proj-a... (org: org-abc123)
+    Sources: Cursor, Internal CRM
+    Last seen: 2026-04-08 14:23:01
+    Daily request avg: 1,200
+
+  - Key pattern: sk-proj-x... (org: org-xyz789)
+    Sources: ChatGPT web UI
+    Last seen: 2026-04-08 13:45:22
+    Daily request avg: 340
+    NOTE: Different org ID — possible personal account
+
+Anthropic:
+  - Key pattern: sk-ant-api03-...
+    Sources: Claude Code, Internal search tool
+    Last seen: 2026-04-08 14:22:58
+    Daily request avg: 890
+
+  - 3 requests via claude.ai web UI (session-based, no API key visible)
+    NOTE: Personal Claude accounts in use
+```
+
+#### 4.5 Team & Department Attribution
+
+PowerGrabber can't directly know which team a browser belongs to. But it can be configured with attribution rules:
+
+```toml
+# attribution.toml
+
+[[teams]]
+name = "Engineering"
+match_tab_urls = ["github.com", "gitlab.com", "cursor://", "vscode://"]
+match_tools = ["cursor", "copilot", "claude-code", "windsurf"]
+
+[[teams]]
+name = "Marketing"
+match_tab_urls = ["hubspot.com", "mailchimp.com", "canva.com"]
+
+[[teams]]
+name = "Data Science"
+match_tab_urls = ["jupyter", "colab.research.google.com", "databricks.com"]
+match_providers_via = ["bedrock", "vertex"]
+
+[[teams]]
+name = "Product"
+match_tab_urls = ["linear.app", "figma.com", "notion.so"]
+
+[[teams]]
+name = "Customer-Facing"
+match_tab_urls = ["app.ourcompany.com", "dashboard.ourcompany.com"]
+```
+
+This is heuristic-based and imperfect. But "Engineering spent ~$48/day on AI and Marketing spent ~$12/day" is infinitely more useful than "we have no idea."
+
+For more accurate attribution, PowerGrabber could accept an external identity signal — e.g., the browser extension popup could include a "Team" dropdown that tags all traffic from that browser instance.
+
+#### 4.6 Organisation-Wide Rollup
+
+When PowerGrabber is deployed across multiple browsers (the intended enterprise scenario), the backend aggregates all traffic into a single view:
+
+```
+ORGANISATION AI USAGE — WEEKLY ROLLUP
+Week of 2026-04-01
+==========================================
+
+Total AI API requests:    34,521
+Total estimated tokens:   52,340,000
+Total estimated cost:     $623.45
+Active browser instances: 47
+Active AI providers:      5
+Active AI models:         12
+Active coding tools:      4
+
+Provider breakdown:
+  OpenAI:     $312.10 (50.1%) — 18,234 requests
+  Anthropic:  $198.40 (31.8%) — 11,203 requests
+  Google:      $67.30 (10.8%) —  3,456 requests
+  Cohere:      $34.20  (5.5%) —  1,204 requests
+  Mistral:     $11.45  (1.8%) —    424 requests
+
+Team breakdown:
+  Engineering: $398.20 (63.9%)
+  Data Science: $112.30 (18.0%)
+  Marketing:    $56.40  (9.0%)
+  Product:      $34.10  (5.5%)
+  Unattributed: $22.45  (3.6%)
+
+Trend: ▲ +18% vs previous week
+Alert: Engineering spend increased 34% — primarily Cursor usage (+2,100 requests)
+Alert: 3 new API keys detected this week (possible credential sprawl)
+Alert: 89 requests to unapproved provider (Cohere) from Data Science team
+```
+
+#### 4.7 Budget Enforcement & Alerts
+
+Configurable budget thresholds:
+
+```toml
+# budgets.toml
+
+[global]
+daily_limit = 200.00
+weekly_limit = 1000.00
+monthly_limit = 4000.00
+alert_at = [50, 75, 90, 100]  # percentage thresholds
+
+[per_provider.openai]
+daily_limit = 120.00
+alert_at = [75, 100]
+
+[per_team.engineering]
+daily_limit = 150.00
+weekly_limit = 700.00
+
+[per_team.marketing]
+daily_limit = 30.00
+alert_at = [80, 100]
+```
+
+Alert events emitted when thresholds crossed:
+
+```json
+{"type": "budget_alert", "scope": "global", "period": "daily", "current": 182.30, "limit": 200.00, "percent": 91, "severity": "warning"}
+{"type": "budget_alert", "scope": "team:marketing", "period": "daily", "current": 30.50, "limit": 30.00, "percent": 102, "severity": "critical"}
+```
+
+#### 4.8 Subscription vs API Usage Tracking
+
+Distinguish between:
+
+- **Web UI usage** (ChatGPT, Claude.ai, Gemini web) — identified by tab URL. These are typically covered by per-seat subscriptions, not API billing. Still valuable to track for productivity analysis and data flow governance, but don't directly cost per-request.
+
+- **API usage** (direct API calls from tools, extensions, internal apps) — identified by API endpoint URLs. These are billed per-token. This is where cost tracking matters.
+
+- **Coding tool usage** (Cursor, Copilot, Windsurf) — mixed model. Subscription covers the tool, but some tools also make direct API calls billed to the user's key. PowerGrabber can distinguish between calls to the tool's own backend (e.g., `api2.cursor.sh`) and calls to the raw provider API (e.g., `api.openai.com`).
+
+#### 4.9 Usage Anomaly Detection
+
+Flag unusual patterns:
+
+- **Spike detection:** Daily request count exceeds 2x the 7-day moving average
+- **New provider:** First-ever request to a previously unseen AI provider
+- **New model:** First-ever request to a previously unseen model
+- **Off-hours usage:** Significant AI API traffic outside configured business hours
+- **Single-tab surge:** One browser tab generating an unusual volume of AI requests (possible automation or runaway loop)
+- **Credential sprawl:** Number of distinct API key patterns increasing over time
+
+#### 4.10 Data Export for Finance
+
+Export formats designed for finance teams, not engineers:
+
+- **CSV:** Date, Provider, Team, Request Count, Estimated Tokens, Estimated Cost — importable into Excel/Google Sheets
+- **JSONL:** Structured events for data warehouse ingestion
+- **Monthly summary PDF** (future): Generated report with charts, suitable for attaching to expense reports or board decks
+
+**Integration points:**
+- Webhook on budget threshold: POST to Slack, PagerDuty, or custom endpoint
+- Periodic report delivery: daily/weekly/monthly summaries to configured email (via external integration)
+- SIEM integration: all events available on the dashboard WebSocket protocol (#20)
+
+### What This Section Does NOT Cover (Honest Limitations)
+
+1. **Per-request exact token counts** — without reading request/response bodies, token counts are estimated from rate-limit header deltas. This is directionally accurate but not precise.
+
+2. **Prompt content analysis** — PowerGrabber captures HTTP metadata, not bodies. It cannot tell you what was asked or what the AI responded. This is by design (privacy), but it means usage tracking is quantitative (how much), not qualitative (what).
+
+3. **Individual user attribution** — PowerGrabber runs per-browser. In a shared computer environment, it can't distinguish users. In a one-person-per-machine environment (standard corporate), the browser instance is a reasonable proxy for the individual.
+
+4. **Exact cost reconciliation** — estimated costs will not match provider invoices exactly. Token estimation from headers is approximate. The goal is directional accuracy (within 20-30%) and trend visibility, not accounting-grade precision. The output should always be labelled "estimated."
+
+5. **Subscription costs** — PowerGrabber can count web UI visits to ChatGPT or Claude.ai, but it cannot determine subscription tier or per-seat pricing. Subscription cost tracking requires data from the billing system, not the browser.
+
+---
+
 ## Summary: Feature Priority Matrix
 
 | # | Feature | OWASP Coverage | Implementation Complexity | Value |
