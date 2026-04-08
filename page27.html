@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Compliance for SOC 2 and SOX Audits — PowerGrabber AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: #374151;
+  line-height: 1.75;
+}
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.back-link {
+  position: fixed; top: 20px; left: 24px; z-index: 100;
+  background: #fff; border: 1px solid #d1d5db;
+  padding: 8px 18px; border-radius: 6px; font-size: 14px; color: #1e293b;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: background 0.2s;
+}
+.back-link:hover { background: #f9fafb; text-decoration: none; }
+
+header {
+  background: #1e293b; color: #fff; padding: 90px 24px 60px; text-align: center;
+}
+header .tag {
+  display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: #cbd5e1; padding: 5px 14px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+}
+header h1 {
+  font-family: 'Lora', serif; font-size: 42px; font-weight: 700; margin-bottom: 16px;
+  max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.25;
+}
+header p {
+  font-size: 18px; color: #94a3b8; max-width: 620px; margin: 0 auto;
+}
+
+.container { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+/* Section styling */
+section { padding: 56px 0; }
+section + section { border-top: 1px solid #e5e7eb; }
+h2 {
+  font-family: 'Lora', serif; font-size: 26px; color: #1e293b;
+  font-weight: 700; margin-bottom: 8px;
+}
+.section-lead { color: #6b7280; font-size: 15px; margin-bottom: 32px; max-width: 680px; }
+
+/* Evidence numbering */
+.evidence-id {
+  display: inline-block; background: #1e293b; color: #fff;
+  font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px;
+  margin-right: 8px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;
+}
+
+/* Audit mapping table */
+.audit-table {
+  width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;
+}
+.audit-table thead th {
+  background: #f8fafc; color: #1e293b; padding: 12px 16px;
+  text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.5px; border-bottom: 2px solid #1e293b;
+}
+.audit-table tbody td {
+  padding: 14px 16px; border-bottom: 1px solid #e5e7eb; vertical-align: top;
+}
+.audit-table tbody tr:hover { background: #f9fafb; }
+
+/* Verdict badges */
+.verdict {
+  display: inline-block; padding: 3px 10px; border-radius: 4px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.3px;
+}
+.verdict-pass { background: #dcfce7; color: #166534; }
+.verdict-warning { background: #fef3c7; color: #92400e; }
+.verdict-fail { background: #fee2e2; color: #991b1b; }
+.verdict-na { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+/* Cards grid */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.card {
+  border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px;
+  background: #fff; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.card h3 { font-family: 'Lora', serif; font-size: 17px; color: #1e293b; margin-bottom: 10px; }
+.card p { font-size: 14px; color: #6b7280; }
+
+/* Verdict explanation */
+.verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.verdict-card {
+  border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px;
+  text-align: center;
+}
+.verdict-card .v-badge { margin-bottom: 12px; }
+.verdict-card h4 { font-size: 15px; color: #1e293b; margin-bottom: 8px; }
+.verdict-card p { font-size: 13px; color: #6b7280; }
+
+/* Formal list */
+.formal-list { list-style: none; counter-reset: formal; }
+.formal-list li {
+  counter-increment: formal; padding: 16px 0; border-bottom: 1px solid #f1f5f9;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.formal-list li::before {
+  content: counter(formal, decimal-leading-zero);
+  font-family: 'Lora', serif; font-weight: 700; color: #1e293b;
+  font-size: 18px; min-width: 32px; flex-shrink: 0;
+}
+.formal-list li strong { color: #1e293b; }
+
+/* Walkthrough steps */
+.walkthrough { counter-reset: wt; }
+.wt-step {
+  display: grid; grid-template-columns: 48px 1fr; gap: 16px;
+  padding: 24px 0; border-bottom: 1px solid #f1f5f9;
+}
+.wt-step:last-child { border-bottom: none; }
+.wt-num {
+  width: 48px; height: 48px; border: 2px solid #1e293b; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lora', serif; font-weight: 700; font-size: 18px; color: #1e293b;
+  flex-shrink: 0;
+}
+.wt-content h3 { font-size: 16px; color: #1e293b; margin-bottom: 6px; }
+.wt-content p { font-size: 14px; color: #6b7280; }
+.wt-evidence {
+  margin-top: 10px; background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #475569;
+}
+
+/* Export formats */
+.export-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.export-card {
+  border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px;
+  background: #f8fafc;
+}
+.export-card h4 {
+  font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.export-card .format-tag {
+  display: inline-block; background: #1e293b; color: #fff; font-size: 10px;
+  padding: 2px 6px; border-radius: 3px; font-weight: 600;
+}
+.export-card p { font-size: 13px; color: #6b7280; margin-top: 8px; }
+.export-card code {
+  display: block; margin-top: 10px; background: #1e293b; color: #e2e8f0;
+  padding: 12px; border-radius: 4px; font-size: 12px; overflow-x: auto;
+  white-space: pre; line-height: 1.5;
+}
+
+footer {
+  text-align: center; padding: 48px 24px;
+  border-top: 2px solid #1e293b; color: #6b7280; font-size: 13px;
+  background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+  header h1 { font-size: 28px; }
+  h2 { font-size: 22px; }
+  .audit-table { font-size: 12px; }
+  .audit-table thead th, .audit-table tbody td { padding: 10px 8px; }
+  .wt-step { grid-template-columns: 1fr; }
+  .wt-num { margin-bottom: -8px; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">Back to PowerGrabber AI</a>
+
+<header>
+  <div class="tag">GRC &amp; Audit</div>
+  <h1>AI Compliance for SOC 2 and SOX Audits</h1>
+  <p>Use the OWASP AI Security scorecard as machine-readable audit evidence. Map every finding to your control framework.</p>
+</header>
+
+<div class="container">
+
+  <!-- Auditor Walkthrough -->
+  <section>
+    <h2>How an Auditor Uses the Scorecard</h2>
+    <p class="section-lead">The OWASP ASI scorecard produces structured findings that map directly to audit requirements. Here is the workflow from scorecard to audit evidence.</p>
+
+    <div class="walkthrough">
+      <div class="wt-step">
+        <div class="wt-num">1</div>
+        <div class="wt-content">
+          <h3>Run the Assessment</h3>
+          <p>PowerGrabber AI continuously monitors AI tool traffic and produces OWASP ASI scorecard assessments on demand or on schedule. Each assessment covers all 10 ASI categories.</p>
+          <div class="wt-evidence"><span class="evidence-id">EV-001</span> Assessment run at 2026-04-08T06:00:00Z covering 30-day observation window. 4 AI tools monitored across 3 providers.</div>
+        </div>
+      </div>
+      <div class="wt-step">
+        <div class="wt-num">2</div>
+        <div class="wt-content">
+          <h3>Review Each Finding</h3>
+          <p>Each ASI category receives a verdict: PASS, WARNING, FAIL, or NOT ASSESSABLE. Each verdict includes supporting evidence: observed data, thresholds applied, and timestamps.</p>
+          <div class="wt-evidence"><span class="evidence-id">EV-002</span> ASI01 (Prompt Injection): WARNING &mdash; 2 tools lack prompt sanitization visibility. ASI07 (Data Leakage): PASS &mdash; no sensitive data patterns detected in 12,847 monitored requests.</div>
+        </div>
+      </div>
+      <div class="wt-step">
+        <div class="wt-num">3</div>
+        <div class="wt-content">
+          <h3>Map to Control Framework</h3>
+          <p>Each scorecard finding maps to specific SOC 2 Trust Service Criteria or SOX ITGC requirements. This mapping is provided automatically in the export.</p>
+          <div class="wt-evidence"><span class="evidence-id">EV-003</span> ASI07 PASS maps to SOC 2 CC6.1 (Logical Access), CC6.7 (Data Classification). ASI03 WARNING maps to SOC 2 CC6.3 (Role-Based Access).</div>
+        </div>
+      </div>
+      <div class="wt-step">
+        <div class="wt-num">4</div>
+        <div class="wt-content">
+          <h3>Include in Audit Workpapers</h3>
+          <p>Export the scorecard in CSV format for inclusion in audit workpapers. Each row is a discrete piece of evidence with its own evidence ID, timestamp, and control mapping.</p>
+          <div class="wt-evidence"><span class="evidence-id">EV-004</span> Exported 42 evidence rows covering 10 ASI categories, 4 tools, 30-day window. File: <code>powergrabber-audit-2026Q1.csv</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scorecard to Audit Mapping -->
+  <section>
+    <h2>Scorecard-to-Audit Requirement Mapping</h2>
+    <p class="section-lead">Each OWASP ASI category maps to specific audit control requirements. This table shows the primary mappings.</p>
+
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>ASI Category</th>
+          <th>Scorecard Output</th>
+          <th>SOC 2 TSC</th>
+          <th>SOX ITGC</th>
+          <th>Evidence Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ASI01</strong> Prompt Injection</td>
+          <td><span class="verdict verdict-warning">WARNING</span></td>
+          <td>CC6.1, CC7.2</td>
+          <td>Change Mgmt</td>
+          <td>Continuous monitoring</td>
+        </tr>
+        <tr>
+          <td><strong>ASI02</strong> Tool Misuse</td>
+          <td><span class="verdict verdict-warning">WARNING</span></td>
+          <td>CC6.7, CC8.1</td>
+          <td>Access Controls</td>
+          <td>Endpoint baseline deviation</td>
+        </tr>
+        <tr>
+          <td><strong>ASI03</strong> Excessive Permissions</td>
+          <td><span class="verdict verdict-warning">WARNING</span></td>
+          <td>CC6.3</td>
+          <td>Access Controls</td>
+          <td>Credential inventory</td>
+        </tr>
+        <tr>
+          <td><strong>ASI04</strong> Knowledge Poisoning</td>
+          <td><span class="verdict verdict-na">NOT ASSESSABLE</span></td>
+          <td>CC7.2</td>
+          <td>Program Develop.</td>
+          <td>Requires model-level access</td>
+        </tr>
+        <tr>
+          <td><strong>ASI05</strong> Memory Poisoning</td>
+          <td><span class="verdict verdict-na">NOT ASSESSABLE</span></td>
+          <td>CC6.1</td>
+          <td>Program Develop.</td>
+          <td>Requires memory inspection</td>
+        </tr>
+        <tr>
+          <td><strong>ASI06</strong> Harmful Content</td>
+          <td><span class="verdict verdict-pass">PASS</span></td>
+          <td>CC7.2</td>
+          <td>Operations</td>
+          <td>Content pattern analysis</td>
+        </tr>
+        <tr>
+          <td><strong>ASI07</strong> Data Leakage</td>
+          <td><span class="verdict verdict-pass">PASS</span></td>
+          <td>CC6.1, CC6.7</td>
+          <td>Access Controls</td>
+          <td>Sensitive data detection</td>
+        </tr>
+        <tr>
+          <td><strong>ASI08</strong> Hallucination</td>
+          <td><span class="verdict verdict-na">NOT ASSESSABLE</span></td>
+          <td>CC7.2</td>
+          <td>Operations</td>
+          <td>Requires output validation</td>
+        </tr>
+        <tr>
+          <td><strong>ASI09</strong> Denial of AI Service</td>
+          <td><span class="verdict verdict-pass">PASS</span></td>
+          <td>A1.2</td>
+          <td>Operations</td>
+          <td>Rate limit monitoring</td>
+        </tr>
+        <tr>
+          <td><strong>ASI10</strong> Model Theft</td>
+          <td><span class="verdict verdict-pass">PASS</span></td>
+          <td>CC6.7</td>
+          <td>Access Controls</td>
+          <td>Exfiltration detection</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Verdict Explanations -->
+  <section>
+    <h2>What Each Verdict Means as Audit Evidence</h2>
+    <p class="section-lead">Each verdict carries specific meaning for auditors. Understanding these distinctions is critical for accurate audit documentation.</p>
+
+    <div class="verdict-grid">
+      <div class="verdict-card">
+        <div class="v-badge"><span class="verdict verdict-pass" style="font-size:16px;">PASS</span></div>
+        <h4>Control Operating Effectively</h4>
+        <p>The assessed risk area has been monitored and no issues were detected within the observation window. Evidence supports a conclusion of effective operation.</p>
+      </div>
+      <div class="verdict-card">
+        <div class="v-badge"><span class="verdict verdict-warning" style="font-size:16px;">WARNING</span></div>
+        <h4>Control Weakness Identified</h4>
+        <p>Indicators suggest a gap or potential issue. Not a confirmed failure, but sufficient evidence to warrant a management response and remediation plan.</p>
+      </div>
+      <div class="verdict-card">
+        <div class="v-badge"><span class="verdict verdict-fail" style="font-size:16px;">FAIL</span></div>
+        <h4>Control Failure</h4>
+        <p>A confirmed violation of the assessed criteria. Requires immediate remediation and must be reported as an exception in audit findings.</p>
+      </div>
+      <div class="verdict-card">
+        <div class="v-badge"><span class="verdict verdict-na" style="font-size:16px;">NOT ASSESSABLE</span></div>
+        <h4>Insufficient Visibility</h4>
+        <p>The tool cannot assess this risk from its observation point. This is <strong>valuable</strong> &mdash; it tells auditors exactly where to focus other assessment methods such as vendor questionnaires, penetration testing, or manual review.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOT ASSESSABLE Deep Dive -->
+  <section>
+    <h2>The Value of NOT ASSESSABLE</h2>
+    <p class="section-lead">NOT ASSESSABLE is not a gap in coverage &mdash; it is a precise identification of where your other audit procedures should focus.</p>
+
+    <ol class="formal-list">
+      <li><strong>ASI04 Knowledge Poisoning:</strong> Cannot be assessed from network traffic alone. Auditors should request model training documentation from AI providers and review data provenance controls.</li>
+      <li><strong>ASI05 Memory Poisoning:</strong> Requires inspection of tool-specific memory/context mechanisms. Auditors should evaluate each tool's context persistence architecture and isolation controls.</li>
+      <li><strong>ASI08 Hallucination:</strong> Output accuracy cannot be validated from traffic monitoring. Auditors should review human-in-the-loop processes and output validation procedures within business workflows.</li>
+    </ol>
+  </section>
+
+  <!-- Continuous Monitoring Evidence -->
+  <section>
+    <h2>Continuous Monitoring as Audit Evidence</h2>
+    <p class="section-lead">SOC 2 and SOX both require evidence that controls operate continuously, not just at a point in time. PowerGrabber AI provides this through always-on monitoring.</p>
+
+    <div class="cards-grid">
+      <div class="card">
+        <h3>Observation Window</h3>
+        <p>Every assessment includes the exact time range monitored. Auditors can verify continuous coverage with no gaps. Default window: rolling 30 days with daily snapshots.</p>
+      </div>
+      <div class="card">
+        <h3>Control Effectiveness Over Time</h3>
+        <p>Trend data shows whether a control has been consistently PASS, or if it oscillates between PASS and WARNING. Auditors can assess sustained vs. point-in-time compliance.</p>
+      </div>
+      <div class="card">
+        <h3>Gap Identification</h3>
+        <p>When monitoring was interrupted (e.g., extension disabled, system restarted), PowerGrabber AI logs the gap with timestamps. Auditors see exactly when monitoring was and was not active.</p>
+      </div>
+      <div class="card">
+        <h3>Automated Alerting</h3>
+        <p>Real-time alerts ensure that control failures are detected and communicated immediately, not discovered weeks later during a scheduled review. Alert timestamps prove timely detection.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Export Formats -->
+  <section>
+    <h2>Export Formats for Every Audience</h2>
+    <p class="section-lead">The scorecard exports in three formats, each designed for a specific downstream consumer.</p>
+
+    <div class="export-grid">
+      <div class="export-card">
+        <h4><span class="format-tag">JSON</span> SIEM Integration</h4>
+        <p>Structured JSON for ingestion into Splunk, Sentinel, or any SIEM. Each event includes OWASP category, verdict, evidence, and timestamp.</p>
+        <code>{
+  "asi_category": "ASI07",
+  "verdict": "PASS",
+  "evidence_count": 12847,
+  "window_start": "2026-03-09",
+  "window_end": "2026-04-08",
+  "control_mapping": ["CC6.1","CC6.7"]
+}</code>
+      </div>
+      <div class="export-card">
+        <h4><span class="format-tag">CSV</span> Audit Workpapers</h4>
+        <p>Flat CSV with one row per finding. Columns: Evidence ID, ASI Category, Verdict, Description, SOC2 Mapping, SOX Mapping, Timestamp, Observation Window.</p>
+        <code>EV-001,ASI01,WARNING,"2 tools lack..."
+EV-002,ASI07,PASS,"No sensitive..."
+EV-003,ASI03,WARNING,"1 personal key..."
+EV-004,ASI04,NOT_ASSESSABLE,"..."</code>
+      </div>
+      <div class="export-card">
+        <h4><span class="format-tag">SARIF</span> Code Security Platforms</h4>
+        <p>Static Analysis Results Interchange Format for integration with GitHub Advanced Security, SonarQube, or Snyk. Maps findings to code-level locations where applicable.</p>
+        <code>{
+  "$schema": "sarif-2.1.0",
+  "runs": [{
+    "tool": {"driver": {
+      "name": "PowerGrabber AI"
+    }},
+    "results": [...]
+  }]
+}</code>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>PowerGrabber AI &mdash; Audit-ready AI security evidence for GRC professionals.</p>
+  <p style="margin-top: 8px;"><a href="index.html">Back to Home</a></p>
+</footer>
+
+</body>
+</html>

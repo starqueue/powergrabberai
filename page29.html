@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Alerts Before the Invoice Arrives — PowerGrabber AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+
+  nav {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: #0f172a; }
+
+  .nav-brand {
+    font-weight: 700;
+    font-size: 16px;
+    color: #0f172a !important;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 80px 32px 48px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #0f172a;
+    margin-bottom: 20px;
+    letter-spacing: -0.03em;
+  }
+
+  .hero p {
+    font-size: 19px;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* --- TOML Config Section --- */
+  .section {
+    margin-bottom: 72px;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .section-desc {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 32px;
+    max-width: 600px;
+  }
+
+  .config-card {
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 32px;
+    overflow-x: auto;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12);
+  }
+
+  .config-card pre {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #e2e8f0;
+    margin: 0;
+    white-space: pre;
+  }
+
+  .config-card .comment { color: #64748b; }
+  .config-card .key { color: #7dd3fc; }
+  .config-card .string { color: #86efac; }
+  .config-card .number { color: #fbbf24; }
+  .config-card .section-header { color: #c4b5fd; font-weight: 600; }
+  .config-card .bracket { color: #f472b6; }
+
+  /* --- Alert Thresholds --- */
+  .thresholds-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .threshold-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .threshold-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  .threshold-pct {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+
+  .threshold-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .threshold-desc {
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  .t-green .threshold-pct { color: #16a34a; }
+  .t-green .threshold-label { color: #16a34a; }
+  .t-green { border-bottom: 3px solid #16a34a; }
+
+  .t-amber .threshold-pct { color: #d97706; }
+  .t-amber .threshold-label { color: #d97706; }
+  .t-amber { border-bottom: 3px solid #d97706; }
+
+  .t-orange .threshold-pct { color: #ea580c; }
+  .t-orange .threshold-label { color: #ea580c; }
+  .t-orange { border-bottom: 3px solid #ea580c; }
+
+  .t-red .threshold-pct { color: #dc2626; }
+  .t-red .threshold-label { color: #dc2626; }
+  .t-red { border-bottom: 3px solid #dc2626; }
+
+  /* --- Slack-style Notifications --- */
+  .notifications-area {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .slack-msg {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    border-left: 4px solid #e2e8f0;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .slack-msg.critical { border-left-color: #dc2626; }
+  .slack-msg.warning { border-left-color: #d97706; }
+  .slack-msg.ok { border-left-color: #16a34a; }
+
+  .slack-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .slack-msg.critical .slack-avatar { background: #dc2626; }
+  .slack-msg.warning .slack-avatar { background: #d97706; }
+  .slack-msg.ok .slack-avatar { background: #16a34a; }
+
+  .slack-content { flex: 1; }
+
+  .slack-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .slack-sender {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+  }
+
+  .slack-app-badge {
+    font-size: 11px;
+    background: #e2e8f0;
+    color: #64748b;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .slack-time {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-left: auto;
+  }
+
+  .slack-text {
+    font-size: 15px;
+    color: #334155;
+    line-height: 1.5;
+  }
+
+  .slack-text code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: #dc2626;
+  }
+
+  .slack-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .tag-critical { background: #fef2f2; color: #dc2626; }
+  .tag-warning { background: #fffbeb; color: #d97706; }
+  .tag-ok { background: #f0fdf4; color: #16a34a; }
+
+  .slack-bar {
+    margin-top: 10px;
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .slack-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s;
+  }
+
+  .bar-critical { background: #dc2626; }
+  .bar-warning { background: #d97706; }
+  .bar-ok { background: #16a34a; }
+
+  /* --- Webhook Section --- */
+  .webhook-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .webhook-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .webhook-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+  }
+
+  .webhook-card p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 16px;
+  }
+
+  .webhook-code {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .webhook-full {
+    grid-column: 1 / -1;
+  }
+
+  .payload-card {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 32px;
+  }
+
+  .payload-card pre {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: #e2e8f0;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  .payload-card .json-key { color: #7dd3fc; }
+  .payload-card .json-string { color: #86efac; }
+  .payload-card .json-number { color: #fbbf24; }
+
+  /* --- Footer CTA --- */
+  .cta-section {
+    text-align: center;
+    padding: 72px 32px;
+    margin-top: 48px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .cta-section h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-section p {
+    font-size: 17px;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto 28px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: #0f172a;
+    color: #fff;
+    padding: 14px 36px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .cta-btn:hover { background: #1e293b; }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  footer a { color: #64748b; text-decoration: none; }
+  footer a:hover { color: #0f172a; }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 32px; }
+    .thresholds-grid { grid-template-columns: repeat(2, 1fr); }
+    .webhook-grid { grid-template-columns: 1fr; }
+    .webhook-full { grid-column: 1; }
+  }
+
+  @media (max-width: 480px) {
+    .thresholds-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">PowerGrabber AI</a>
+  <a href="index.html">&larr; Back to Home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">For Finance &amp; Procurement Teams</div>
+  <h1>Budget Alerts Before the Invoice Arrives</h1>
+  <p>Set per-provider, per-team, and global AI spend limits. Get notified at 50%, 75%, 90%, and 100% &mdash; in Slack, PagerDuty, or anywhere you need.</p>
+</div>
+
+<div class="container">
+
+  <!-- TOML Config -->
+  <div class="section">
+    <div class="section-label">Configuration</div>
+    <div class="section-title">Define budgets in plain TOML</div>
+    <div class="section-desc">One config file controls global limits, per-provider caps, and per-team budgets. No UI-clicking required.</div>
+
+    <div class="config-card">
+<pre><span class="comment"># powergrabber-budget.toml</span>
+
+<span class="section-header">[global]</span>
+<span class="key">daily_limit</span>   = <span class="number">500.00</span>
+<span class="key">weekly_limit</span>  = <span class="number">3000.00</span>
+<span class="key">monthly_limit</span> = <span class="number">10000.00</span>
+<span class="key">currency</span>      = <span class="string">"USD"</span>
+
+<span class="section-header">[alerts]</span>
+<span class="key">thresholds</span> = <span class="bracket">[</span> <span class="number">50</span>, <span class="number">75</span>, <span class="number">90</span>, <span class="number">100</span> <span class="bracket">]</span>
+
+<span class="section-header">[providers.openai]</span>
+<span class="key">daily_limit</span>  = <span class="number">120.00</span>
+<span class="key">weekly_limit</span> = <span class="number">700.00</span>
+
+<span class="section-header">[providers.anthropic]</span>
+<span class="key">daily_limit</span>  = <span class="number">200.00</span>
+<span class="key">weekly_limit</span> = <span class="number">1200.00</span>
+
+<span class="section-header">[providers.google]</span>
+<span class="key">daily_limit</span>  = <span class="number">80.00</span>
+
+<span class="section-header">[teams.engineering]</span>
+<span class="key">daily_limit</span>   = <span class="number">150.00</span>
+<span class="key">monthly_limit</span> = <span class="number">3500.00</span>
+
+<span class="section-header">[teams.marketing]</span>
+<span class="key">daily_limit</span>   = <span class="number">30.00</span>
+<span class="key">monthly_limit</span> = <span class="number">600.00</span>
+
+<span class="section-header">[teams.research]</span>
+<span class="key">daily_limit</span>   = <span class="number">250.00</span>
+<span class="key">monthly_limit</span> = <span class="number">5000.00</span></pre>
+    </div>
+  </div>
+
+  <!-- Alert Thresholds -->
+  <div class="section">
+    <div class="section-label">Thresholds</div>
+    <div class="section-title">Four-stage alert escalation</div>
+    <div class="section-desc">Each threshold triggers a distinct notification. You always know where spend stands before it becomes a problem.</div>
+
+    <div class="thresholds-grid">
+      <div class="threshold-card t-green">
+        <div class="threshold-pct">50%</div>
+        <div class="threshold-label">Heads Up</div>
+        <div class="threshold-desc">Informational ping. Half the budget used &mdash; no action needed yet.</div>
+      </div>
+      <div class="threshold-card t-amber">
+        <div class="threshold-pct">75%</div>
+        <div class="threshold-label">Warning</div>
+        <div class="threshold-desc">Three-quarters spent. Time to review usage patterns.</div>
+      </div>
+      <div class="threshold-card t-orange">
+        <div class="threshold-pct">90%</div>
+        <div class="threshold-label">Critical</div>
+        <div class="threshold-desc">Almost at limit. Escalate to budget owner immediately.</div>
+      </div>
+      <div class="threshold-card t-red">
+        <div class="threshold-pct">100%</div>
+        <div class="threshold-label">Breached</div>
+        <div class="threshold-desc">Budget exceeded. Policy engine can auto-block or alert leadership.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slack-style Notifications -->
+  <div class="section">
+    <div class="section-label">Live Alerts</div>
+    <div class="section-title">Real notifications, not buried reports</div>
+    <div class="section-desc">Alerts land in Slack the moment a threshold is crossed. Here's what they look like.</div>
+
+    <div class="notifications-area">
+
+      <div class="slack-msg critical">
+        <div class="slack-avatar">P</div>
+        <div class="slack-content">
+          <div class="slack-header">
+            <span class="slack-sender">PowerGrabber AI</span>
+            <span class="slack-app-badge">APP</span>
+            <span class="slack-time">2:15 PM</span>
+          </div>
+          <div class="slack-text">
+            <strong>Budget Exceeded</strong> &mdash; Marketing exceeded <code>$30/day</code> AI budget at 2:15pm.<br>
+            Current spend: <code>$34.20</code> &middot; Limit: <code>$30.00</code> &middot; Provider: OpenAI
+          </div>
+          <span class="slack-tag tag-critical">BREACHED &mdash; 114%</span>
+          <div class="slack-bar"><div class="slack-bar-fill bar-critical" style="width:100%"></div></div>
+        </div>
+      </div>
+
+      <div class="slack-msg warning">
+        <div class="slack-avatar">P</div>
+        <div class="slack-content">
+          <div class="slack-header">
+            <span class="slack-sender">PowerGrabber AI</span>
+            <span class="slack-app-badge">APP</span>
+            <span class="slack-time">1:48 PM</span>
+          </div>
+          <div class="slack-text">
+            <strong>Threshold Warning</strong> &mdash; OpenAI daily spend at 91% (<code>$109.20</code> / <code>$120.00</code>).<br>
+            Rate: ~$14/hr &middot; Projected to breach by 3:00 PM
+          </div>
+          <span class="slack-tag tag-warning">WARNING &mdash; 91%</span>
+          <div class="slack-bar"><div class="slack-bar-fill bar-warning" style="width:91%"></div></div>
+        </div>
+      </div>
+
+      <div class="slack-msg ok">
+        <div class="slack-avatar">P</div>
+        <div class="slack-content">
+          <div class="slack-header">
+            <span class="slack-sender">PowerGrabber AI</span>
+            <span class="slack-app-badge">APP</span>
+            <span class="slack-time">11:30 AM</span>
+          </div>
+          <div class="slack-text">
+            <strong>Daily Summary</strong> &mdash; Engineering team at 42% of daily budget (<code>$63.00</code> / <code>$150.00</code>).<br>
+            All providers within limits. No action required.
+          </div>
+          <span class="slack-tag tag-ok">OK &mdash; 42%</span>
+          <div class="slack-bar"><div class="slack-bar-fill bar-ok" style="width:42%"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Webhook Integration -->
+  <div class="section">
+    <div class="section-label">Integrations</div>
+    <div class="section-title">Webhook-first alert delivery</div>
+    <div class="section-desc">Every threshold breach fires a POST to your configured endpoints. Slack, PagerDuty, or your own internal tooling.</div>
+
+    <div class="webhook-grid">
+      <div class="webhook-card">
+        <h3>Slack Webhook</h3>
+        <p>Post to any channel via incoming webhook URL.</p>
+        <div class="webhook-code">[webhooks.slack]
+url   = "https://hooks.slack.com/services/T.../B.../xxx"
+events = ["threshold_warning", "threshold_breach"]
+format = "slack"</div>
+      </div>
+
+      <div class="webhook-card">
+        <h3>PagerDuty</h3>
+        <p>Create incidents on budget breach for on-call response.</p>
+        <div class="webhook-code">[webhooks.pagerduty]
+url     = "https://events.pagerduty.com/v2/enqueue"
+token   = "${PAGERDUTY_TOKEN}"
+events  = ["threshold_breach"]
+severity = "warning"</div>
+      </div>
+
+      <div class="webhook-card webhook-full">
+        <h3>Custom Endpoint</h3>
+        <p>POST JSON to any HTTP endpoint. Add custom headers, filter by event type.</p>
+        <div class="webhook-code">[webhooks.custom]
+url     = "https://internal.corp/api/ai-budget-alerts"
+method  = "POST"
+headers = { Authorization = "Bearer ${INTERNAL_TOKEN}", Content-Type = "application/json" }
+events  = ["threshold_warning", "threshold_breach", "daily_summary"]</div>
+      </div>
+    </div>
+
+    <div class="payload-card">
+<pre><span class="json-key">"event"</span>:     <span class="json-string">"threshold_breach"</span>,
+<span class="json-key">"scope"</span>:     <span class="json-string">"team"</span>,
+<span class="json-key">"team"</span>:      <span class="json-string">"marketing"</span>,
+<span class="json-key">"provider"</span>:  <span class="json-string">"openai"</span>,
+<span class="json-key">"threshold"</span>: <span class="json-number">100</span>,
+<span class="json-key">"current"</span>:   <span class="json-number">34.20</span>,
+<span class="json-key">"limit"</span>:     <span class="json-number">30.00</span>,
+<span class="json-key">"period"</span>:    <span class="json-string">"daily"</span>,
+<span class="json-key">"timestamp"</span>: <span class="json-string">"2026-04-08T14:15:03Z"</span>,
+<span class="json-key">"action"</span>:    <span class="json-string">"notify"</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<div class="cta-section">
+  <h2>Stop reconciling invoices after the fact</h2>
+  <p>PowerGrabber AI gives finance teams real-time budget visibility across every AI provider and every team.</p>
+  <a href="index.html" class="cta-btn">Learn More</a>
+</div>
+
+<footer>
+  <p><a href="index.html">PowerGrabber AI</a> &middot; Budget alerts for AI spend</p>
+</footer>
+
+</body>
+</html>

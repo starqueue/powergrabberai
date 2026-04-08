@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From ChatGPT to Cohere: Map Your AI Attack Surface — PowerGrabber AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0a;
+  color: #d4d4d4;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+a { color: #ef4444; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.back-link {
+  position: fixed; top: 20px; left: 24px; z-index: 100;
+  background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.3);
+  padding: 8px 18px; border-radius: 6px; font-size: 14px; color: #ef4444;
+  backdrop-filter: blur(8px); transition: background 0.2s;
+}
+.back-link:hover { background: rgba(220,38,38,0.2); text-decoration: none; }
+
+header {
+  text-align: center; padding: 100px 24px 60px;
+  background: radial-gradient(ellipse at 50% 20%, rgba(220,38,38,0.08) 0%, transparent 50%);
+}
+header .tag {
+  display: inline-block; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3);
+  color: #ef4444; padding: 5px 14px; border-radius: 4px;
+  font-family: 'Share Tech Mono', monospace; font-size: 12px;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+}
+header h1 {
+  font-family: 'Share Tech Mono', monospace; font-size: 42px; font-weight: 400;
+  color: #fff; max-width: 780px; margin: 0 auto 16px; line-height: 1.2;
+}
+header h1 span { color: #dc2626; }
+header p.sub { font-size: 18px; color: #737373; max-width: 620px; margin: 0 auto; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+section { padding: 64px 0; }
+section + section { border-top: 1px solid rgba(220,38,38,0.08); }
+h2 {
+  font-family: 'Share Tech Mono', monospace; font-size: 24px; color: #fff;
+  margin-bottom: 8px;
+}
+.section-lead { color: #737373; font-size: 15px; margin-bottom: 36px; max-width: 700px; }
+
+/* Attack Surface Map */
+.surface-map {
+  position: relative; background: rgba(20,20,20,0.8); border: 1px solid rgba(220,38,38,0.15);
+  border-radius: 12px; padding: 40px; overflow: hidden;
+}
+.surface-map::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 25% 35%, rgba(220,38,38,0.04) 0%, transparent 40%),
+    radial-gradient(circle at 75% 65%, rgba(220,38,38,0.03) 0%, transparent 40%);
+}
+.map-legend {
+  display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; position: relative; z-index: 1;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 8px; font-size: 12px; color: #737373;
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.ld-source { background: #3b82f6; }
+.ld-provider { background: #dc2626; }
+.ld-egress { border: 2px solid #dc2626; background: none; }
+
+/* Source nodes (left) */
+.map-flow {
+  display: grid; grid-template-columns: 200px 1fr 200px; gap: 24px;
+  align-items: center; position: relative; z-index: 1;
+}
+.source-col, .provider-col { display: flex; flex-direction: column; gap: 12px; }
+.flow-lines { position: relative; min-height: 500px; }
+
+.source-node, .provider-node {
+  padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  position: relative;
+}
+.source-node {
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25);
+  color: #93c5fd; text-align: right;
+}
+.provider-node {
+  background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.25);
+  color: #fca5a5; text-align: left;
+}
+.provider-node .req-count {
+  font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #dc2626;
+  display: block; margin-top: 2px;
+}
+.provider-node .threat-indicator {
+  position: absolute; top: -4px; right: -4px; width: 10px; height: 10px;
+  background: #dc2626; border-radius: 50%; border: 2px solid #0a0a0a;
+}
+
+/* SVG flow lines */
+.flow-svg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
+.flow-svg line {
+  stroke: rgba(220,38,38,0.15); stroke-width: 1;
+  stroke-dasharray: 4 4; animation: flowDash 15s linear infinite;
+}
+.flow-svg line.active { stroke: rgba(220,38,38,0.4); stroke-width: 2; }
+@keyframes flowDash { to { stroke-dashoffset: -120; } }
+
+/* Provider Coverage Grid */
+.provider-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
+}
+.provider-card {
+  background: rgba(20,20,20,0.6); border: 1px solid rgba(220,38,38,0.1);
+  border-radius: 8px; padding: 16px; text-align: center;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.provider-card:hover { border-color: rgba(220,38,38,0.4); transform: translateY(-2px); }
+.provider-card .p-name {
+  font-family: 'Share Tech Mono', monospace; font-size: 14px; color: #fff;
+  margin-bottom: 4px;
+}
+.provider-card .p-endpoints {
+  font-size: 11px; color: #737373;
+}
+.provider-card .p-status {
+  display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+}
+.ps-detected { background: rgba(220,38,38,0.12); color: #ef4444; }
+.ps-monitored { background: rgba(34,197,94,0.1); color: #4ade80; }
+
+/* Data Flow Table */
+.flow-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  background: rgba(20,20,20,0.4); border: 1px solid rgba(220,38,38,0.1);
+  border-radius: 10px; overflow: hidden;
+}
+.flow-table thead th {
+  background: rgba(220,38,38,0.06); color: #ef4444; padding: 12px 16px;
+  text-align: left; font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+  border-bottom: 1px solid rgba(220,38,38,0.15);
+}
+.flow-table tbody td {
+  padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03);
+  vertical-align: top;
+}
+.flow-table tbody tr:hover { background: rgba(220,38,38,0.03); }
+.flow-table code {
+  font-family: 'Share Tech Mono', monospace; font-size: 12px;
+  color: #d4d4d4;
+}
+
+/* Usage type badges */
+.usage-type {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+}
+.ut-web { background: rgba(59,130,246,0.12); color: #60a5fa; }
+.ut-api { background: rgba(220,38,38,0.12); color: #ef4444; }
+.ut-coding { background: rgba(168,85,247,0.12); color: #c084fc; }
+
+/* Risk indicators */
+.risk-bar {
+  display: flex; gap: 2px; align-items: center;
+}
+.risk-seg {
+  width: 6px; height: 16px; border-radius: 2px;
+}
+.risk-low { background: rgba(34,197,94,0.4); }
+.risk-med { background: rgba(245,158,11,0.5); }
+.risk-high { background: rgba(220,38,38,0.6); }
+.risk-crit { background: #dc2626; }
+
+/* Third party risk section */
+.risk-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.risk-card {
+  background: rgba(20,20,20,0.5); border: 1px solid rgba(220,38,38,0.1);
+  border-radius: 10px; padding: 24px; transition: border-color 0.3s;
+}
+.risk-card:hover { border-color: rgba(220,38,38,0.3); }
+.risk-card h3 {
+  font-family: 'Share Tech Mono', monospace; font-size: 15px; color: #fff;
+  margin-bottom: 10px;
+}
+.risk-card p { font-size: 13px; color: #737373; }
+.risk-card .highlight {
+  margin-top: 12px; padding: 10px 14px; background: rgba(220,38,38,0.06);
+  border-left: 3px solid #dc2626; border-radius: 4px;
+  font-size: 13px; color: #fca5a5;
+}
+
+/* Distinction section */
+.distinction-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.distinction-card {
+  background: rgba(20,20,20,0.4); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 24px; text-align: center;
+}
+.distinction-card .d-icon {
+  font-size: 28px; margin-bottom: 12px;
+}
+.distinction-card h4 {
+  font-family: 'Share Tech Mono', monospace; font-size: 14px; color: #fff;
+  margin-bottom: 6px;
+}
+.distinction-card p { font-size: 13px; color: #737373; }
+.distinction-card .d-type {
+  display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 4px;
+  font-size: 12px; font-weight: 600;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; padding: 32px 0;
+}
+.stat-item {
+  text-align: center; padding: 20px; background: rgba(220,38,38,0.04);
+  border: 1px solid rgba(220,38,38,0.1); border-radius: 10px;
+}
+.stat-item .stat-num {
+  font-family: 'Share Tech Mono', monospace; font-size: 36px; color: #dc2626;
+  font-weight: 400;
+}
+.stat-item .stat-label { font-size: 13px; color: #737373; margin-top: 4px; }
+
+footer {
+  text-align: center; padding: 48px 24px;
+  border-top: 1px solid rgba(220,38,38,0.1);
+  color: #525252; font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  header h1 { font-size: 28px; }
+  .map-flow { grid-template-columns: 1fr; }
+  .flow-lines { display: none; }
+  .source-node { text-align: left; }
+  .distinction-grid { grid-template-columns: 1fr; }
+  .flow-table { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">Back to PowerGrabber AI</a>
+
+<header>
+  <div class="tag">// red team</div>
+  <h1>From ChatGPT to Cohere: Map Your AI <span>Attack Surface</span></h1>
+  <p class="sub">Every AI endpoint is an egress point for sensitive data. Every provider relationship is third-party risk. PowerGrabber AI maps them all.</p>
+</header>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">AI Providers Detected</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">47</div>
+      <div class="stat-label">Unique Endpoints Tracked</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Active Egress Channels</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Unmanaged Providers</div>
+    </div>
+  </div>
+
+  <!-- Attack Surface Map -->
+  <section>
+    <h2>// DATA FLOW MAP</h2>
+    <p class="section-lead">Which applications and tabs are sending data to which AI providers? Every line is an observed connection. Every number is a real request count.</p>
+
+    <div class="surface-map">
+      <div class="map-legend">
+        <span class="legend-item"><span class="legend-dot ld-source"></span> Source Application</span>
+        <span class="legend-item"><span class="legend-dot ld-provider"></span> AI Provider</span>
+        <span class="legend-item"><span class="legend-dot ld-egress"></span> Threat Indicator</span>
+      </div>
+
+      <div class="map-flow">
+        <div class="source-col">
+          <div class="source-node">Cursor IDE</div>
+          <div class="source-node">ChatGPT Tab</div>
+          <div class="source-node">Internal CRM</div>
+          <div class="source-node">Claude Code</div>
+          <div class="source-node">Slack + AI Bot</div>
+          <div class="source-node">Jupyter Notebook</div>
+          <div class="source-node">VS Code + Copilot</div>
+          <div class="source-node">Perplexity Tab</div>
+        </div>
+
+        <div class="flow-lines">
+          <svg class="flow-svg" viewBox="0 0 400 500" preserveAspectRatio="none">
+            <line x1="0" y1="30" x2="400" y2="20" />
+            <line x1="0" y1="30" x2="400" y2="60" class="active" />
+            <line x1="0" y1="90" x2="400" y2="20" class="active" />
+            <line x1="0" y1="150" x2="400" y2="20" />
+            <line x1="0" y1="150" x2="400" y2="180" />
+            <line x1="0" y1="210" x2="400" y2="100" class="active" />
+            <line x1="0" y1="210" x2="400" y2="140" />
+            <line x1="0" y1="270" x2="400" y2="20" />
+            <line x1="0" y1="270" x2="400" y2="260" />
+            <line x1="0" y1="330" x2="400" y2="220" />
+            <line x1="0" y1="330" x2="400" y2="300" />
+            <line x1="0" y1="330" x2="400" y2="340" />
+            <line x1="0" y1="390" x2="400" y2="20" />
+            <line x1="0" y1="390" x2="400" y2="180" />
+            <line x1="0" y1="450" x2="400" y2="420" />
+          </svg>
+        </div>
+
+        <div class="provider-col">
+          <div class="provider-node">
+            OpenAI
+            <span class="req-count">2,847 req/day</span>
+            <span class="threat-indicator"></span>
+          </div>
+          <div class="provider-node">
+            Anthropic
+            <span class="req-count">1,923 req/day</span>
+          </div>
+          <div class="provider-node">
+            Google AI
+            <span class="req-count">412 req/day</span>
+          </div>
+          <div class="provider-node">
+            Cohere
+            <span class="req-count">89 req/day</span>
+            <span class="threat-indicator"></span>
+          </div>
+          <div class="provider-node">
+            Mistral
+            <span class="req-count">156 req/day</span>
+          </div>
+          <div class="provider-node">
+            HuggingFace
+            <span class="req-count">203 req/day</span>
+          </div>
+          <div class="provider-node">
+            Groq
+            <span class="req-count">67 req/day</span>
+            <span class="threat-indicator"></span>
+          </div>
+          <div class="provider-node">
+            Together AI
+            <span class="req-count">34 req/day</span>
+          </div>
+          <div class="provider-node">
+            Perplexity
+            <span class="req-count">178 req/day</span>
+          </div>
+          <div class="provider-node">
+            Fireworks
+            <span class="req-count">12 req/day</span>
+            <span class="threat-indicator"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Provider Detection Coverage -->
+  <section>
+    <h2>// ENDPOINT DETECTION COVERAGE</h2>
+    <p class="section-lead">PowerGrabber AI detects traffic to 10+ AI providers by matching endpoint patterns, authentication headers, and request signatures.</p>
+
+    <div class="provider-grid">
+      <div class="provider-card">
+        <div class="p-name">OpenAI</div>
+        <div class="p-endpoints">api.openai.com +3</div>
+        <span class="p-status ps-detected">DETECTED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Anthropic</div>
+        <div class="p-endpoints">api.anthropic.com +1</div>
+        <span class="p-status ps-monitored">MONITORED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Google AI</div>
+        <div class="p-endpoints">generativelanguage.googleapis.com</div>
+        <span class="p-status ps-monitored">MONITORED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Cohere</div>
+        <div class="p-endpoints">api.cohere.ai +1</div>
+        <span class="p-status ps-detected">DETECTED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Mistral</div>
+        <div class="p-endpoints">api.mistral.ai</div>
+        <span class="p-status ps-monitored">MONITORED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">HuggingFace</div>
+        <div class="p-endpoints">api-inference.huggingface.co</div>
+        <span class="p-status ps-monitored">MONITORED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Groq</div>
+        <div class="p-endpoints">api.groq.com</div>
+        <span class="p-status ps-detected">DETECTED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Together</div>
+        <div class="p-endpoints">api.together.xyz</div>
+        <span class="p-status ps-monitored">MONITORED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Perplexity</div>
+        <div class="p-endpoints">api.perplexity.ai +1</div>
+        <span class="p-status ps-monitored">MONITORED</span>
+      </div>
+      <div class="provider-card">
+        <div class="p-name">Fireworks</div>
+        <div class="p-endpoints">api.fireworks.ai</div>
+        <span class="p-status ps-detected">DETECTED</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Flow Detail Table -->
+  <section>
+    <h2>// DETAILED DATA FLOWS</h2>
+    <p class="section-lead">Full breakdown: source application, destination provider, request volume, and usage classification.</p>
+
+    <table class="flow-table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Provider</th>
+          <th>Endpoint</th>
+          <th>Req/Day</th>
+          <th>Usage Type</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cursor IDE</td>
+          <td>OpenAI</td>
+          <td><code>api.openai.com/v1/chat/completions</code></td>
+          <td>1,248</td>
+          <td><span class="usage-type ut-coding">Coding Tool</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-med"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Cursor IDE</td>
+          <td>Anthropic</td>
+          <td><code>api.anthropic.com/v1/messages</code></td>
+          <td>312</td>
+          <td><span class="usage-type ut-coding">Coding Tool</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>ChatGPT Tab</td>
+          <td>OpenAI</td>
+          <td><code>chatgpt.com/backend-api/conversation</code></td>
+          <td>847</td>
+          <td><span class="usage-type ut-web">Web UI</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-high"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Internal CRM</td>
+          <td>OpenAI</td>
+          <td><code>api.openai.com/v1/embeddings</code></td>
+          <td>432</td>
+          <td><span class="usage-type ut-api">API</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Claude Code</td>
+          <td>Anthropic</td>
+          <td><code>api.anthropic.com/v1/messages</code></td>
+          <td>1,611</td>
+          <td><span class="usage-type ut-coding">Coding Tool</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-med"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Jupyter Notebook</td>
+          <td>HuggingFace</td>
+          <td><code>api-inference.huggingface.co/models/</code></td>
+          <td>203</td>
+          <td><span class="usage-type ut-api">API</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-high"></span><span class="risk-seg risk-high"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Jupyter Notebook</td>
+          <td>Groq</td>
+          <td><code>api.groq.com/openai/v1/chat/completions</code></td>
+          <td>67</td>
+          <td><span class="usage-type ut-api">API</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-crit"></span><span class="risk-seg risk-high"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Jupyter Notebook</td>
+          <td>Together</td>
+          <td><code>api.together.xyz/v1/completions</code></td>
+          <td>34</td>
+          <td><span class="usage-type ut-api">API</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-crit"></span><span class="risk-seg risk-high"></span><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Perplexity Tab</td>
+          <td>Perplexity</td>
+          <td><code>www.perplexity.ai/api/query</code></td>
+          <td>178</td>
+          <td><span class="usage-type ut-web">Web UI</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-med"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span><span class="risk-seg risk-low"></span></div></td>
+        </tr>
+        <tr>
+          <td>Slack + AI Bot</td>
+          <td>Cohere</td>
+          <td><code>api.cohere.ai/v1/generate</code></td>
+          <td>89</td>
+          <td><span class="usage-type ut-api">API</span></td>
+          <td><div class="risk-bar"><span class="risk-seg risk-crit"></span><span class="risk-seg risk-high"></span><span class="risk-seg risk-high"></span><span class="risk-seg risk-med"></span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Usage Type Distinction -->
+  <section>
+    <h2>// USAGE CLASSIFICATION</h2>
+    <p class="section-lead">Not all AI usage is the same. The billing model, data exposure, and risk profile differ significantly.</p>
+
+    <div class="distinction-grid">
+      <div class="distinction-card">
+        <div class="d-icon" style="color:#60a5fa;">&#x1f310;</div>
+        <h4>Web UI Usage</h4>
+        <p>Browser-based access via subscription (ChatGPT Plus, Perplexity Pro). Data enters via text input and file upload. Provider retains conversation history.</p>
+        <span class="d-type ut-web">Subscription billing</span>
+      </div>
+      <div class="distinction-card">
+        <div class="d-icon" style="color:#ef4444;">&#x2699;</div>
+        <h4>API Usage</h4>
+        <p>Programmatic access via API keys. Per-token billing. Data enters via HTTP POST. Provider may or may not retain data depending on terms and settings.</p>
+        <span class="d-type ut-api">Per-token billing</span>
+      </div>
+      <div class="distinction-card">
+        <div class="d-icon" style="color:#c084fc;">&#x1f4bb;</div>
+        <h4>Coding Tool Usage</h4>
+        <p>IDE extensions and CLI tools (Cursor, Copilot, Claude Code). Sends code context automatically. Mixed billing: some subscription, some per-token. Highest volume of sensitive data.</p>
+        <span class="d-type ut-coding">Mixed billing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Third-Party Risk -->
+  <section>
+    <h2>// THIRD-PARTY RISK ASSESSMENT</h2>
+    <p class="section-lead">Every AI provider is a third party processing your data. Red teams need to enumerate this risk surface completely.</p>
+
+    <div class="risk-cards">
+      <div class="risk-card">
+        <h3>Data Egress Channels</h3>
+        <p>Each AI endpoint is a potential exfiltration path. A compromised tool or malicious prompt could route sensitive data to any provider the tool is configured to contact.</p>
+        <div class="highlight">6 active egress channels detected. 3 providers not in your vendor management program.</div>
+      </div>
+      <div class="risk-card">
+        <h3>Shadow AI Providers</h3>
+        <p>Groq, Together AI, and Fireworks were detected in Jupyter notebook traffic but do not appear in your approved vendor list. These are shadow AI relationships created by individual developers.</p>
+        <div class="highlight">3 unapproved providers processing corporate data via personal API keys.</div>
+      </div>
+      <div class="risk-card">
+        <h3>Cross-Provider Data Correlation</h3>
+        <p>The same code snippet was sent to OpenAI (via Cursor), Anthropic (via Claude Code), and Groq (via Jupyter) within 4 minutes. Each provider now has a copy. Data minimization is impossible without visibility.</p>
+        <div class="highlight">Sensitive data replicated across 3 providers in a single coding session.</div>
+      </div>
+      <div class="risk-card">
+        <h3>Vendor Concentration Risk</h3>
+        <p>OpenAI receives 48% of all AI traffic. A service disruption, policy change, or data breach at OpenAI would affect your most critical development workflows.</p>
+        <div class="highlight">Single-provider dependency: 2,847 req/day to OpenAI across 3 source apps.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>PowerGrabber AI &mdash; Attack surface mapping for red teams and offensive security.</p>
+  <p style="margin-top: 8px;"><a href="index.html">Back to Home</a></p>
+</footer>
+
+</body>
+</html>

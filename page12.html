@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerGrabber — The AI Spend Report Your CFO Wants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#fafafa;color:#1a1a2e}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 48px;background:#fff;border-bottom:1px solid #e5e7eb}
+.logo{font-weight:700;font-size:1.1rem;color:#4f46e5}
+nav a{color:#6366f1;text-decoration:none;font-size:.85rem}
+.hero{max-width:800px;margin:0 auto;padding:80px 32px 48px;text-align:center}
+.hero .chip{display:inline-block;background:#eef2ff;color:#4f46e5;padding:6px 16px;border-radius:50px;font-size:.8rem;font-weight:600;margin-bottom:24px}
+.hero h1{font-size:clamp(2rem,4.5vw,3rem);font-weight:700;line-height:1.2;margin-bottom:16px}
+.hero h1 span{color:#4f46e5}
+.hero p{font-size:1.05rem;line-height:1.7;color:#64748b;max-width:600px;margin:0 auto}
+.report-card{max-width:700px;margin:48px auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid #e5e7eb;overflow:hidden}
+.report-header{background:#f8fafc;padding:16px 24px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:#64748b}
+.report-header strong{color:#1a1a2e}
+.report-body{padding:24px}
+.spend-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f1f5f9}
+.spend-row:last-child{border-bottom:none}
+.spend-provider{font-weight:600;color:#1a1a2e;display:flex;align-items:center;gap:8px}
+.spend-dot{width:10px;height:10px;border-radius:50%}
+.dot-openai{background:#10b981}
+.dot-anthropic{background:#8b5cf6}
+.dot-google{background:#3b82f6}
+.dot-cohere{background:#f59e0b}
+.dot-mistral{background:#ef4444}
+.spend-amount{font-family:'Space Mono',monospace;font-weight:700;font-size:1.1rem;color:#1a1a2e}
+.spend-meta{text-align:right}
+.spend-requests{font-size:.8rem;color:#94a3b8}
+.spend-trend{font-size:.75rem;font-weight:600;margin-top:2px}
+.trend-up{color:#ef4444}
+.trend-down{color:#10b981}
+.trend-stable{color:#94a3b8}
+.total-bar{background:#f8fafc;padding:16px 24px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center}
+.total-label{font-weight:600;color:#64748b}
+.total-amount{font-family:'Space Mono',monospace;font-weight:700;font-size:1.4rem;color:#4f46e5}
+.budget-bar{margin:8px 0;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}
+.budget-fill{height:100%;background:linear-gradient(90deg,#4f46e5,#6366f1);border-radius:4px;width:41%}
+.budget-text{font-size:.75rem;color:#94a3b8;text-align:right}
+.team-section{max-width:700px;margin:40px auto;padding:0 32px}
+.team-section h2{font-size:1.4rem;font-weight:700;margin-bottom:20px}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.team-card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:20px;display:flex;justify-content:space-between;align-items:center}
+.team-name{font-weight:600;font-size:.9rem}
+.team-cost{font-family:'Space Mono',monospace;font-weight:700;color:#4f46e5}
+.team-pct{font-size:.75rem;color:#94a3b8}
+.features{max-width:700px;margin:60px auto;padding:0 32px}
+.features h2{font-size:1.4rem;font-weight:700;margin-bottom:24px;text-align:center}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat-item{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:20px}
+.feat-item h3{font-size:.9rem;color:#4f46e5;margin-bottom:6px}
+.feat-item p{font-size:.85rem;color:#64748b;line-height:1.5}
+.cta{text-align:center;padding:80px 32px}
+.cta h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.cta h2 span{color:#4f46e5}
+.cta p{color:#64748b;margin-bottom:24px}
+.cta-btn{display:inline-block;background:#4f46e5;color:#fff;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:600;transition:all .3s}
+.cta-btn:hover{background:#4338ca}
+footer{text-align:center;padding:40px;color:#94a3b8;font-size:.85rem;border-top:1px solid #e5e7eb;background:#fff}
+footer a{color:#4f46e5;text-decoration:none}
+@media(max-width:640px){.team-grid,.feat-grid{grid-template-columns:1fr}nav{padding:16px 20px}}
+</style>
+</head>
+<body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Pages</a></nav>
+<section class="hero">
+<div class="chip">Financial Governance</div>
+<h1>The AI spend report <span>your CFO has been asking for</span></h1>
+<p>Nobody knows what your organisation spends on AI. PowerGrabber gives you a single view across every provider, every tool, every team — estimated from browser traffic, no provider dashboard access needed.</p>
+</section>
+<div class="report-card">
+<div class="report-header"><span>AI Spend Report &mdash; <strong>2026-04-08</strong></span><span>Daily</span></div>
+<div class="report-body">
+<div class="spend-row"><div class="spend-provider"><span class="spend-dot dot-openai"></span>OpenAI</div><div class="spend-meta"><div class="spend-amount">$48.32</div><div class="spend-requests">2,847 requests &middot; 4.1M tokens est.</div><div class="spend-trend trend-up">&uarr; +23% vs yesterday</div></div></div>
+<div class="spend-row"><div class="spend-provider"><span class="spend-dot dot-anthropic"></span>Anthropic</div><div class="spend-meta"><div class="spend-amount">$31.45</div><div class="spend-requests">1,203 requests &middot; 1.9M tokens est.</div><div class="spend-trend trend-down">&darr; -8%</div></div></div>
+<div class="spend-row"><div class="spend-provider"><span class="spend-dot dot-google"></span>Google AI</div><div class="spend-meta"><div class="spend-amount">$1.12</div><div class="spend-requests">456 requests &middot; 234K tokens est.</div><div class="spend-trend trend-stable">&bull; stable</div></div></div>
+<div class="spend-row"><div class="spend-provider"><span class="spend-dot dot-cohere"></span>Cohere</div><div class="spend-meta"><div class="spend-amount">$0.34</div><div class="spend-requests">89 requests &middot; 45K tokens est.</div><div class="spend-trend trend-up">&uarr; new this week</div></div></div>
+</div>
+<div class="total-bar">
+<div><div class="total-label">Daily Total (estimated)</div><div class="budget-bar"><div class="budget-fill"></div></div><div class="budget-text">$81.23 / $200.00 daily budget (41%)</div></div>
+<div class="total-amount">$81.23</div>
+</div>
+</div>
+<section class="team-section">
+<h2>Spend by team</h2>
+<div class="team-grid">
+<div class="team-card"><div><div class="team-name">Engineering</div><div class="team-pct">Cursor + Copilot + Claude Code</div></div><div class="team-cost">$52.10</div></div>
+<div class="team-card"><div><div class="team-name">Data Science</div><div class="team-pct">Anthropic + Google via Vertex</div></div><div class="team-cost">$18.30</div></div>
+<div class="team-card"><div><div class="team-name">Marketing</div><div class="team-pct">ChatGPT web UI + API</div></div><div class="team-cost">$7.40</div></div>
+<div class="team-card"><div><div class="team-name">Product</div><div class="team-pct">Internal CRM AI features</div></div><div class="team-cost">$3.43</div></div>
+</div>
+</section>
+<section class="features">
+<h2>How it works</h2>
+<div class="feat-grid">
+<div class="feat-item"><h3>Token delta tracking</h3><p>Estimates token consumption from rate-limit header deltas between consecutive API responses. No request body access needed.</p></div>
+<div class="feat-item"><h3>Configurable pricing table</h3><p>Ships with current pricing for OpenAI, Anthropic, Google, Cohere, Mistral. User-editable TOML file for custom models.</p></div>
+<div class="feat-item"><h3>Budget alerts</h3><p>Per-global, per-provider, per-team daily/weekly/monthly thresholds. Alerts at 50%, 75%, 90%, 100%.</p></div>
+<div class="feat-item"><h3>Finance-ready export</h3><p>CSV for Excel/Sheets. JSONL for data warehouses. Webhook to Slack/PagerDuty on threshold breach.</p></div>
+</div>
+</section>
+<section class="cta">
+<h2>Stop guessing. <span>Start measuring.</span></h2>
+<p>Directionally accurate AI spend visibility — before the end-of-month invoice surprise.</p>
+<a href="#" class="cta-btn">Get Started</a>
+</section>
+<footer><a href="index.html">&larr; Back to all pages</a> &middot; PowerGrabber &mdash; AI compliance and monitoring</footer>
+</body>
+</html>

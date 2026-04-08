@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerGrabber AI — The AI Policy Engine</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:#0c1222;
+  color:#c4cad6;
+  min-height:100vh;
+  line-height:1.7;
+  background-image:
+    linear-gradient(rgba(34,211,238,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,.03) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 48px;
+  background:rgba(12,18,34,.9);
+  border-bottom:1px solid #1a2744;
+  backdrop-filter:blur(8px);
+  position:sticky;top:0;z-index:100;
+}
+.logo{font-family:'Fira Code',monospace;font-weight:700;font-size:1rem;color:#22d3ee}
+nav a{color:#22d3ee;text-decoration:none;font-size:.85rem;opacity:.7;transition:opacity .2s}
+nav a:hover{opacity:1}
+
+.hero{
+  max-width:860px;margin:0 auto;padding:80px 32px 40px;text-align:center;
+}
+.spec-badge{
+  display:inline-block;font-family:'Fira Code',monospace;font-size:.7rem;
+  color:#22d3ee;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid #22d3ee33;padding:6px 18px;border-radius:2px;margin-bottom:28px;
+  background:rgba(34,211,238,.05);
+}
+.hero h1{
+  font-family:'Inter',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:700;
+  color:#f0f4f8;line-height:1.2;margin-bottom:16px;
+}
+.hero h1 span{color:#22d3ee}
+.hero p{
+  font-size:1rem;color:#7a8ba8;max-width:640px;margin:0 auto;line-height:1.8;
+}
+
+.section{max-width:920px;margin:0 auto;padding:0 32px 64px}
+.section-title{
+  font-size:.7rem;letter-spacing:3px;text-transform:uppercase;
+  color:#22d3ee;margin-bottom:12px;font-family:'Fira Code',monospace;
+}
+.section h2{
+  font-size:1.6rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;
+}
+.section .subtitle{font-size:.95rem;color:#607490;margin-bottom:32px;line-height:1.7}
+
+.policy-block{
+  background:#080d1a;border:1px solid #1a2744;border-radius:8px;
+  overflow:hidden;margin-bottom:24px;
+  box-shadow:0 0 60px rgba(34,211,238,.03);
+}
+.policy-header{
+  background:#0f1730;padding:12px 20px;border-bottom:1px solid #1a2744;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.policy-header .filename{
+  font-family:'Fira Code',monospace;font-size:.78rem;color:#22d3ee;
+}
+.policy-header .lang{
+  font-family:'Fira Code',monospace;font-size:.65rem;color:#4a6080;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.policy-code{
+  padding:20px 24px;font-family:'Fira Code',monospace;font-size:.8rem;
+  line-height:2;overflow-x:auto;
+}
+.policy-code .comment{color:#4a6080}
+.policy-code .key{color:#22d3ee}
+.policy-code .string{color:#a5f3fc}
+.policy-code .bracket{color:#64748b}
+.policy-code .number{color:#fbbf24}
+.policy-code .bool{color:#f472b6}
+.policy-code .heading{color:#22d3ee;font-weight:600}
+
+.rule-explanation{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;
+  margin:32px 0;
+}
+.rule-card{
+  background:#080d1a;border:1px solid #1a2744;border-radius:8px;
+  padding:20px 24px;border-left:3px solid #22d3ee;
+}
+.rule-card h3{
+  font-size:.85rem;font-weight:600;color:#e2e8f0;margin-bottom:8px;
+  font-family:'Fira Code',monospace;
+}
+.rule-card p{font-size:.82rem;color:#607490;line-height:1.7}
+
+.flow-diagram{
+  background:#080d1a;border:1px solid #1a2744;border-radius:8px;padding:32px;
+  margin:32px 0;text-align:center;
+}
+.flow-title{
+  font-family:'Fira Code',monospace;font-size:.7rem;color:#4a6080;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;
+}
+.flow-steps{
+  display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;
+}
+.flow-node{
+  background:#0f1730;border:1px solid #1a2744;border-radius:6px;
+  padding:14px 20px;font-size:.82rem;color:#c4cad6;min-width:130px;
+}
+.flow-node.active{border-color:#22d3ee;color:#22d3ee}
+.flow-arrow{color:#22d3ee;padding:0 8px;font-size:1.2rem}
+
+.json-block{
+  background:#080d1a;border:1px solid #1a2744;border-radius:8px;
+  overflow:hidden;margin:24px 0;
+}
+.json-header{
+  background:#0f1730;padding:12px 20px;border-bottom:1px solid #1a2744;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.json-header .filename{font-family:'Fira Code',monospace;font-size:.78rem;color:#22d3ee}
+.json-header .tag{
+  font-size:.6rem;padding:3px 10px;border-radius:3px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.tag-alert{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
+.tag-block{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
+.tag-info{background:rgba(34,211,238,.12);color:#22d3ee;border:1px solid rgba(34,211,238,.25)}
+.json-body{
+  padding:20px 24px;font-family:'Fira Code',monospace;font-size:.78rem;line-height:1.9;overflow-x:auto;
+}
+.json-body .jk{color:#22d3ee}
+.json-body .js{color:#a5f3fc}
+.json-body .jn{color:#fbbf24}
+.json-body .jb{color:#f472b6}
+.json-body .jp{color:#64748b}
+
+.cta{
+  text-align:center;padding:64px 32px 80px;
+  border-top:1px solid #1a2744;
+}
+.cta h2{font-size:1.6rem;font-weight:700;color:#f0f4f8;margin-bottom:12px}
+.cta p{color:#607490;margin-bottom:32px}
+.cta-btn{
+  display:inline-block;background:#22d3ee;color:#0c1222;
+  padding:14px 36px;border-radius:4px;text-decoration:none;
+  font-family:'Fira Code',monospace;font-weight:700;font-size:.85rem;
+  transition:background .2s;letter-spacing:.5px;
+}
+.cta-btn:hover{background:#06b6d4}
+
+footer{
+  text-align:center;padding:32px;border-top:1px solid #1a2744;
+  font-size:.75rem;color:#3a4f6b;
+}
+footer a{color:#22d3ee;text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">// PowerGrabber.policy</div>
+  <a href="index.html">&larr; Back to Home</a>
+</nav>
+
+<div class="hero">
+  <div class="spec-badge">Policy Engine Specification</div>
+  <h1>The <span>AI Policy Engine</span></h1>
+  <p>Define rules in TOML. PowerGrabber evaluates every captured AI request against your policy set in real time. Block, alert, log, or rate-limit &mdash; per provider, per tool, per schedule.</p>
+</div>
+
+<div class="section">
+  <div class="section-title">How It Works</div>
+  <h2>Every event. Every rule. Every time.</h2>
+  <p class="subtitle">When PowerGrabber intercepts an AI API request, it extracts metadata (provider, model, tool, user, timestamp, token count) and runs it through your complete policy rule set. Matching rules trigger actions: block, alert, log, or rate-limit.</p>
+
+  <div class="flow-diagram">
+    <div class="flow-title">Event Evaluation Pipeline</div>
+    <div class="flow-steps">
+      <div class="flow-node">AI Request<br><span style="font-size:.7rem;color:#4a6080">intercepted</span></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node">Extract<br><span style="font-size:.7rem;color:#4a6080">metadata</span></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node active">Evaluate<br><span style="font-size:.7rem;color:#4a6080">all rules</span></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node">Match?<br><span style="font-size:.7rem;color:#4a6080">yes / no</span></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node">Action<br><span style="font-size:.7rem;color:#4a6080">block / alert / log</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Policy Rules</div>
+  <h2>TOML Policy Syntax</h2>
+  <p class="subtitle">Five real-world rules covering the most common governance scenarios. Copy these into your <code style="color:#22d3ee">powergrabber.policy.toml</code> and customise.</p>
+
+  <div class="policy-block">
+    <div class="policy-header">
+      <span class="filename">powergrabber.policy.toml</span>
+      <span class="lang">TOML</span>
+    </div>
+    <div class="policy-code">
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="comment"># Rule 1: Block unapproved AI providers</span>
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="heading">[[rule]]</span>
+<span class="key">name</span>       = <span class="string">"block-unapproved-providers"</span>
+<span class="key">description</span> = <span class="string">"Only allow OpenAI and Anthropic. Block everything else."</span>
+<span class="key">condition</span>  = <span class="string">"provider NOT IN ['openai', 'anthropic']"</span>
+<span class="key">action</span>     = <span class="string">"block"</span>
+<span class="key">severity</span>   = <span class="string">"critical"</span>
+<span class="key">notify</span>     = <span class="bracket">[</span><span class="string">"slack:#security-alerts"</span>, <span class="string">"webhook:pagerduty"</span><span class="bracket">]</span>
+
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="comment"># Rule 2: Rate-limit alerts per tool</span>
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="heading">[[rule]]</span>
+<span class="key">name</span>       = <span class="string">"rate-limit-per-tool"</span>
+<span class="key">description</span> = <span class="string">"Alert if any single tool exceeds 500 requests in 10 minutes."</span>
+<span class="key">condition</span>  = <span class="string">"tool.request_count(window='10m') > 500"</span>
+<span class="key">action</span>     = <span class="string">"alert"</span>
+<span class="key">severity</span>   = <span class="string">"high"</span>
+<span class="key">cooldown</span>   = <span class="string">"15m"</span>
+<span class="key">notify</span>     = <span class="bracket">[</span><span class="string">"slack:#ai-ops"</span><span class="bracket">]</span>
+
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="comment"># Rule 3: Block AI requests from healthcare-origin apps</span>
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="heading">[[rule]]</span>
+<span class="key">name</span>       = <span class="string">"healthcare-origin-block"</span>
+<span class="key">description</span> = <span class="string">"Block requests where the originating app handles PHI/ePHI."</span>
+<span class="key">condition</span>  = <span class="string">"tool.tag CONTAINS 'healthcare' AND provider.region != 'us-hipaa'"</span>
+<span class="key">action</span>     = <span class="string">"block"</span>
+<span class="key">severity</span>   = <span class="string">"critical"</span>
+<span class="key">log_body</span>   = <span class="bool">false</span>
+<span class="key">notify</span>     = <span class="bracket">[</span><span class="string">"slack:#compliance"</span>, <span class="string">"email:dpo@company.com"</span><span class="bracket">]</span>
+
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="comment"># Rule 4: After-hours detection</span>
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="heading">[[rule]]</span>
+<span class="key">name</span>       = <span class="string">"after-hours-ai-usage"</span>
+<span class="key">description</span> = <span class="string">"Flag AI usage outside business hours (potential automation/exfil)."</span>
+<span class="key">condition</span>  = <span class="string">"event.time.hour NOT IN range(8, 18) AND event.day NOT IN ['Sat','Sun']"</span>
+<span class="key">action</span>     = <span class="string">"alert"</span>
+<span class="key">severity</span>   = <span class="string">"medium"</span>
+<span class="key">notify</span>     = <span class="bracket">[</span><span class="string">"log:after-hours.jsonl"</span><span class="bracket">]</span>
+
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="comment"># Rule 5: New tool detection</span>
+<span class="comment"># ──────────────────────────────────────────</span>
+<span class="heading">[[rule]]</span>
+<span class="key">name</span>       = <span class="string">"new-tool-alert"</span>
+<span class="key">description</span> = <span class="string">"Alert when a previously unseen tool binary makes its first AI call."</span>
+<span class="key">condition</span>  = <span class="string">"tool.binary NOT IN known_tools()"</span>
+<span class="key">action</span>     = <span class="string">"alert"</span>
+<span class="key">severity</span>   = <span class="string">"high"</span>
+<span class="key">auto_add</span>   = <span class="bool">false</span>
+<span class="key">notify</span>     = <span class="bracket">[</span><span class="string">"slack:#security-alerts"</span>, <span class="string">"webhook:siem"</span><span class="bracket">]</span>
+    </div>
+  </div>
+
+  <div class="rule-explanation">
+    <div class="rule-card">
+      <h3>block-unapproved-providers</h3>
+      <p>Maintains an allowlist of sanctioned AI providers. Any request to an unlisted provider (Cohere, Mistral, local LLMs) is blocked at the proxy and flagged to security.</p>
+    </div>
+    <div class="rule-card">
+      <h3>rate-limit-per-tool</h3>
+      <p>Sliding-window counter per tool binary. Catches runaway loops, accidental infinite retries, or automated scripts consuming tokens at abnormal velocity.</p>
+    </div>
+    <div class="rule-card">
+      <h3>healthcare-origin-block</h3>
+      <p>Tags from your CMDB identify healthcare applications. If one sends data to a non-HIPAA AI endpoint, the request is hard-blocked and compliance is notified immediately.</p>
+    </div>
+    <div class="rule-card">
+      <h3>after-hours-detection</h3>
+      <p>AI usage at 2 AM on a Tuesday is either automation or something unexpected. This rule creates a forensic log without blocking, letting SecOps investigate at their pace.</p>
+    </div>
+    <div class="rule-card">
+      <h3>new-tool-alert</h3>
+      <p>Shadow AI starts with "just trying this new tool." This rule fires the moment an unknown binary makes its first API call, giving your team instant visibility into tool sprawl.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Alert Output</div>
+  <h2>Example Alert Events</h2>
+  <p class="subtitle">When a rule matches, PowerGrabber emits structured JSON events. These integrate directly with your SIEM, Slack, PagerDuty, or any webhook endpoint.</p>
+
+  <div class="json-block">
+    <div class="json-header">
+      <span class="filename">alert: block-unapproved-providers</span>
+      <span class="tag tag-block">BLOCKED</span>
+    </div>
+    <div class="json-body">
+<span class="jp">{</span>
+  <span class="jk">"event_id"</span><span class="jp">:</span>    <span class="js">"evt_8f3a1b2c"</span><span class="jp">,</span>
+  <span class="jk">"timestamp"</span><span class="jp">:</span>   <span class="js">"2026-04-08T14:23:11Z"</span><span class="jp">,</span>
+  <span class="jk">"rule"</span><span class="jp">:</span>        <span class="js">"block-unapproved-providers"</span><span class="jp">,</span>
+  <span class="jk">"action"</span><span class="jp">:</span>      <span class="js">"block"</span><span class="jp">,</span>
+  <span class="jk">"severity"</span><span class="jp">:</span>    <span class="js">"critical"</span><span class="jp">,</span>
+  <span class="jk">"provider"</span><span class="jp">:</span>    <span class="js">"cohere"</span><span class="jp">,</span>
+  <span class="jk">"endpoint"</span><span class="jp">:</span>    <span class="js">"https://api.cohere.ai/v1/generate"</span><span class="jp">,</span>
+  <span class="jk">"tool"</span><span class="jp">:</span>        <span class="js">"custom-cli"</span><span class="jp">,</span>
+  <span class="jk">"tool_pid"</span><span class="jp">:</span>    <span class="jn">48812</span><span class="jp">,</span>
+  <span class="jk">"user"</span><span class="jp">:</span>        <span class="js">"jdoe"</span><span class="jp">,</span>
+  <span class="jk">"notified"</span><span class="jp">:</span>    <span class="jp">[</span><span class="js">"slack:#security-alerts"</span><span class="jp">,</span> <span class="js">"webhook:pagerduty"</span><span class="jp">]</span>
+<span class="jp">}</span>
+    </div>
+  </div>
+
+  <div class="json-block">
+    <div class="json-header">
+      <span class="filename">alert: rate-limit-per-tool</span>
+      <span class="tag tag-alert">ALERT</span>
+    </div>
+    <div class="json-body">
+<span class="jp">{</span>
+  <span class="jk">"event_id"</span><span class="jp">:</span>    <span class="js">"evt_c91d4e7f"</span><span class="jp">,</span>
+  <span class="jk">"timestamp"</span><span class="jp">:</span>   <span class="js">"2026-04-08T09:41:03Z"</span><span class="jp">,</span>
+  <span class="jk">"rule"</span><span class="jp">:</span>        <span class="js">"rate-limit-per-tool"</span><span class="jp">,</span>
+  <span class="jk">"action"</span><span class="jp">:</span>      <span class="js">"alert"</span><span class="jp">,</span>
+  <span class="jk">"severity"</span><span class="jp">:</span>    <span class="js">"high"</span><span class="jp">,</span>
+  <span class="jk">"tool"</span><span class="jp">:</span>        <span class="js">"cursor"</span><span class="jp">,</span>
+  <span class="jk">"request_count"</span><span class="jp">:</span> <span class="jn">523</span><span class="jp">,</span>
+  <span class="jk">"window"</span><span class="jp">:</span>      <span class="js">"10m"</span><span class="jp">,</span>
+  <span class="jk">"threshold"</span><span class="jp">:</span>   <span class="jn">500</span><span class="jp">,</span>
+  <span class="jk">"cooldown_until"</span><span class="jp">:</span> <span class="js">"2026-04-08T09:56:03Z"</span><span class="jp">,</span>
+  <span class="jk">"notified"</span><span class="jp">:</span>    <span class="jp">[</span><span class="js">"slack:#ai-ops"</span><span class="jp">]</span>
+<span class="jp">}</span>
+    </div>
+  </div>
+
+  <div class="json-block">
+    <div class="json-header">
+      <span class="filename">alert: new-tool-alert</span>
+      <span class="tag tag-info">NEW TOOL</span>
+    </div>
+    <div class="json-body">
+<span class="jp">{</span>
+  <span class="jk">"event_id"</span><span class="jp">:</span>    <span class="js">"evt_a47f8b21"</span><span class="jp">,</span>
+  <span class="jk">"timestamp"</span><span class="jp">:</span>   <span class="js">"2026-04-08T16:07:44Z"</span><span class="jp">,</span>
+  <span class="jk">"rule"</span><span class="jp">:</span>        <span class="js">"new-tool-alert"</span><span class="jp">,</span>
+  <span class="jk">"action"</span><span class="jp">:</span>      <span class="js">"alert"</span><span class="jp">,</span>
+  <span class="jk">"severity"</span><span class="jp">:</span>    <span class="js">"high"</span><span class="jp">,</span>
+  <span class="jk">"tool"</span><span class="jp">:</span>        <span class="js">"aider"</span><span class="jp">,</span>
+  <span class="jk">"tool_binary"</span><span class="jp">:</span> <span class="js">"/usr/local/bin/aider"</span><span class="jp">,</span>
+  <span class="jk">"tool_pid"</span><span class="jp">:</span>    <span class="jn">71204</span><span class="jp">,</span>
+  <span class="jk">"first_seen"</span><span class="jp">:</span>  <span class="jb">true</span><span class="jp">,</span>
+  <span class="jk">"provider"</span><span class="jp">:</span>    <span class="js">"anthropic"</span><span class="jp">,</span>
+  <span class="jk">"notified"</span><span class="jp">:</span>    <span class="jp">[</span><span class="js">"slack:#security-alerts"</span><span class="jp">,</span> <span class="js">"webhook:siem"</span><span class="jp">]</span>
+<span class="jp">}</span>
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <h2>Define your AI governance as code.</h2>
+  <p>TOML rules. Real-time evaluation. Structured alerts to the tools you already use.</p>
+  <a href="index.html" class="cta-btn">// explore PowerGrabber</a>
+</div>
+
+<footer>
+  PowerGrabber AI &mdash; Policy-as-code for AI governance. <a href="index.html">Home</a>
+</footer>
+
+</body>
+</html>
