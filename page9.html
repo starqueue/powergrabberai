@@ -3,504 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerGrabber — The Speed Demon</title>
+<title>PowerGrabber — LLM Certainty (Orange Racing)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Barlow:wght@300;400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+body{font-family:'Barlow',sans-serif;background:#0c0a09;color:#a8a29e}
+nav{padding:20px 48px;border-bottom:1px solid #292524;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#f97316;font-family:'Barlow',sans-serif;}
+nav a{color:#f97316;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#a8a29e;opacity:.5;border-bottom:1px solid #292524}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Barlow',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#fafaf9;margin-bottom:16px;}
+.hero h1 span{color:#f97316}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#a8a29e;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#f97316;color:#0c0a09;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #f9731633}
+.btn-ghost{background:transparent;color:#f97316;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #f97316;transition:all .3s}
+.btn-ghost:hover{background:#f9731611}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#f97316;margin-bottom:12px}
+h2{font-family:'Barlow',sans-serif;font-size:1.6rem;font-weight:700;color:#fafaf9;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#a8a29e;margin-bottom:14px}
+strong{color:#fafaf9}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #292524;color:#fafaf9;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:#1c1917;border:1px solid #292524;border-radius:4px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#f97316}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#f97316;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #292524}
+.steps li::before{content:counter(step)'.';color:#f97316;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#a8a29e;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:#1c1917;border:1px solid #292524;border-radius:4px;padding:22px}
+.team-card h3{color:#f97316;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:#1c1917;border:1px solid #292524;border-radius:4px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#f97316}
+.price-card h3{font-size:.7rem;font-weight:600;color:#f97316;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#fafaf9;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#a8a29e;opacity:.6}
+.price-card p{font-size:.8rem;color:#a8a29e;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #292524;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#f97316;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #292524;color:#a8a29e;opacity:.5;font-size:.85rem}
+footer a{color:#f97316;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-  body {
-    font-family: 'Barlow', sans-serif;
-    background: #0c0a09;
-    color: #d6d3d1;
-    overflow-x: hidden;
-  }
-
-  /* Racing stripes */
-  .stripes {
-    position: fixed;
-    top: 0; right: 0; bottom: 0;
-    width: 200px;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .stripe {
-    position: absolute;
-    right: 0;
-    width: 4px;
-    background: linear-gradient(to bottom, transparent, #f97316, transparent);
-    animation: raceDown 2s linear infinite;
-  }
-
-  .stripe:nth-child(1) { right: 20px; animation-delay: 0s; height: 100px; }
-  .stripe:nth-child(2) { right: 60px; animation-delay: 0.4s; height: 150px; }
-  .stripe:nth-child(3) { right: 100px; animation-delay: 0.8s; height: 80px; }
-  .stripe:nth-child(4) { right: 140px; animation-delay: 1.2s; height: 120px; }
-  .stripe:nth-child(5) { right: 180px; animation-delay: 0.6s; height: 90px; }
-
-  @keyframes raceDown {
-    from { top: -150px; }
-    to { top: calc(100% + 150px); }
-  }
-
-  .content { position: relative; z-index: 1; }
-
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 48px;
-  }
-
-  .logo {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 1.4rem;
-    color: #f97316;
-  }
-
-  nav a { color: #f97316; text-decoration: none; font-size: 0.85rem; }
-
-  /* Hero — speed-focused */
-  .hero {
-    padding: 100px 48px 80px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .hero-badge {
-    display: inline-block;
-    background: rgba(249,115,22,0.1);
-    color: #fb923c;
-    padding: 6px 16px;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    border: 1px solid rgba(249,115,22,0.2);
-  }
-
-  .hero h1 {
-    font-family: 'Racing Sans One', cursive;
-    font-size: clamp(3rem, 7vw, 6rem);
-    color: #fafaf9;
-    line-height: 1.0;
-    margin-bottom: 24px;
-  }
-
-  .hero h1 .orange { color: #f97316; }
-
-  .hero p {
-    font-size: 1.2rem;
-    font-weight: 300;
-    line-height: 1.7;
-    color: #78716c;
-    max-width: 600px;
-    margin-bottom: 40px;
-  }
-
-  .hero-cta {
-    display: inline-block;
-    background: #f97316;
-    color: #0c0a09;
-    padding: 16px 40px;
-    font-weight: 700;
-    font-size: 1rem;
-    text-decoration: none;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
-    transition: all 0.3s;
-  }
-  .hero-cta:hover {
-    background: #fb923c;
-    box-shadow: 0 4px 24px rgba(249,115,22,0.4);
-  }
-
-  /* Speed metrics — large and bold */
-  .speed-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-
-  .speed-card {
-    background: #1c1917;
-    padding: 48px 32px;
-    text-align: center;
-    border-top: 3px solid #f97316;
-    transition: all 0.3s;
-  }
-
-  .speed-card:hover {
-    background: #292524;
-  }
-
-  .speed-number {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 3.5rem;
-    color: #f97316;
-    margin-bottom: 8px;
-    line-height: 1;
-  }
-
-  .speed-unit {
-    font-size: 0.9rem;
-    color: #fb923c;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  .speed-desc {
-    font-size: 0.85rem;
-    color: #78716c;
-    line-height: 1.5;
-  }
-
-  /* Why Rust section */
-  .rust-section {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 100px 48px;
-  }
-
-  .rust-section h2 {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 2.5rem;
-    color: #fafaf9;
-    margin-bottom: 48px;
-    text-align: center;
-  }
-
-  .rust-section h2 .orange { color: #f97316; }
-
-  .rust-features {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-
-  .rust-card {
-    padding: 32px 28px;
-    border-left: 4px solid #f97316;
-    background: linear-gradient(135deg, rgba(249,115,22,0.03), transparent);
-    transition: all 0.3s;
-  }
-
-  .rust-card:hover {
-    background: linear-gradient(135deg, rgba(249,115,22,0.06), transparent);
-    transform: translateX(4px);
-  }
-
-  .rust-card h3 {
-    color: #fb923c;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .rust-card p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #78716c;
-  }
-
-  /* Benchmark comparison */
-  .bench-section {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 60px 48px;
-  }
-
-  .bench-section h2 {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 2rem;
-    color: #fafaf9;
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  .bench-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .bench-table th {
-    text-align: left;
-    padding: 14px 20px;
-    background: #1c1917;
-    color: #f97316;
-    font-weight: 700;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .bench-table td {
-    padding: 14px 20px;
-    border-bottom: 1px solid #292524;
-    font-size: 0.9rem;
-  }
-
-  .bench-table tr:hover td {
-    background: rgba(249,115,22,0.03);
-  }
-
-  .bench-table .lang { font-weight: 700; color: #fafaf9; }
-  .bench-table .fast { color: #f97316; font-weight: 700; }
-  .bench-table .medium { color: #fbbf24; }
-  .bench-table .slow { color: #78716c; }
-
-  /* Architecture speed points */
-  .arch-section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 60px 48px;
-  }
-
-  .arch-section h2 {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 2rem;
-    color: #fafaf9;
-    margin-bottom: 40px;
-    text-align: center;
-  }
-
-  .arch-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .arch-item {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 24px;
-    background: #1c1917;
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-
-  .arch-item:hover {
-    background: #292524;
-    transform: translateX(4px);
-  }
-
-  .arch-speed {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 1.5rem;
-    color: #f97316;
-    flex-shrink: 0;
-    width: 80px;
-    text-align: center;
-  }
-
-  .arch-item h3 {
-    color: #fafaf9;
-    font-size: 0.95rem;
-    margin-bottom: 4px;
-  }
-
-  .arch-item p {
-    font-size: 0.85rem;
-    color: #78716c;
-    line-height: 1.4;
-  }
-
-  /* CTA */
-  .final-cta {
-    text-align: center;
-    padding: 100px 48px;
-    border-top: 1px solid #292524;
-    margin-top: 60px;
-  }
-
-  .final-cta h2 {
-    font-family: 'Racing Sans One', cursive;
-    font-size: 3rem;
-    color: #fafaf9;
-    margin-bottom: 16px;
-  }
-
-  .final-cta .orange { color: #f97316; }
-
-  .final-cta p {
-    color: #78716c;
-    margin-bottom: 32px;
-    font-size: 1.05rem;
-  }
-
-  footer {
-    text-align: center;
-    padding: 40px;
-    color: #44403c;
-    font-size: 0.85rem;
-  }
-  footer a { color: #f97316; text-decoration: none; }
-
-  @media (max-width: 768px) {
-    .speed-grid { grid-template-columns: 1fr; padding: 0 24px; }
-    .rust-features { grid-template-columns: 1fr; }
-    nav { padding: 16px 20px; }
-    .hero { padding: 60px 24px; }
-    .stripes { display: none; }
-  }
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<div class="stripes">
-  <div class="stripe"></div>
-  <div class="stripe"></div>
-  <div class="stripe"></div>
-  <div class="stripe"></div>
-  <div class="stripe"></div>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
+
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
+
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
+
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
+
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
+
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<div class="content">
-  <nav>
-    <div class="logo">PowerGrabber</div>
-    <a href="index.html">&larr; All Concepts</a>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-badge">Built in Rust</div>
-    <h1>Capture at the<br>speed of <span class="orange">thought</span></h1>
-    <p>PowerGrabber's Rust backend processes network events in sub-millisecond time. Zero garbage collection pauses. Zero runtime overhead. Pure async I/O on tokio.</p>
-    <a href="#" class="hero-cta">See Performance Specs</a>
-  </section>
-
-  <div class="speed-grid">
-    <div class="speed-card">
-      <div class="speed-number">&lt;1</div>
-      <div class="speed-unit">millisecond</div>
-      <div class="speed-desc">Event processing latency from WebSocket receive to parsed output</div>
-    </div>
-    <div class="speed-card">
-      <div class="speed-number">500</div>
-      <div class="speed-unit">events / second</div>
-      <div class="speed-desc">Per-connection rate limit. Configurable. Handles burst traffic gracefully.</div>
-    </div>
-    <div class="speed-card">
-      <div class="speed-number">~4</div>
-      <div class="speed-unit">MB binary</div>
-      <div class="speed-desc">Compiled release binary. No runtime dependencies. Single file deployment.</div>
-    </div>
-  </div>
-
-  <section class="rust-section">
-    <h2>Why <span class="orange">Rust</span>?</h2>
-    <div class="rust-features">
-      <div class="rust-card">
-        <h3>Zero-Cost Abstractions</h3>
-        <p>Rust's ownership model means no garbage collector, no runtime overhead, no stop-the-world pauses. Every cycle goes to processing your events.</p>
-      </div>
-      <div class="rust-card">
-        <h3>tokio Async Runtime</h3>
-        <p>Non-blocking I/O for WebSocket connections. Each browser connection gets its own lightweight task. No thread-per-connection overhead.</p>
-      </div>
-      <div class="rust-card">
-        <h3>Memory Safety</h3>
-        <p>Compile-time guarantees against buffer overflows, use-after-free, and data races. Security-critical code that's safe by construction.</p>
-      </div>
-      <div class="rust-card">
-        <h3>RAII Resource Management</h3>
-        <p>Connection counting via Drop impl. Timers, buffers, and handles cleaned up deterministically. No leaked resources, ever.</p>
-      </div>
-      <div class="rust-card">
-        <h3>Backpressure by Design</h3>
-        <p>try_send on bounded channels. Drop counting instead of blocking. The system degrades gracefully under load — it never freezes.</p>
-      </div>
-      <div class="rust-card">
-        <h3>Single Binary</h3>
-        <p>Compile once, copy everywhere. No Python venv, no Node modules, no JVM. One file. Works on Linux, macOS, Windows.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="bench-section">
-    <h2>Performance Comparison</h2>
-    <table class="bench-table">
-      <thead>
-        <tr><th>Approach</th><th>Latency</th><th>Memory</th><th>Deploy</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="lang">PowerGrabber (Rust)</td>
-          <td class="fast">&lt;1ms</td>
-          <td class="fast">~10MB</td>
-          <td class="fast">Single binary</td>
-        </tr>
-        <tr>
-          <td class="lang">Node.js proxy</td>
-          <td class="medium">5-20ms</td>
-          <td class="medium">~80MB</td>
-          <td class="slow">npm install</td>
-        </tr>
-        <tr>
-          <td class="lang">Python mitmproxy</td>
-          <td class="slow">10-50ms</td>
-          <td class="slow">~150MB</td>
-          <td class="slow">pip + venv</td>
-        </tr>
-        <tr>
-          <td class="lang">Java CDP client</td>
-          <td class="medium">5-15ms</td>
-          <td class="slow">~200MB</td>
-          <td class="slow">JVM + JARs</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="arch-section">
-    <h2>Speed at Every Layer</h2>
-    <div class="arch-list">
-      <div class="arch-item">
-        <div class="arch-speed">0ms</div>
-        <div>
-          <h3>Browser Extension Capture</h3>
-          <p>webRequest API fires synchronously with browser network events. Zero additional latency.</p>
-        </div>
-      </div>
-      <div class="arch-item">
-        <div class="arch-speed">&lt;1ms</div>
-        <div>
-          <h3>WebSocket Delivery</h3>
-          <p>Local loopback WebSocket to 127.0.0.1. No network hop. Sub-millisecond delivery.</p>
-        </div>
-      </div>
-      <div class="arch-item">
-        <div class="arch-speed">&lt;1ms</div>
-        <div>
-          <h3>JSON Parse + Validate</h3>
-          <p>serde_json deserialization with field validation. URL bounds, header limits, timestamp clamping.</p>
-        </div>
-      </div>
-      <div class="arch-item">
-        <div class="arch-speed">&lt;1ms</div>
-        <div>
-          <h3>Redact + Output</h3>
-          <p>Header and URL redaction, format to JSONL or text, write to stdout. All in one pass.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="final-cta">
-    <h2>Fast enough to <span class="orange">forget it's there</span>.</h2>
-    <p>PowerGrabber adds zero perceptible latency to your browsing. It just watches.</p>
-    <a href="#" class="hero-cta">Deploy Now</a>
-  </section>
-
-  <footer>
-    <a href="index.html">&larr; Back to all concepts</a> &middot; PowerGrabber — Rust-powered LLM traffic capture
-  </footer>
-</div>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

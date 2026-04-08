@@ -3,346 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerGrabber AI — Shadow AI: The $200K Problem Nobody Sees</title>
+<title>PowerGrabber — LLM Certainty (Executive Black)</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 
-body{
-  font-family:'Outfit',sans-serif;
-  background:#000;
-  color:#fff;
-  min-height:100vh;
-  line-height:1.6;
-}
+body{font-family:'Outfit',sans-serif;background:#000;color:#a1a1aa}
+nav{padding:20px 48px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#fff;font-family:'Outfit',sans-serif;}
+nav a{color:#fff;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#a1a1aa;opacity:.5;border-bottom:1px solid #333}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Outfit',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#fff;margin-bottom:16px;}
+.hero h1 span{color:#fff}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#a1a1aa;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#fff;color:#000;padding:12px 32px;border-radius:0px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #fff33}
+.btn-ghost{background:transparent;color:#fff;padding:12px 32px;border-radius:0px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #fff;transition:all .3s}
+.btn-ghost:hover{background:#fff11}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:12px}
+h2{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#a1a1aa;margin-bottom:14px}
+strong{color:#fff}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #333;color:#fff;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(255,255,255,0.03);border:1px solid #333;border-radius:0px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#fff}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#fff;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #333}
+.steps li::before{content:counter(step)'.';color:#fff;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#a1a1aa;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(255,255,255,0.03);border:1px solid #333;border-radius:0px;padding:22px}
+.team-card h3{color:#fff;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(255,255,255,0.03);border:1px solid #333;border-radius:0px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#fff}
+.price-card h3{font-size:.7rem;font-weight:600;color:#fff;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#a1a1aa;opacity:.6}
+.price-card p{font-size:.8rem;color:#a1a1aa;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #333;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#fff;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #333;color:#a1a1aa;opacity:.5;font-size:.85rem}
+footer a{color:#fff;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-nav{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:24px 48px;
-}
-.logo{font-weight:700;font-size:1rem;color:#fff;letter-spacing:-.5px}
-nav a{color:#999;text-decoration:none;font-size:.85rem;transition:color .2s}
-nav a:hover{color:#fff}
-
-.slide{
-  max-width:1100px;margin:0 auto;padding:0 48px;
-  min-height:calc(100vh - 80px);
-  display:flex;flex-direction:column;justify-content:center;
-}
-
-.opening{
-  padding:80px 0 120px;
-}
-.opening .quote{
-  font-size:clamp(1.8rem,4.5vw,3.5rem);
-  font-weight:300;line-height:1.3;color:#e5e5e5;
-  max-width:900px;letter-spacing:-.5px;
-}
-.opening .quote em{
-  font-style:normal;color:#fff;font-weight:700;
-}
-.opening .attr{
-  margin-top:24px;font-size:1rem;color:#555;font-weight:400;
-}
-
-.divider{
-  width:80px;height:1px;background:#333;margin:0 0 80px;
-}
-
-.big-number-section{
-  padding:0 0 100px;
-}
-.big-number-section h2{
-  font-size:.75rem;letter-spacing:4px;text-transform:uppercase;
-  color:#555;margin-bottom:48px;font-weight:500;
-}
-.big-numbers{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:48px;
-}
-.bn{text-align:left}
-.bn .val{
-  font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;
-  line-height:1;letter-spacing:-2px;margin-bottom:8px;
-}
-.bn .label{font-size:.9rem;color:#666;font-weight:400;line-height:1.5}
-
-.discovery-section{padding:0 0 100px}
-.discovery-section h2{
-  font-size:.75rem;letter-spacing:4px;text-transform:uppercase;
-  color:#555;margin-bottom:48px;font-weight:500;
-}
-
-.discovery-table{
-  width:100%;border-collapse:collapse;
-}
-.discovery-table th{
-  text-align:left;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
-  color:#555;font-weight:500;padding:16px 0;border-bottom:1px solid #222;
-}
-.discovery-table td{
-  padding:20px 0;border-bottom:1px solid #111;font-size:1.05rem;
-  vertical-align:middle;
-}
-.discovery-table tr:last-child td{border-bottom:none}
-.provider-name{font-weight:600;color:#fff}
-.status-approved{
-  display:inline-block;padding:4px 14px;border-radius:2px;
-  font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;
-  background:#0a1a0a;color:#22c55e;border:1px solid #14532d;
-}
-.status-unapproved{
-  display:inline-block;padding:4px 14px;border-radius:2px;
-  font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;
-  background:#1a0a0a;color:#ef4444;border:1px solid #7f1d1d;
-}
-.status-unknown{
-  display:inline-block;padding:4px 14px;border-radius:2px;
-  font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;
-  background:#1a1a0a;color:#eab308;border:1px solid #713f12;
-}
-.spend-col{font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
-.req-col{color:#666;font-variant-numeric:tabular-nums}
-
-.rollup-section{padding:0 0 100px}
-.rollup-section h2{
-  font-size:.75rem;letter-spacing:4px;text-transform:uppercase;
-  color:#555;margin-bottom:48px;font-weight:500;
-}
-.rollup-card{
-  background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:48px;
-}
-.rollup-header{
-  display:flex;justify-content:space-between;align-items:baseline;
-  margin-bottom:40px;flex-wrap:wrap;gap:16px;
-}
-.rollup-header h3{font-size:1.2rem;font-weight:600;color:#ccc}
-.rollup-header .period{font-size:.85rem;color:#555}
-.rollup-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:32px;
-}
-.rollup-item .r-val{
-  font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;
-  letter-spacing:-1px;line-height:1;margin-bottom:4px;
-}
-.rollup-item .r-label{font-size:.8rem;color:#555;font-weight:400}
-
-.problem-section{padding:0 0 100px}
-.problem-section h2{
-  font-size:.75rem;letter-spacing:4px;text-transform:uppercase;
-  color:#555;margin-bottom:48px;font-weight:500;
-}
-.problem-points{
-  display:grid;grid-template-columns:1fr 1fr;gap:0;
-}
-.pp{padding:32px 0;border-bottom:1px solid #111}
-.pp:nth-child(odd){padding-right:48px;border-right:1px solid #111}
-.pp:nth-child(even){padding-left:48px}
-.pp h3{font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:8px}
-.pp p{font-size:.95rem;color:#555;line-height:1.7}
-
-.closer{
-  padding:120px 0;text-align:center;
-}
-.closer h2{
-  font-size:clamp(2rem,5vw,3.5rem);font-weight:800;
-  letter-spacing:-1px;line-height:1.2;margin-bottom:16px;
-}
-.closer p{font-size:1.1rem;color:#555;margin-bottom:40px}
-.closer a{
-  display:inline-block;background:#fff;color:#000;
-  padding:16px 40px;text-decoration:none;
-  font-weight:700;font-size:.95rem;
-  transition:opacity .2s;
-}
-.closer a:hover{opacity:.8}
-
-footer{
-  text-align:center;padding:32px;border-top:1px solid #111;
-  font-size:.75rem;color:#333;
-}
-footer a{color:#666;text-decoration:none}
-
-@media(max-width:700px){
-  .problem-points{grid-template-columns:1fr}
-  .pp:nth-child(odd){padding-right:0;border-right:none}
-  .pp:nth-child(even){padding-left:0}
-  nav{padding:20px 24px}
-  .slide,.opening{padding-left:24px;padding-right:24px}
-  .rollup-card{padding:24px}
-}
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<nav>
-  <div class="logo">PowerGrabber AI</div>
-  <a href="index.html">&larr; Home</a>
-</nav>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
 
-<div class="slide">
-  <div class="opening">
-    <div class="quote">
-      The CFO asks how much we spend on AI.<br>
-      The honest answer is: <em>we don't know.</em>
-    </div>
-    <div class="attr">Every enterprise, Q1 2026</div>
-  </div>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
+
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
+
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
+
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
+
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<div class="slide" style="min-height:auto">
-  <div class="divider"></div>
-
-  <div class="big-number-section">
-    <h2>The Shadow AI Problem</h2>
-    <div class="big-numbers">
-      <div class="bn">
-        <div class="val">$200K+</div>
-        <div class="label">Average annual untracked AI spend<br>in enterprises with 500+ developers</div>
-      </div>
-      <div class="bn">
-        <div class="val">73%</div>
-        <div class="label">of AI tool usage bypasses<br>corporate procurement</div>
-      </div>
-      <div class="bn">
-        <div class="val">5.2</div>
-        <div class="label">average AI providers per org,<br>only 2 are approved</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="discovery-section">
-    <h2>Shadow AI Discovery Report</h2>
-
-    <table class="discovery-table">
-      <thead>
-        <tr>
-          <th>Provider</th>
-          <th>Status</th>
-          <th>Weekly Spend</th>
-          <th>Requests / Week</th>
-          <th>Tools Using</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="provider-name">OpenAI</td>
-          <td><span class="status-approved">Approved</span></td>
-          <td class="spend-col">$412.30</td>
-          <td class="req-col">28,441</td>
-          <td class="req-col">Cursor, VS Code, 2 CLIs</td>
-        </tr>
-        <tr>
-          <td class="provider-name">Anthropic</td>
-          <td><span class="status-approved">Approved</span></td>
-          <td class="spend-col">$148.20</td>
-          <td class="req-col">4,102</td>
-          <td class="req-col">Claude Code, Cursor</td>
-        </tr>
-        <tr>
-          <td class="provider-name">Cohere</td>
-          <td><span class="status-unapproved">Unapproved</span></td>
-          <td class="spend-col">$38.60</td>
-          <td class="req-col">1,204</td>
-          <td class="req-col">Unknown CLI script</td>
-        </tr>
-        <tr>
-          <td class="provider-name">Mistral</td>
-          <td><span class="status-unapproved">Unapproved</span></td>
-          <td class="spend-col">$19.85</td>
-          <td class="req-col">612</td>
-          <td class="req-col">Continue.dev</td>
-        </tr>
-        <tr>
-          <td class="provider-name">Replicate</td>
-          <td><span class="status-unknown">Unknown</span></td>
-          <td class="spend-col">$4.50</td>
-          <td class="req-col">162</td>
-          <td class="req-col">Python script (pid 9102)</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="rollup-section">
-    <h2>Organisation Weekly Rollup</h2>
-
-    <div class="rollup-card">
-      <div class="rollup-header">
-        <h3>Acme Corp &mdash; All AI Activity</h3>
-        <span class="period">Week of March 31 &ndash; April 6, 2026</span>
-      </div>
-      <div class="rollup-grid">
-        <div class="rollup-item">
-          <div class="r-val">$623.45</div>
-          <div class="r-label">Total estimated AI spend</div>
-        </div>
-        <div class="rollup-item">
-          <div class="r-val">34,521</div>
-          <div class="r-label">Total API requests</div>
-        </div>
-        <div class="rollup-item">
-          <div class="r-val">47</div>
-          <div class="r-label">Browser instances observed</div>
-        </div>
-        <div class="rollup-item">
-          <div class="r-val">5</div>
-          <div class="r-label">Distinct AI providers</div>
-        </div>
-        <div class="rollup-item">
-          <div class="r-val">3</div>
-          <div class="r-label">Unapproved providers</div>
-        </div>
-        <div class="rollup-item">
-          <div class="r-val">12</div>
-          <div class="r-label">Unique developer machines</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="problem-section">
-    <h2>Why This Matters</h2>
-    <div class="problem-points">
-      <div class="pp">
-        <h3>Budget Blind Spots</h3>
-        <p>AI spend is distributed across personal credit cards, team budgets, and corporate accounts. No single system sees the total. Finance is flying blind.</p>
-      </div>
-      <div class="pp">
-        <h3>Compliance Gaps</h3>
-        <p>Unapproved providers mean unevaluated data processing agreements. Your data could be training third-party models without your knowledge or consent.</p>
-      </div>
-      <div class="pp">
-        <h3>Security Exposure</h3>
-        <p>Every unsanctioned tool is an unmonitored attack surface. API keys on personal accounts. Source code sent to providers without DLP review.</p>
-      </div>
-      <div class="pp">
-        <h3>Forecast Impossible</h3>
-        <p>You cannot plan next year's AI budget if you do not know this year's AI spend. Shadow AI makes capacity planning a guessing game.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="slide" style="min-height:auto">
-  <div class="closer">
-    <h2>See what you're actually spending.</h2>
-    <p>PowerGrabber discovers every AI provider, every tool, every dollar.<br>No agents to install. Deploy in one afternoon.</p>
-    <a href="index.html">Learn More</a>
-  </div>
-</div>
-
-<footer>
-  PowerGrabber AI &mdash; Shadow AI visibility for the enterprise. <a href="index.html">Home</a>
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

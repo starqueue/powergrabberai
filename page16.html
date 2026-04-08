@@ -3,342 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Which AI Models Is Your Organisation Actually Using? — PowerGrabber AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>PowerGrabber — LLM Certainty (Catalogue Teal)</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Outfit', sans-serif; background: #f0fdfa; color: #134e4a; line-height: 1.6; }
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-/* Topbar */
-.topbar { background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; }
-.topbar .logo { font-weight: 800; font-size: 17px; color: #0d9488; }
-.topbar nav { display: flex; gap: 24px; }
-.topbar a { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
-.topbar a:hover { color: #0d9488; }
+body{font-family:'Outfit',sans-serif;background:#f0fdfa;color:#475569}
+nav{padding:20px 48px;border-bottom:1px solid #ccfbf1;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#0d9488;font-family:'Outfit',sans-serif;}
+nav a{color:#0d9488;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#475569;opacity:.5;border-bottom:1px solid #ccfbf1}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Outfit',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#0f172a;margin-bottom:16px;}
+.hero h1 span{color:#0d9488}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#475569;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#0d9488;color:#f0fdfa;padding:12px 32px;border-radius:12px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #0d948833}
+.btn-ghost{background:transparent;color:#0d9488;padding:12px 32px;border-radius:12px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #0d9488;transition:all .3s}
+.btn-ghost:hover{background:#0d948811}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#0d9488;margin-bottom:12px}
+h2{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:700;color:#0f172a;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#475569;margin-bottom:14px}
+strong{color:#0f172a}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #ccfbf1;color:#0f172a;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:#fff;border:1px solid #ccfbf1;border-radius:12px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#0d9488}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#0d9488;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #ccfbf1}
+.steps li::before{content:counter(step)'.';color:#0d9488;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#475569;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:#fff;border:1px solid #ccfbf1;border-radius:12px;padding:22px}
+.team-card h3{color:#0d9488;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:#fff;border:1px solid #ccfbf1;border-radius:12px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#0d9488}
+.price-card h3{font-size:.7rem;font-weight:600;color:#0d9488;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#475569;opacity:.6}
+.price-card p{font-size:.8rem;color:#475569;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #ccfbf1;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#0d9488;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #ccfbf1;color:#475569;opacity:.5;font-size:.85rem}
+footer a{color:#0d9488;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-/* Hero */
-.hero { background: #ffffff; padding: 72px 40px 56px; border-bottom: 1px solid #e2e8f0; }
-.hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
-.hero h1 { font-size: 44px; font-weight: 800; color: #0f172a; line-height: 1.15; margin-bottom: 16px; }
-.hero p { font-size: 18px; color: #64748b; max-width: 540px; font-weight: 300; margin-bottom: 24px; }
-.hero .stat-row { display: flex; gap: 32px; }
-.hero .stat { text-align: left; }
-.hero .stat .num { font-size: 36px; font-weight: 800; color: #0d9488; }
-.hero .stat .lbl { font-size: 13px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-.hero-visual { background: #f0fdfa; border: 2px solid #ccfbf1; border-radius: 16px; padding: 32px; min-width: 320px; }
-.hero-visual .mini-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-.hero-visual .mini-card:last-child { margin-bottom: 0; }
-.hero-visual .mini-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.hero-visual .mini-dot.green { background: #10b981; }
-.hero-visual .mini-dot.amber { background: #f59e0b; }
-.hero-visual .mini-dot.red { background: #ef4444; }
-.hero-visual .mini-name { font-size: 14px; font-weight: 600; color: #0f172a; flex: 1; }
-.hero-visual .mini-badge { font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 10px; }
-.mini-badge.approved { background: #dcfce7; color: #166534; }
-.mini-badge.shadow { background: #fef9c3; color: #854d0e; }
-.mini-badge.deprecated { background: #fee2e2; color: #991b1b; }
-
-/* Section helpers */
-.section { max-width: 1100px; margin: 0 auto; padding: 56px 40px; }
-.section-eyebrow { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #0d9488; margin-bottom: 8px; }
-.section-title { font-size: 30px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-.section-desc { font-size: 16px; color: #64748b; margin-bottom: 36px; max-width: 640px; }
-
-/* Model inventory grid */
-.model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 56px; }
-.model-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 0; overflow: hidden; transition: box-shadow 0.2s, border-color 0.2s; }
-.model-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: #0d9488; }
-.mc-header { padding: 20px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; }
-.mc-provider { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; }
-.mc-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
-.mc-status.approved { background: #dcfce7; color: #166534; }
-.mc-status.shadow { background: #fef9c3; color: #854d0e; }
-.mc-status.deprecated { background: #fee2e2; color: #991b1b; }
-.mc-body { padding: 8px 24px 20px; }
-.mc-model-name { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-.mc-model-id { font-size: 13px; color: #94a3b8; font-family: monospace; margin-bottom: 16px; }
-.mc-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.mc-field .f-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 2px; }
-.mc-field .f-value { font-size: 14px; font-weight: 600; color: #334155; }
-.mc-footer { border-top: 1px solid #f1f5f9; padding: 14px 24px; display: flex; align-items: center; gap: 8px; }
-.mc-footer .tool-tag { background: #f0fdfa; color: #0d9488; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; border: 1px solid #ccfbf1; }
-
-/* How it works */
-.how-section { background: #ffffff; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
-.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.how-card { padding: 0; }
-.how-card .hc-num { font-size: 48px; font-weight: 800; color: #ccfbf1; line-height: 1; margin-bottom: 12px; }
-.how-card h3 { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
-.how-card p { font-size: 14px; color: #64748b; line-height: 1.65; }
-.how-card code { background: #f0fdfa; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #0d9488; }
-
-/* Features section */
-.features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.feature-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px; }
-.feature-card .fc-icon { width: 40px; height: 40px; background: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 16px; color: #0d9488; font-weight: 700; }
-.feature-card h3 { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
-.feature-card p { font-size: 14px; color: #64748b; line-height: 1.65; }
-
-/* CTA */
-.cta-section { text-align: center; }
-.cta-box { background: #0d9488; border-radius: 16px; padding: 56px 40px; }
-.cta-box h2 { font-size: 30px; font-weight: 800; color: #ffffff; margin-bottom: 12px; }
-.cta-box p { font-size: 16px; color: #ccfbf1; margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto; }
-.cta-box a { display: inline-block; background: #ffffff; color: #0d9488; padding: 14px 36px; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 10px; transition: background 0.2s; }
-.cta-box a:hover { background: #f0fdfa; }
-
-/* Footer */
-.footer { padding: 32px 40px; text-align: center; font-size: 13px; color: #94a3b8; }
-.footer a { color: #64748b; text-decoration: none; }
-
-@media (max-width: 900px) {
-  .model-grid { grid-template-columns: 1fr; }
-  .hero-inner { grid-template-columns: 1fr; }
-  .hero-visual { display: none; }
-  .how-grid { grid-template-columns: 1fr; }
-  .features-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 768px) {
-  .hero h1 { font-size: 30px; }
-  .model-grid { grid-template-columns: 1fr; }
-}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <span class="logo">PowerGrabber AI</span>
-  <nav>
-    <a href="index.html">&larr; Back to Home</a>
-  </nav>
-</div>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
 <section class="hero">
-  <div class="hero-inner">
-    <div>
-      <h1>Which AI Models Is Your Organisation Actually Using?</h1>
-      <p>You approved GPT-4o and Claude. But your network traffic shows Gemini, Mistral, and three deprecated models nobody remembers deploying. PowerGrabber builds the inventory automatically.</p>
-      <div class="stat-row">
-        <div class="stat"><div class="num">6</div><div class="lbl">Models Detected</div></div>
-        <div class="stat"><div class="num">2</div><div class="lbl">Shadow Models</div></div>
-        <div class="stat"><div class="num">1</div><div class="lbl">Deprecated</div></div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="mini-card"><span class="mini-dot green"></span><span class="mini-name">GPT-4o</span><span class="mini-badge approved">Approved</span></div>
-      <div class="mini-card"><span class="mini-dot green"></span><span class="mini-name">Claude Sonnet 4.6</span><span class="mini-badge approved">Approved</span></div>
-      <div class="mini-card"><span class="mini-dot amber"></span><span class="mini-name">Gemini 2.5 Flash</span><span class="mini-badge shadow">Shadow</span></div>
-      <div class="mini-card"><span class="mini-dot amber"></span><span class="mini-name">text-embedding-3-small</span><span class="mini-badge shadow">Shadow</span></div>
-      <div class="mini-card"><span class="mini-dot green"></span><span class="mini-name">Claude Haiku 3.5</span><span class="mini-badge approved">Approved</span></div>
-      <div class="mini-card"><span class="mini-dot red"></span><span class="mini-name">gpt-3.5-turbo-0125</span><span class="mini-badge deprecated">Deprecated</span></div>
-    </div>
-  </div>
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
 </section>
 
-<div class="section">
-  <div class="section-eyebrow">Model Inventory</div>
-  <div class="section-title">Live AI Model Catalogue</div>
-  <div class="section-desc">Every model detected across your organisation's AI traffic. Each card is built automatically from URL paths and response headers.</div>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
 
-  <div class="model-grid">
-    <!-- Card 1: GPT-4o -->
-    <div class="model-card">
-      <div class="mc-header">
-        <span class="mc-provider">OpenAI</span>
-        <span class="mc-status approved">Approved</span>
-      </div>
-      <div class="mc-body">
-        <div class="mc-model-name">GPT-4o</div>
-        <div class="mc-model-id">gpt-4o-2024-11-20</div>
-        <div class="mc-fields">
-          <div class="mc-field"><div class="f-label">First Seen</div><div class="f-value">2025-12-03</div></div>
-          <div class="mc-field"><div class="f-label">Last Seen</div><div class="f-value">2026-04-08</div></div>
-          <div class="mc-field"><div class="f-label">Requests (30d)</div><div class="f-value">14,283</div></div>
-          <div class="mc-field"><div class="f-label">Users</div><div class="f-value">47</div></div>
-        </div>
-      </div>
-      <div class="mc-footer">
-        <span class="tool-tag">Cursor</span>
-        <span class="tool-tag">Internal App</span>
-        <span class="tool-tag">Copilot</span>
-      </div>
-    </div>
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
 
-    <!-- Card 2: Claude Sonnet 4.6 -->
-    <div class="model-card">
-      <div class="mc-header">
-        <span class="mc-provider">Anthropic</span>
-        <span class="mc-status approved">Approved</span>
-      </div>
-      <div class="mc-body">
-        <div class="mc-model-name">Claude Sonnet 4.6</div>
-        <div class="mc-model-id">claude-sonnet-4-6-20260320</div>
-        <div class="mc-fields">
-          <div class="mc-field"><div class="f-label">First Seen</div><div class="f-value">2026-03-20</div></div>
-          <div class="mc-field"><div class="f-label">Last Seen</div><div class="f-value">2026-04-08</div></div>
-          <div class="mc-field"><div class="f-label">Requests (30d)</div><div class="f-value">8,941</div></div>
-          <div class="mc-field"><div class="f-label">Users</div><div class="f-value">31</div></div>
-        </div>
-      </div>
-      <div class="mc-footer">
-        <span class="tool-tag">Claude Code</span>
-        <span class="tool-tag">Internal App</span>
-      </div>
-    </div>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
 
-    <!-- Card 3: Gemini 2.5 Flash -->
-    <div class="model-card">
-      <div class="mc-header">
-        <span class="mc-provider">Google</span>
-        <span class="mc-status shadow">Shadow</span>
-      </div>
-      <div class="mc-body">
-        <div class="mc-model-name">Gemini 2.5 Flash</div>
-        <div class="mc-model-id">gemini-2.5-flash-preview-04-17</div>
-        <div class="mc-fields">
-          <div class="mc-field"><div class="f-label">First Seen</div><div class="f-value">2026-03-28</div></div>
-          <div class="mc-field"><div class="f-label">Last Seen</div><div class="f-value">2026-04-07</div></div>
-          <div class="mc-field"><div class="f-label">Requests (30d)</div><div class="f-value">342</div></div>
-          <div class="mc-field"><div class="f-label">Users</div><div class="f-value">3</div></div>
-        </div>
-      </div>
-      <div class="mc-footer">
-        <span class="tool-tag">Unknown Client</span>
-      </div>
-    </div>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
 
-    <!-- Card 4: text-embedding-3-small -->
-    <div class="model-card">
-      <div class="mc-header">
-        <span class="mc-provider">OpenAI</span>
-        <span class="mc-status shadow">Shadow</span>
-      </div>
-      <div class="mc-body">
-        <div class="mc-model-name">text-embedding-3-small</div>
-        <div class="mc-model-id">text-embedding-3-small</div>
-        <div class="mc-fields">
-          <div class="mc-field"><div class="f-label">First Seen</div><div class="f-value">2026-01-15</div></div>
-          <div class="mc-field"><div class="f-label">Last Seen</div><div class="f-value">2026-04-08</div></div>
-          <div class="mc-field"><div class="f-label">Requests (30d)</div><div class="f-value">52,108</div></div>
-          <div class="mc-field"><div class="f-label">Users</div><div class="f-value">1</div></div>
-        </div>
-      </div>
-      <div class="mc-footer">
-        <span class="tool-tag">RAG Pipeline</span>
-      </div>
-    </div>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
 
-    <!-- Card 5: Claude Haiku 3.5 -->
-    <div class="model-card">
-      <div class="mc-header">
-        <span class="mc-provider">Anthropic</span>
-        <span class="mc-status approved">Approved</span>
-      </div>
-      <div class="mc-body">
-        <div class="mc-model-name">Claude Haiku 3.5</div>
-        <div class="mc-model-id">claude-3-5-haiku-20241022</div>
-        <div class="mc-fields">
-          <div class="mc-field"><div class="f-label">First Seen</div><div class="f-value">2025-11-08</div></div>
-          <div class="mc-field"><div class="f-label">Last Seen</div><div class="f-value">2026-04-08</div></div>
-          <div class="mc-field"><div class="f-label">Requests (30d)</div><div class="f-value">3,217</div></div>
-          <div class="mc-field"><div class="f-label">Users</div><div class="f-value">12</div></div>
-        </div>
-      </div>
-      <div class="mc-footer">
-        <span class="tool-tag">Slack Bot</span>
-        <span class="tool-tag">Triage Tool</span>
-      </div>
-    </div>
-
-    <!-- Card 6: GPT-3.5 Turbo (Deprecated) -->
-    <div class="model-card" style="border-color: #fca5a5;">
-      <div class="mc-header">
-        <span class="mc-provider">OpenAI</span>
-        <span class="mc-status deprecated">Deprecated</span>
-      </div>
-      <div class="mc-body">
-        <div class="mc-model-name">GPT-3.5 Turbo</div>
-        <div class="mc-model-id">gpt-3.5-turbo-0125</div>
-        <div class="mc-fields">
-          <div class="mc-field"><div class="f-label">First Seen</div><div class="f-value">2024-06-12</div></div>
-          <div class="mc-field"><div class="f-label">Last Seen</div><div class="f-value">2026-04-06</div></div>
-          <div class="mc-field"><div class="f-label">Requests (30d)</div><div class="f-value">891</div></div>
-          <div class="mc-field"><div class="f-label">Users</div><div class="f-value">2</div></div>
-        </div>
-      </div>
-      <div class="mc-footer">
-        <span class="tool-tag">Legacy Script</span>
-      </div>
-    </div>
-  </div>
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<div class="how-section">
-  <div class="section">
-    <div class="section-eyebrow">How It Works</div>
-    <div class="section-title">Model IDs from URL Paths</div>
-    <div class="section-desc">PowerGrabber extracts model identifiers automatically from the structure of AI API requests. No body inspection required.</div>
-
-    <div class="how-grid">
-      <div class="how-card">
-        <div class="hc-num">01</div>
-        <h3>URL Path Parsing</h3>
-        <p>AI APIs encode model IDs in predictable URL patterns. OpenAI uses <code>/v1/chat/completions</code> with model in the body, but the <code>x-model</code> response header reveals it. Anthropic's <code>/v1/messages</code> returns the model in response headers. Google embeds it directly: <code>/v1/models/gemini-2.5-flash:generateContent</code>.</p>
-      </div>
-      <div class="how-card">
-        <div class="hc-num">02</div>
-        <h3>Response Header Extraction</h3>
-        <p>Most AI providers return the actual model version used in response headers or the response metadata visible in HTTP trailers. PowerGrabber captures these to distinguish between <code>gpt-4o</code> and <code>gpt-4o-2024-11-20</code>, giving you version-level visibility.</p>
-      </div>
-      <div class="how-card">
-        <div class="hc-num">03</div>
-        <h3>Inventory Aggregation</h3>
-        <p>Each unique model ID is tracked over time: first seen date, last seen date, request count, originating tools (identified by User-Agent headers), and user count. New models trigger a "shadow model" alert if they are not on your approved list.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-eyebrow">Governance Features</div>
-  <div class="section-title">Beyond Discovery</div>
-  <div class="section-desc">The model inventory powers ongoing governance workflows.</div>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="fc-icon">!</div>
-      <h3>Shadow Model Detection</h3>
-      <p>Any model not on your approved list is flagged as a shadow model the moment it first appears in traffic. Get alerted before unapproved models become embedded in production workflows.</p>
-    </div>
-    <div class="feature-card">
-      <div class="fc-icon">&#8635;</div>
-      <h3>Deprecated Model Flagging</h3>
-      <p>PowerGrabber maintains a registry of deprecated model versions and their sunset dates. When traffic to a deprecated model is detected, the responsible team is notified with migration guidance.</p>
-    </div>
-    <div class="feature-card">
-      <div class="fc-icon">&#8645;</div>
-      <h3>Model Version Drift</h3>
-      <p>Track when providers silently upgrade model versions behind stable aliases. If "gpt-4o" starts resolving to a new snapshot version, PowerGrabber detects the change and logs it.</p>
-    </div>
-    <div class="feature-card">
-      <div class="fc-icon">&#9776;</div>
-      <h3>Tool-to-Model Mapping</h3>
-      <p>See which internal tools and applications are calling which models. Know that Cursor uses GPT-4o, your Slack bot uses Haiku, and an unknown script is still hitting a deprecated endpoint.</p>
-    </div>
-  </div>
-</div>
-
-<div class="section cta-section">
-  <div class="cta-box">
-    <h2>Build Your AI Model Inventory</h2>
-    <p>Discover every model in use, every shadow deployment, every deprecated endpoint. Automatically. Continuously.</p>
-    <a href="index.html">Learn More About PowerGrabber AI</a>
-  </div>
-</div>
-
-<footer class="footer">
-  <a href="index.html">PowerGrabber AI</a> &mdash; Automated AI model inventory and governance.
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

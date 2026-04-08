@@ -3,302 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Denial of Wallet: When AI Costs Attack — PowerGrabber AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<title>PowerGrabber — LLM Certainty (Incident Red)</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Barlow', sans-serif; background: #0f0f0f; color: #e5e5e5; line-height: 1.6; }
-code, .mono { font-family: 'Fira Code', monospace; }
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-/* Topbar */
-.topbar { background: #0a0a0a; border-bottom: 1px solid #1f1f1f; padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; }
-.topbar .logo { font-weight: 800; font-size: 15px; color: #ef4444; letter-spacing: 1px; text-transform: uppercase; }
-.topbar a { color: #737373; text-decoration: none; font-size: 13px; font-weight: 500; }
-.topbar a:hover { color: #ef4444; }
+body{font-family:'Barlow',sans-serif;background:#0f0f0f;color:#a8a29e}
+nav{padding:20px 48px;border-bottom:1px solid rgba(239,68,68,0.15);display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#ef4444;font-family:'Barlow',sans-serif;}
+nav a{color:#ef4444;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#a8a29e;opacity:.5;border-bottom:1px solid rgba(239,68,68,0.15)}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Barlow',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#fafaf9;margin-bottom:16px;}
+.hero h1 span{color:#ef4444}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#a8a29e;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#ef4444;color:#0f0f0f;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #ef444433}
+.btn-ghost{background:transparent;color:#ef4444;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #ef4444;transition:all .3s}
+.btn-ghost:hover{background:#ef444411}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#ef4444;margin-bottom:12px}
+h2{font-family:'Barlow',sans-serif;font-size:1.6rem;font-weight:700;color:#fafaf9;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#a8a29e;margin-bottom:14px}
+strong{color:#fafaf9}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid rgba(239,68,68,0.15);color:#fafaf9;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:4px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#ef4444}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#ef4444;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid rgba(239,68,68,0.15)}
+.steps li::before{content:counter(step)'.';color:#ef4444;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#a8a29e;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:4px;padding:22px}
+.team-card h3{color:#ef4444;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:4px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#ef4444}
+.price-card h3{font-size:.7rem;font-weight:600;color:#ef4444;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#fafaf9;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#a8a29e;opacity:.6}
+.price-card p{font-size:.8rem;color:#a8a29e;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid rgba(239,68,68,0.15);margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#ef4444;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(239,68,68,0.15);color:#a8a29e;opacity:.5;font-size:.85rem}
+footer a{color:#ef4444;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-/* Incident banner */
-.incident-banner { background: linear-gradient(90deg, #450a0a, #7f1d1d, #450a0a); border-bottom: 2px solid #ef4444; padding: 10px 32px; text-align: center; animation: banner-pulse 3s ease-in-out infinite; }
-@keyframes banner-pulse { 0%, 100% { background: linear-gradient(90deg, #450a0a, #7f1d1d, #450a0a); } 50% { background: linear-gradient(90deg, #450a0a, #991b1b, #450a0a); } }
-.incident-banner span { color: #fca5a5; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-
-/* Hero */
-.hero { padding: 80px 32px 60px; text-align: center; position: relative; }
-.hero::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, #ef4444, transparent); }
-.hero .incident-tag { display: inline-block; background: #ef4444; color: #fff; padding: 4px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 2px; margin-bottom: 24px; }
-.hero h1 { font-size: 52px; font-weight: 900; color: #ffffff; line-height: 1.1; margin-bottom: 16px; max-width: 700px; margin-left: auto; margin-right: auto; }
-.hero h1 .red { color: #ef4444; }
-.hero p { font-size: 18px; color: #a3a3a3; max-width: 580px; margin: 0 auto; font-weight: 300; }
-
-/* Timeline */
-.timeline-section { max-width: 900px; margin: 60px auto; padding: 0 32px; }
-.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #ef4444; margin-bottom: 8px; }
-.section-title { font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 8px; }
-.section-desc { font-size: 15px; color: #737373; margin-bottom: 32px; }
-
-.timeline { position: relative; padding-left: 32px; }
-.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: #292929; }
-.tl-item { position: relative; margin-bottom: 28px; }
-.tl-item::before { content: ''; position: absolute; left: -28px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: #292929; border: 2px solid #404040; }
-.tl-item.alert::before { background: #ef4444; border-color: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
-.tl-time { font-family: 'Fira Code', monospace; font-size: 12px; color: #737373; margin-bottom: 4px; }
-.tl-text { font-size: 15px; color: #d4d4d4; }
-.tl-text strong { color: #ffffff; font-weight: 600; }
-.tl-text .val { color: #ef4444; font-weight: 600; }
-
-/* Scorecard */
-.scorecard-section { max-width: 900px; margin: 60px auto; padding: 0 32px; }
-.scorecard { background: #1a1a1a; border: 1px solid #292929; border-radius: 4px; overflow: hidden; }
-.sc-header { background: #0a0a0a; padding: 20px 28px; border-bottom: 1px solid #292929; display: flex; justify-content: space-between; align-items: center; }
-.sc-header h3 { color: #ffffff; font-size: 16px; font-weight: 700; }
-.sc-fail-badge { background: #ef4444; color: #fff; padding: 4px 16px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 2px; }
-.sc-grid { display: grid; grid-template-columns: 1fr 1fr; }
-.sc-cell { padding: 20px 28px; border-bottom: 1px solid #1f1f1f; border-right: 1px solid #1f1f1f; }
-.sc-cell:nth-child(even) { border-right: none; }
-.sc-cell .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #737373; font-weight: 600; margin-bottom: 6px; }
-.sc-cell .value { font-size: 22px; font-weight: 800; color: #ffffff; }
-.sc-cell .value.critical { color: #ef4444; }
-.sc-cell .value .unit { font-size: 13px; font-weight: 500; color: #a3a3a3; }
-.sc-cell .bar-outer { background: #292929; height: 8px; border-radius: 4px; margin-top: 8px; overflow: hidden; }
-.sc-cell .bar-inner { height: 100%; border-radius: 4px; }
-.sc-cell .bar-inner.danger { background: linear-gradient(90deg, #f87171, #ef4444); }
-.sc-footer { padding: 16px 28px; border-top: 1px solid #292929; display: flex; justify-content: space-between; font-size: 13px; color: #737373; }
-
-/* Rate limit headers */
-.headers-section { max-width: 900px; margin: 60px auto; padding: 0 32px; }
-.header-block { background: #1a1a1a; border: 1px solid #292929; border-radius: 4px; overflow: hidden; }
-.header-block .hb-title { background: #0a0a0a; padding: 14px 24px; border-bottom: 1px solid #292929; font-size: 13px; font-weight: 600; color: #a3a3a3; }
-.header-lines { padding: 20px 24px; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 2; }
-.header-lines .key { color: #737373; }
-.header-lines .val { color: #22c55e; }
-.header-lines .val.warn { color: #f59e0b; }
-.header-lines .val.crit { color: #ef4444; }
-.header-lines .comment { color: #525252; font-style: italic; }
-
-/* Cost impact */
-.cost-section { max-width: 900px; margin: 60px auto; padding: 0 32px; }
-.cost-box { background: #1a1a1a; border: 1px solid #292929; border-radius: 4px; padding: 40px; text-align: center; }
-.cost-box .cost-number { font-size: 72px; font-weight: 900; color: #ef4444; line-height: 1; margin-bottom: 8px; }
-.cost-box .cost-label { font-size: 16px; color: #a3a3a3; margin-bottom: 24px; }
-.cost-breakdown { display: flex; justify-content: center; gap: 48px; }
-.cost-item { text-align: center; }
-.cost-item .ci-val { font-size: 24px; font-weight: 700; color: #ffffff; }
-.cost-item .ci-label { font-size: 12px; color: #737373; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
-
-/* Explanation */
-.explain-section { max-width: 900px; margin: 60px auto; padding: 0 32px; }
-.explain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.explain-card { background: #1a1a1a; border: 1px solid #292929; border-radius: 4px; padding: 28px; }
-.explain-card h3 { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
-.explain-card p { font-size: 14px; color: #a3a3a3; line-height: 1.65; }
-.explain-card .tag { display: inline-block; background: #292929; color: #ef4444; padding: 2px 10px; font-size: 11px; font-weight: 700; border-radius: 2px; margin-bottom: 12px; font-family: 'Fira Code', monospace; }
-
-/* CTA */
-.cta { max-width: 900px; margin: 60px auto 40px; padding: 0 32px; }
-.cta-box { border: 1px solid #ef4444; border-radius: 4px; padding: 48px; text-align: center; background: linear-gradient(180deg, #1a0a0a, #0f0f0f); }
-.cta-box h2 { font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 12px; }
-.cta-box p { color: #a3a3a3; font-size: 15px; margin-bottom: 28px; }
-.cta-box a { display: inline-block; background: #ef4444; color: #ffffff; padding: 14px 36px; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 2px; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; }
-.cta-box a:hover { background: #dc2626; }
-
-/* Footer */
-.footer { border-top: 1px solid #1f1f1f; padding: 28px 32px; text-align: center; font-size: 13px; color: #525252; margin-top: 20px; }
-.footer a { color: #737373; text-decoration: none; }
-
-@media (max-width: 768px) {
-  .hero h1 { font-size: 34px; }
-  .sc-grid { grid-template-columns: 1fr; }
-  .sc-cell { border-right: none; }
-  .explain-grid { grid-template-columns: 1fr; }
-  .cost-breakdown { flex-direction: column; gap: 20px; }
-}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <span class="logo">PowerGrabber AI</span>
-  <a href="index.html">&larr; Back to Home</a>
-</div>
-
-<div class="incident-banner">
-  <span>&#9888; Active Incident &mdash; LLM10 Unbounded Consumption &mdash; Severity: High</span>
-</div>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
 <section class="hero">
-  <div class="incident-tag">OWASP LLM10</div>
-  <h1>Denial of Wallet: <span class="red">When AI Costs Attack</span></h1>
-  <p>A runaway Cursor loop burned through 94% of your OpenAI rate limit in 2 hours. PowerGrabber caught it from the headers alone.</p>
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
 </section>
 
-<section class="timeline-section">
-  <div class="section-label">Incident Timeline</div>
-  <div class="section-title">The 2-Hour Burn</div>
-  <div class="section-desc">Reconstructed from HTTP response headers. No request bodies were inspected.</div>
-
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-time">09:14:22 UTC</div>
-      <div class="tl-text"><strong>Cursor IDE</strong> initiates a multi-file refactoring task via <span class="val">api.openai.com/v1/chat/completions</span>. Normal request pattern.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-time">09:17:48 UTC</div>
-      <div class="tl-text">Token consumption rate: <span class="val">~2,400 tokens/min</span>. Within normal baseline.</div>
-    </div>
-    <div class="tl-item alert">
-      <div class="tl-time">09:31:06 UTC</div>
-      <div class="tl-text">PowerGrabber detects <span class="val">+340% volume spike</span>. Cursor has entered a retry loop. Rate-limit headers show accelerating consumption.</div>
-    </div>
-    <div class="tl-item alert">
-      <div class="tl-time">09:44:19 UTC</div>
-      <div class="tl-text">First <span class="val">HTTP 429</span> response received. <code>x-ratelimit-remaining-tokens</code> drops below <span class="val">500,000</span>.</div>
-    </div>
-    <div class="tl-item alert">
-      <div class="tl-time">10:22:55 UTC</div>
-      <div class="tl-text"><span class="val">23 rate-limited (429) responses</span> logged. Cursor retries each with exponential backoff but does not stop the loop.</div>
-    </div>
-    <div class="tl-item alert">
-      <div class="tl-time">11:08:41 UTC</div>
-      <div class="tl-text"><span class="val">1,882,000 / 2,000,000 tokens consumed</span>. Rate limit at <span class="val">94%</span>. PowerGrabber issues LLM10 FAIL.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-time">11:12:03 UTC</div>
-      <div class="tl-text">Alert reaches on-call engineer. Cursor session terminated. Bleeding stopped.</div>
-    </div>
-  </div>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
 </section>
 
-<section class="scorecard-section">
-  <div class="section-label">Scorecard Output</div>
-  <div class="section-title">LLM10: Unbounded Consumption</div>
-  <div class="section-desc">The scorecard entry generated by PowerGrabber during this incident.</div>
-
-  <div class="scorecard">
-    <div class="sc-header">
-      <h3>LLM10: Unbounded Consumption</h3>
-      <span class="sc-fail-badge">FAIL</span>
-    </div>
-    <div class="sc-grid">
-      <div class="sc-cell">
-        <div class="label">Tokens Consumed</div>
-        <div class="value critical">1,882,000 <span class="unit">/ 2,000,000</span></div>
-        <div class="bar-outer"><div class="bar-inner danger" style="width:94%"></div></div>
-      </div>
-      <div class="sc-cell">
-        <div class="label">Rate-Limited Responses (429)</div>
-        <div class="value critical">23</div>
-      </div>
-      <div class="sc-cell">
-        <div class="label">Volume Spike</div>
-        <div class="value critical">+340% <span class="unit">above baseline</span></div>
-      </div>
-      <div class="sc-cell">
-        <div class="label">Time Window</div>
-        <div class="value">1h 54m</div>
-      </div>
-      <div class="sc-cell">
-        <div class="label">Originating Tool</div>
-        <div class="value">Cursor IDE <span class="unit">v0.45.x</span></div>
-      </div>
-      <div class="sc-cell">
-        <div class="label">Target Endpoint</div>
-        <div class="value" style="font-size:16px;">api.openai.com <span class="unit">/v1/chat/completions</span></div>
-      </div>
-    </div>
-    <div class="sc-footer">
-      <span>Detection method: Rate-limit header analysis</span>
-      <span>Assessed: 2026-04-08 11:08 UTC</span>
-    </div>
-  </div>
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
 </section>
 
-<section class="headers-section">
-  <div class="section-label">Evidence</div>
-  <div class="section-title">Rate-Limit Headers Tell the Story</div>
-  <div class="section-desc">These standard HTTP response headers from OpenAI provide real-time token consumption visibility.</div>
-
-  <div class="header-block">
-    <div class="hb-title">HTTP Response Headers &mdash; 11:08:41 UTC</div>
-    <div class="header-lines">
-      <span class="key">x-ratelimit-limit-tokens:</span> <span class="val">2000000</span><br>
-      <span class="key">x-ratelimit-remaining-tokens:</span> <span class="val crit">118000</span> <span class="comment"># 94% consumed</span><br>
-      <span class="key">x-ratelimit-reset-tokens:</span> <span class="val warn">48m22s</span><br>
-      <span class="key">x-ratelimit-limit-requests:</span> <span class="val">10000</span><br>
-      <span class="key">x-ratelimit-remaining-requests:</span> <span class="val warn">1247</span><br>
-      <span class="key">HTTP/1.1</span> <span class="val crit">429 Too Many Requests</span><br>
-      <span class="key">retry-after:</span> <span class="val warn">12</span> <span class="comment"># seconds</span>
-    </div>
-  </div>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
 </section>
 
-<section class="cost-section">
-  <div class="section-label">Financial Impact</div>
-  <div class="section-title">Cost Impact</div>
-  <div class="section-desc">The excess spend from this single 2-hour incident.</div>
-
-  <div class="cost-box">
-    <div class="cost-number">$34.50</div>
-    <div class="cost-label">Excess spend from this single runaway loop</div>
-    <div class="cost-breakdown">
-      <div class="cost-item">
-        <div class="ci-val">1.88M</div>
-        <div class="ci-label">Tokens burned</div>
-      </div>
-      <div class="cost-item">
-        <div class="ci-val">~$0.018</div>
-        <div class="ci-label">Per 1K tokens (GPT-4o avg)</div>
-      </div>
-      <div class="cost-item">
-        <div class="ci-val">1h 54m</div>
-        <div class="ci-label">Incident duration</div>
-      </div>
-      <div class="cost-item">
-        <div class="ci-val">23</div>
-        <div class="ci-label">Wasted 429 retries</div>
-      </div>
-    </div>
-  </div>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
 </section>
 
-<section class="explain-section">
-  <div class="section-label">OWASP Context</div>
-  <div class="section-title">Denial of Wallet as an OWASP Risk</div>
-  <div class="section-desc">LLM10 &mdash; Unbounded Consumption covers both availability and financial risks.</div>
-
-  <div class="explain-grid">
-    <div class="explain-card">
-      <div class="tag">LLM10</div>
-      <h3>What Is Denial of Wallet?</h3>
-      <p>Unlike traditional denial-of-service attacks that exhaust compute resources, Denial of Wallet attacks exhaust financial resources. Pay-per-token AI APIs create a direct link between uncontrolled consumption and uncontrolled cost. A single runaway loop can burn through an entire monthly budget in hours.</p>
-    </div>
-    <div class="explain-card">
-      <div class="tag">LLM10</div>
-      <h3>Why Existing Tools Miss It</h3>
-      <p>Traditional API gateways monitor request counts. But AI API costs are driven by tokens, not requests. A single request can consume 128,000 tokens. Rate-limit headers are the only real-time signal for token-level consumption &mdash; and most security tools ignore them entirely.</p>
-    </div>
-    <div class="explain-card">
-      <div class="tag">Detection</div>
-      <h3>Header-Based Visibility</h3>
-      <p>Every OpenAI, Anthropic, and Google response includes rate-limit headers showing token consumption, remaining quota, and reset windows. PowerGrabber reads these headers on every response to build a real-time consumption graph &mdash; no body inspection needed.</p>
-    </div>
-    <div class="explain-card">
-      <div class="tag">Prevention</div>
-      <h3>Alert Before the Bill Arrives</h3>
-      <p>PowerGrabber fires alerts when consumption exceeds baseline thresholds. The +340% spike in this incident was detectable within 17 minutes. Without header monitoring, this incident would only be visible on next month's invoice.</p>
-    </div>
-  </div>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
 </section>
 
-<section class="cta">
-  <div class="cta-box">
-    <h2>Stop the Bleed Before It Starts</h2>
-    <p>Real-time AI cost monitoring from HTTP headers. No agents. No body inspection. Just visibility.</p>
-    <a href="index.html">Learn More</a>
-  </div>
-</section>
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
+</div>
 
-<footer class="footer">
-  <a href="index.html">PowerGrabber AI</a> &mdash; AI cost and consumption monitoring from HTTP metadata.
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

@@ -3,405 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Happens When Cursor Hits the AWS Console — PowerGrabber AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>PowerGrabber — LLM Certainty (Cloud Orange)</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Barlow', sans-serif;
-  background: #0c0f1a;
-  color: #d1d5db;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
-a { color: #fb923c; text-decoration: none; }
-a:hover { text-decoration: underline; }
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-.back-link {
-  position: fixed; top: 20px; left: 24px; z-index: 100;
-  background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.3);
-  padding: 8px 18px; border-radius: 8px; font-size: 14px; color: #fb923c;
-  backdrop-filter: blur(8px); transition: background 0.2s;
-}
-.back-link:hover { background: rgba(249,115,22,0.25); text-decoration: none; }
+body{font-family:'Barlow',sans-serif;background:#1a0a00;color:#d6d3d1}
+nav{padding:20px 48px;border-bottom:1px solid rgba(249,115,22,0.12);display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#f97316;font-family:'Barlow',sans-serif;}
+nav a{color:#f97316;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#d6d3d1;opacity:.5;border-bottom:1px solid rgba(249,115,22,0.12)}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Barlow',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#fafaf9;margin-bottom:16px;}
+.hero h1 span{color:#f97316}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#d6d3d1;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#f97316;color:#1a0a00;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #f9731633}
+.btn-ghost{background:transparent;color:#f97316;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #f97316;transition:all .3s}
+.btn-ghost:hover{background:#f9731611}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#f97316;margin-bottom:12px}
+h2{font-family:'Barlow',sans-serif;font-size:1.6rem;font-weight:700;color:#fafaf9;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#d6d3d1;margin-bottom:14px}
+strong{color:#fafaf9}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid rgba(249,115,22,0.12);color:#fafaf9;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.12);border-radius:6px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#f97316}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#f97316;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid rgba(249,115,22,0.12)}
+.steps li::before{content:counter(step)'.';color:#f97316;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#d6d3d1;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.12);border-radius:6px;padding:22px}
+.team-card h3{color:#f97316;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(249,115,22,0.04);border:1px solid rgba(249,115,22,0.12);border-radius:6px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#f97316}
+.price-card h3{font-size:.7rem;font-weight:600;color:#f97316;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#fafaf9;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#d6d3d1;opacity:.6}
+.price-card p{font-size:.8rem;color:#d6d3d1;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid rgba(249,115,22,0.12);margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#f97316;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(249,115,22,0.12);color:#d6d3d1;opacity:.5;font-size:.85rem}
+footer a{color:#f97316;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-header {
-  text-align: center; padding: 100px 24px 60px;
-  background: linear-gradient(180deg, rgba(249,115,22,0.08) 0%, transparent 60%);
-}
-header .tag {
-  display: inline-block; background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.3);
-  color: #fb923c; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
-}
-header h1 { font-size: 46px; font-weight: 800; color: #fff; max-width: 800px; margin: 0 auto 16px; line-height: 1.15; }
-header h1 span { color: #f97316; }
-header p.sub { font-size: 19px; color: #9ca3af; max-width: 640px; margin: 0 auto; }
-
-.container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
-
-/* Timeline Section */
-.timeline-section { padding: 80px 0 40px; }
-.timeline-section h2 { font-size: 28px; color: #fff; font-weight: 700; margin-bottom: 8px; }
-.timeline-section .lead { color: #9ca3af; margin-bottom: 48px; font-size: 16px; }
-
-.timeline {
-  position: relative; display: flex; gap: 0; margin-bottom: 48px;
-  overflow-x: auto; padding-bottom: 16px;
-}
-.timeline::before {
-  content: ''; position: absolute; top: 36px; left: 0; right: 0;
-  height: 3px; background: linear-gradient(90deg, rgba(249,115,22,0.1), #f97316, rgba(249,115,22,0.1));
-  border-radius: 2px;
-}
-.tl-event {
-  flex: 1; min-width: 180px; position: relative; text-align: center; padding-top: 60px;
-}
-.tl-event::before {
-  content: ''; position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
-  width: 18px; height: 18px; border-radius: 50%; background: #1e293b;
-  border: 3px solid #f97316; z-index: 2;
-}
-.tl-event.alert-event::before { background: #f97316; box-shadow: 0 0 12px rgba(249,115,22,0.5); }
-.tl-time { font-size: 11px; color: #6b7280; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px; }
-.tl-label { font-size: 13px; color: #e5e7eb; font-weight: 600; }
-.tl-detail { font-size: 11px; color: #6b7280; margin-top: 4px; }
-
-/* Baseline Section */
-.baseline-section { padding: 40px 0 60px; }
-.baseline-section h2 { font-size: 26px; color: #fff; margin-bottom: 8px; }
-.baseline-section .lead { color: #9ca3af; margin-bottom: 36px; font-size: 15px; max-width: 700px; }
-
-.baseline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-.baseline-card {
-  background: rgba(30,41,59,0.5); border: 1px solid rgba(249,115,22,0.1);
-  border-radius: 12px; padding: 24px; transition: border-color 0.3s;
-}
-.baseline-card:hover { border-color: rgba(249,115,22,0.3); }
-.baseline-card h3 {
-  font-size: 15px; color: #fff; font-weight: 700; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 10px;
-}
-.baseline-card h3 .tool-icon {
-  width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 700; flex-shrink: 0;
-}
-.icon-cursor { background: rgba(59,130,246,0.15); color: #60a5fa; }
-.icon-chatgpt { background: rgba(16,163,127,0.15); color: #34d399; }
-.icon-claude { background: rgba(139,92,246,0.15); color: #a78bfa; }
-
-.endpoint-list { list-style: none; }
-.endpoint-list li {
-  display: flex; align-items: center; gap: 8px; padding: 6px 0;
-  font-size: 13px; color: #9ca3af; border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.endpoint-list li:last-child { border-bottom: none; }
-.ep-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.ep-normal { background: #4ade80; }
-.ep-anomaly { background: #f97316; }
-.endpoint-list li code { font-family: 'Barlow', monospace; color: #d1d5db; font-size: 12px; }
-
-/* Alert Deep Dive */
-.alert-section { padding: 60px 0; }
-.alert-section h2 { font-size: 26px; color: #fff; margin-bottom: 8px; }
-.alert-section .lead { color: #9ca3af; margin-bottom: 36px; font-size: 15px; }
-
-.alert-box {
-  background: rgba(249,115,22,0.06); border: 2px solid rgba(249,115,22,0.3);
-  border-radius: 14px; padding: 32px; margin-bottom: 32px;
-}
-.alert-box-header {
-  display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
-}
-.alert-icon {
-  width: 48px; height: 48px; background: rgba(249,115,22,0.15); border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
-  color: #f97316;
-}
-.alert-meta h3 { font-size: 18px; color: #fff; font-weight: 700; }
-.alert-meta p { font-size: 13px; color: #9ca3af; margin-top: 4px; }
-.alert-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.alert-tag {
-  display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
-}
-.tag-owasp { background: rgba(249,115,22,0.15); color: #fb923c; }
-.tag-severity { background: rgba(239,68,68,0.12); color: #f87171; }
-.tag-tool { background: rgba(59,130,246,0.12); color: #93c5fd; }
-
-.alert-evidence {
-  background: rgba(12,15,26,0.6); border: 1px solid rgba(249,115,22,0.1);
-  border-radius: 10px; padding: 20px; font-size: 13px; color: #d1d5db;
-  margin-top: 16px;
-}
-.alert-evidence h4 { font-size: 13px; color: #fb923c; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-.evidence-row {
-  display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-  align-items: baseline;
-}
-.evidence-row:last-child { border-bottom: none; }
-.evidence-label { font-size: 12px; color: #6b7280; min-width: 140px; flex-shrink: 0; font-weight: 500; }
-.evidence-value { font-size: 13px; color: #e5e7eb; }
-.evidence-value code { background: rgba(249,115,22,0.1); color: #fb923c; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
-
-/* Investigation Section */
-.investigation-section { padding: 40px 0 80px; }
-.investigation-section h2 { font-size: 26px; color: #fff; margin-bottom: 8px; }
-.investigation-section .lead { color: #9ca3af; margin-bottom: 36px; font-size: 15px; max-width: 700px; }
-
-.investigation-steps { display: grid; gap: 20px; }
-.inv-step {
-  display: grid; grid-template-columns: 48px 1fr; gap: 16px;
-  background: rgba(30,41,59,0.4); border: 1px solid rgba(249,115,22,0.08);
-  border-radius: 12px; padding: 24px;
-  transition: border-color 0.3s;
-}
-.inv-step:hover { border-color: rgba(249,115,22,0.25); }
-.step-num {
-  width: 48px; height: 48px; background: rgba(249,115,22,0.1); border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; font-weight: 800; color: #f97316;
-}
-.step-content h3 { font-size: 16px; color: #fff; font-weight: 700; margin-bottom: 6px; }
-.step-content p { font-size: 14px; color: #9ca3af; }
-.step-verdict {
-  margin-top: 10px; display: inline-block; padding: 4px 12px; border-radius: 6px;
-  font-size: 12px; font-weight: 600;
-}
-.verdict-likely { background: rgba(249,115,22,0.12); color: #fb923c; }
-.verdict-unlikely { background: rgba(34,197,94,0.12); color: #4ade80; }
-.verdict-investigate { background: rgba(139,92,246,0.12); color: #a78bfa; }
-
-/* Cloud Provider Icons */
-.cloud-icons {
-  display: flex; gap: 20px; justify-content: center; padding: 40px 0;
-  flex-wrap: wrap;
-}
-.cloud-icon {
-  width: 64px; height: 64px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-  text-align: center; line-height: 1.2;
-}
-.ci-aws { background: rgba(255,153,0,0.12); color: #f59e0b; border: 1px solid rgba(255,153,0,0.2); }
-.ci-gcp { background: rgba(66,133,244,0.12); color: #60a5fa; border: 1px solid rgba(66,133,244,0.2); }
-.ci-azure { background: rgba(0,120,212,0.12); color: #38bdf8; border: 1px solid rgba(0,120,212,0.2); }
-
-footer {
-  text-align: center; padding: 48px 24px;
-  border-top: 1px solid rgba(249,115,22,0.1);
-  color: #6b7280; font-size: 13px;
-}
-
-@media (max-width: 768px) {
-  header h1 { font-size: 30px; }
-  .timeline { flex-direction: column; gap: 0; }
-  .timeline::before { top: 0; bottom: 0; left: 20px; right: auto; width: 3px; height: auto; }
-  .tl-event { text-align: left; padding-top: 0; padding-left: 50px; padding-bottom: 24px; }
-  .tl-event::before { top: 4px; left: 14px; transform: none; }
-  .inv-step { grid-template-columns: 1fr; }
-}
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<a href="index.html" class="back-link">Back to PowerGrabber AI</a>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
 
-<header>
-  <div class="tag">Cloud Security</div>
-  <h1>What Happens When Cursor Hits the <span>AWS Console</span></h1>
-  <p class="sub">An AI coding tool made an unexpected request to console.aws.amazon.com. Here's how PowerGrabber AI detected, flagged, and helped investigate it.</p>
-</header>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
 
-<div class="container">
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
 
-  <!-- Incident Timeline -->
-  <section class="timeline-section">
-    <h2>Incident Timeline</h2>
-    <p class="lead">A sequence of events as observed by PowerGrabber AI on April 7, 2026.</p>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
 
-    <div class="timeline">
-      <div class="tl-event">
-        <div class="tl-time">14:02:11</div>
-        <div class="tl-label">Normal Cursor Traffic</div>
-        <div class="tl-detail">api.openai.com<br>chat/completions</div>
-      </div>
-      <div class="tl-event">
-        <div class="tl-time">14:02:14</div>
-        <div class="tl-label">Code Suggestion</div>
-        <div class="tl-detail">Response includes<br>AWS SDK snippet</div>
-      </div>
-      <div class="tl-event">
-        <div class="tl-time">14:02:18</div>
-        <div class="tl-label">User Accepts</div>
-        <div class="tl-detail">Tab-complete in<br>editor accepted</div>
-      </div>
-      <div class="tl-event alert-event">
-        <div class="tl-time">14:02:22</div>
-        <div class="tl-label">Anomalous Request</div>
-        <div class="tl-detail">console.aws.amazon.com<br>OUTSIDE BASELINE</div>
-      </div>
-      <div class="tl-event alert-event">
-        <div class="tl-time">14:02:22</div>
-        <div class="tl-label">Alert Fired</div>
-        <div class="tl-detail">ASI02 Tool Misuse<br>WARNING generated</div>
-      </div>
-    </div>
-  </section>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
 
-  <!-- Endpoint Baselines -->
-  <section class="baseline-section">
-    <h2>Endpoint Diversity Baselines</h2>
-    <p class="lead">Every AI tool has a normal set of API endpoints it contacts. PowerGrabber AI learns these baselines, then flags deviations.</p>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
 
-    <div class="baseline-grid">
-      <div class="baseline-card">
-        <h3><span class="tool-icon icon-cursor">C</span> Cursor IDE — Normal Baseline</h3>
-        <ul class="endpoint-list">
-          <li><span class="ep-dot ep-normal"></span><code>api.openai.com</code> &mdash; completions</li>
-          <li><span class="ep-dot ep-normal"></span><code>api.anthropic.com</code> &mdash; messages</li>
-          <li><span class="ep-dot ep-normal"></span><code>api2.cursor.sh</code> &mdash; telemetry</li>
-          <li><span class="ep-dot ep-normal"></span><code>update.cursor.sh</code> &mdash; updates</li>
-          <li><span class="ep-dot ep-anomaly"></span><code>console.aws.amazon.com</code> &mdash; <strong style="color:#f97316;">ANOMALY</strong></li>
-        </ul>
-      </div>
-      <div class="baseline-card">
-        <h3><span class="tool-icon icon-chatgpt">G</span> ChatGPT Web — Normal Baseline</h3>
-        <ul class="endpoint-list">
-          <li><span class="ep-dot ep-normal"></span><code>chatgpt.com</code> &mdash; web UI</li>
-          <li><span class="ep-dot ep-normal"></span><code>cdn.oaistatic.com</code> &mdash; assets</li>
-          <li><span class="ep-dot ep-normal"></span><code>ab.chatgpt.com</code> &mdash; analytics</li>
-          <li><span class="ep-dot ep-normal"></span><code>files.oaiusercontent.com</code> &mdash; uploads</li>
-        </ul>
-      </div>
-      <div class="baseline-card">
-        <h3><span class="tool-icon icon-claude">A</span> Claude Code — Normal Baseline</h3>
-        <ul class="endpoint-list">
-          <li><span class="ep-dot ep-normal"></span><code>api.anthropic.com</code> &mdash; messages</li>
-          <li><span class="ep-dot ep-normal"></span><code>sentry.io</code> &mdash; error reporting</li>
-          <li><span class="ep-dot ep-normal"></span><code>statsig.anthropic.com</code> &mdash; telemetry</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Cloud Provider Targets -->
-  <div class="cloud-icons">
-    <div class="cloud-icon ci-aws">AWS</div>
-    <div class="cloud-icon ci-gcp">GCP</div>
-    <div class="cloud-icon ci-azure">Azure</div>
-  </div>
-
-  <!-- Alert Detail -->
-  <section class="alert-section">
-    <h2>The Alert: Out-of-Baseline Endpoint</h2>
-    <p class="lead">PowerGrabber AI fires a WARNING when any AI tool contacts an endpoint outside its learned baseline.</p>
-
-    <div class="alert-box">
-      <div class="alert-box-header">
-        <div class="alert-icon">&#x26a0;</div>
-        <div class="alert-meta">
-          <h3>Cursor IDE contacted console.aws.amazon.com</h3>
-          <p>Endpoint not in 30-day baseline for this tool. First occurrence.</p>
-          <div class="alert-tags">
-            <span class="alert-tag tag-owasp">ASI02 Tool Misuse</span>
-            <span class="alert-tag tag-severity">Severity: HIGH</span>
-            <span class="alert-tag tag-tool">Tool: Cursor IDE</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="alert-evidence">
-        <h4>Evidence Details</h4>
-        <div class="evidence-row">
-          <span class="evidence-label">Timestamp</span>
-          <span class="evidence-value">2026-04-07T14:02:22.418Z</span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">Source Process</span>
-          <span class="evidence-value">Cursor (pid 48291)</span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">Destination</span>
-          <span class="evidence-value"><code>console.aws.amazon.com</code></span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">Request Path</span>
-          <span class="evidence-value"><code>/iam/home#/roles</code></span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">HTTP Method</span>
-          <span class="evidence-value">GET</span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">Baseline Status</span>
-          <span class="evidence-value"><code style="background:rgba(239,68,68,0.15);color:#f87171;">NOT IN BASELINE</code></span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">Prior Occurrences</span>
-          <span class="evidence-value">0 in last 30 days</span>
-        </div>
-        <div class="evidence-row">
-          <span class="evidence-label">Credential in Flight</span>
-          <span class="evidence-value">AWS session cookie detected in request headers</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Investigation -->
-  <section class="investigation-section">
-    <h2>Investigation Walkthrough</h2>
-    <p class="lead">The alert fires. Now what? PowerGrabber AI gives you the evidence to determine root cause.</p>
-
-    <div class="investigation-steps">
-      <div class="inv-step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Goal Hijack via Prompt Injection?</h3>
-          <p>Did the AI model receive a malicious prompt that instructed it to access AWS? Check the request context: was there a recent code file opened that contained instructions like "access the AWS console and list IAM roles"? PowerGrabber AI logs the sequence of AI requests leading up to the anomaly.</p>
-          <span class="step-verdict verdict-investigate">Requires prompt review</span>
-        </div>
-      </div>
-      <div class="inv-step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Excessive Permissions on the Tool?</h3>
-          <p>Does Cursor have access to AWS credentials? If the user's browser or shell has active AWS sessions, a tool with broad permissions could use those credentials. Check: did the Cursor extension have shell access? Was AWS CLI configured in the same environment?</p>
-          <span class="step-verdict verdict-likely">Likely contributing factor</span>
-        </div>
-      </div>
-      <div class="inv-step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>User-Initiated Action?</h3>
-          <p>Did the user intentionally trigger a Cursor feature that accesses AWS (e.g., an MCP server, a plugin for cloud resource browsing)? Correlate with user input events. If the user was actively typing AWS-related code, this may be expected behavior from a configured integration.</p>
-          <span class="step-verdict verdict-unlikely">Low probability — no plugin configured</span>
-        </div>
-      </div>
-      <div class="inv-step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Automated Tool Behavior?</h3>
-          <p>Some AI tools include "web browsing" or "computer use" capabilities that can navigate to arbitrary URLs. If Cursor's AI agent was given a task that involved understanding AWS IAM, it may have attempted to browse the console directly. This is ASI02 — the tool performing actions beyond its intended scope.</p>
-          <span class="step-verdict verdict-likely">Most probable explanation</span>
-        </div>
-      </div>
-      <div class="inv-step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>Resolution &amp; Remediation</h3>
-          <p>Regardless of root cause: restrict the tool's network access to its known baseline endpoints. Configure browser profile isolation so AI tools cannot access cloud console sessions. Add <code>console.aws.amazon.com</code> to the block list for all AI tool processes. Update the ASI02 scorecard.</p>
-          <span class="step-verdict verdict-investigate">Action required</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<footer>
-  <p>PowerGrabber AI &mdash; Endpoint diversity monitoring for cloud security teams.</p>
-  <p style="margin-top: 8px;"><a href="index.html">Back to Home</a></p>
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

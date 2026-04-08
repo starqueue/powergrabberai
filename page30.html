@@ -3,460 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Honest Compliance Tool — PowerGrabber AI</title>
+<title>PowerGrabber — LLM Certainty (Honest Monochrome)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body{font-family:'Inter',sans-serif;background:#fff;color:#555}
+nav{padding:20px 48px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#000;font-family:'Inter',sans-serif;}
+nav a{color:#000;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#555;opacity:.5;border-bottom:1px solid #ddd}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Inter',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#000;margin-bottom:16px;}
+.hero h1 span{color:#000}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#555;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#000;color:#fff;padding:12px 32px;border-radius:0px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #00033}
+.btn-ghost{background:transparent;color:#000;padding:12px 32px;border-radius:0px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #000;transition:all .3s}
+.btn-ghost:hover{background:#00011}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#000;margin-bottom:12px}
+h2{font-family:'Inter',sans-serif;font-size:1.6rem;font-weight:700;color:#000;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#555;margin-bottom:14px}
+strong{color:#000}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #ddd;color:#000;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:#fafafa;border:1px solid #ddd;border-radius:0px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#000}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#000;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #ddd}
+.steps li::before{content:counter(step)'.';color:#000;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#555;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:#fafafa;border:1px solid #ddd;border-radius:0px;padding:22px}
+.team-card h3{color:#000;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:#fafafa;border:1px solid #ddd;border-radius:0px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#000}
+.price-card h3{font-size:.7rem;font-weight:600;color:#000;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#000;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#555;opacity:.6}
+.price-card p{font-size:.8rem;color:#555;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #ddd;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#000;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #ddd;color:#555;opacity:.5;font-size:.85rem}
+footer a{color:#000;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #fff;
-    color: #000;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  nav {
-    padding: 24px 0;
-    max-width: 680px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  nav a {
-    color: #000;
-    text-decoration: none;
-    font-size: 14px;
-  }
-
-  nav a:hover { text-decoration: underline; }
-
-  .nav-brand { font-weight: 700; }
-
-  .page {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  .spacer-lg { height: 96px; }
-  .spacer-md { height: 64px; }
-  .spacer-sm { height: 40px; }
-
-  h1 {
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.03em;
-    margin-bottom: 24px;
-  }
-
-  h2 {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
-  }
-
-  p {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 16px;
-  }
-
-  .subtitle {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 0;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid #e0e0e0;
-    margin: 0;
-  }
-
-  /* --- Cannot / Can lists --- */
-  .list-section {
-    margin-bottom: 0;
-  }
-
-  .item {
-    padding: 14px 0;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    font-size: 15px;
-  }
-
-  .item:last-child { border-bottom: none; }
-
-  .marker {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    margin-top: 1px;
-  }
-
-  .marker-no {
-    color: #000;
-  }
-
-  .marker-yes {
-    color: #000;
-  }
-
-  .item-text {
-    flex: 1;
-  }
-
-  .item-label {
-    font-weight: 600;
-    color: #000;
-  }
-
-  .item-desc {
-    color: #666;
-    font-size: 14px;
-    margin-top: 2px;
-  }
-
-  /* --- Blockquote --- */
-  .quote-block {
-    border-left: 3px solid #000;
-    padding: 24px 0 24px 28px;
-    margin: 0;
-  }
-
-  .quote-block p {
-    font-size: 20px;
-    font-weight: 600;
-    color: #000;
-    line-height: 1.5;
-    margin-bottom: 0;
-    font-style: normal;
-  }
-
-  /* --- Argument section --- */
-  .argument {
-    font-size: 16px;
-    color: #333;
-    line-height: 1.8;
-  }
-
-  .argument strong {
-    color: #000;
-  }
-
-  /* --- Simple table --- */
-  .coverage-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 8px;
-  }
-
-  .coverage-table th {
-    text-align: left;
-    font-weight: 600;
-    padding: 10px 0;
-    border-bottom: 2px solid #000;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .coverage-table td {
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: top;
-  }
-
-  .coverage-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .status-assessed {
-    font-weight: 600;
-    color: #000;
-  }
-
-  .status-not {
-    color: #999;
-  }
-
-  /* --- Footer --- */
-  .footer {
-    padding: 64px 0 48px;
-    text-align: center;
-  }
-
-  .footer a {
-    color: #000;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .footer a:hover { text-decoration: underline; }
-
-  .footer-note {
-    font-size: 13px;
-    color: #999;
-    margin-top: 12px;
-  }
-
-  @media (max-width: 600px) {
-    h1 { font-size: 28px; }
-    .page { padding: 0 20px; }
-    .spacer-lg { height: 64px; }
-  }
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<div class="page">
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
 
-  <nav>
-    <a href="index.html" class="nav-brand">PowerGrabber AI</a>
-    <a href="index.html">Home</a>
-  </nav>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
 
-  <div class="spacer-lg"></div>
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
 
-  <h1>The Honest Compliance Tool</h1>
-  <p class="subtitle">We start with what we cannot do. Most vendors end there by accident.</p>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
 
-  <div class="spacer-md"></div>
-  <hr>
-  <div class="spacer-md"></div>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
 
-  <h2>What PowerGrabber cannot do</h2>
-  <p>These are real limitations. Not edge cases. Not items on a future roadmap. If you need coverage here, you need a different tool.</p>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
 
-  <div class="spacer-sm"></div>
-
-  <div class="list-section">
-    <div class="item">
-      <div class="marker marker-no">&times;</div>
-      <div class="item-text">
-        <div class="item-label">Read request or response bodies</div>
-        <div class="item-desc">PowerGrabber operates at the network-metadata level. It sees endpoints, headers, and byte counts. It never inspects prompt content or model output.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-no">&times;</div>
-      <div class="item-text">
-        <div class="item-label">Assess prompt injection content</div>
-        <div class="item-desc">Without reading payloads, it cannot detect or score prompt injection attacks. You need an inline proxy or application-layer tool for that.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-no">&times;</div>
-      <div class="item-text">
-        <div class="item-label">Score misinformation or hallucination</div>
-        <div class="item-desc">It has no access to model outputs. It cannot evaluate factual accuracy, bias, or hallucination rates.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-no">&times;</div>
-      <div class="item-text">
-        <div class="item-label">Track local code execution</div>
-        <div class="item-desc">AI-generated code that runs locally is outside the network observation boundary. PowerGrabber sees the API call, not what happens after.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-no">&times;</div>
-      <div class="item-text">
-        <div class="item-label">Reconcile exact costs</div>
-        <div class="item-desc">Cost figures are estimates based on token-count heuristics and published pricing. They will not match your invoice to the cent.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-no">&times;</div>
-      <div class="item-text">
-        <div class="item-label">Identify individual users on shared machines</div>
-        <div class="item-desc">On multi-user hosts, it attributes traffic to the machine, not the person. Per-user attribution requires OS-level identity integration it does not provide.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="spacer-md"></div>
-  <hr>
-  <div class="spacer-md"></div>
-
-  <h2>What PowerGrabber can do</h2>
-
-  <div class="spacer-sm"></div>
-
-  <div class="list-section">
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">Endpoint detection</div>
-        <div class="item-desc">Identify every AI API endpoint contacted from your network. OpenAI, Anthropic, Google, Cohere, Replicate, HuggingFace, and 40+ others.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">Cost estimation</div>
-        <div class="item-desc">Estimate spend per provider, team, and time period using token-count heuristics and published pricing tables.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">Credential exposure detection</div>
-        <div class="item-desc">Detect API keys sent over unencrypted channels, keys present in headers to unexpected endpoints, and credential reuse patterns.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">Data flow mapping</div>
-        <div class="item-desc">Map which internal systems talk to which AI providers, how often, and how much data flows in each direction.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">OWASP LLM Top 10 scoring (9 of 20 items)</div>
-        <div class="item-desc">Assess 9 items from network metadata alone. The other 11 are marked NOT ASSESSABLE &mdash; not silently skipped.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">Policy engine</div>
-        <div class="item-desc">Define rules: block providers, enforce encryption, cap spend, require approval for new endpoints. Enforce them at the network level.</div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="marker marker-yes">+</div>
-      <div class="item-text">
-        <div class="item-label">Tool fingerprinting</div>
-        <div class="item-desc">Identify which AI tools (Copilot, Cursor, ChatGPT, Claude) are in use by their network signatures, without installing agents on endpoints.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="spacer-md"></div>
-  <hr>
-  <div class="spacer-md"></div>
-
-  <h2>NOT ASSESSABLE is a feature</h2>
-
-  <div class="spacer-sm"></div>
-
-  <div class="argument">
-    <p>Most compliance tools present a single score. 87/100. A green checkmark. A letter grade. They do not tell you which items were actually measured and which were assumed, inferred, or quietly skipped.</p>
-
-    <p>PowerGrabber scores 9 of 20 OWASP LLM Top 10 items from network metadata. The remaining 11 are explicitly marked <strong>NOT ASSESSABLE</strong>.</p>
-
-    <p>Those 8 NOT ASSESSABLE items are not failures. They are a map. They tell your security team exactly where to focus other tools &mdash; application-layer scanners, code review, red-team exercises. Instead of a false sense of coverage, you get an honest gap analysis.</p>
-
-    <p>A vendor who claims 100% coverage is either inspecting your data in ways you should question, or they are marking items as "pass" without evidence.</p>
-  </div>
-
-  <div class="spacer-sm"></div>
-
-  <table class="coverage-table">
-    <thead>
-      <tr>
-        <th>OWASP Item</th>
-        <th>Status</th>
-        <th>Method</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>LLM01: Prompt Injection</td>
-        <td class="status-not">NOT ASSESSABLE</td>
-        <td class="status-not">Requires payload inspection</td>
-      </tr>
-      <tr>
-        <td>LLM02: Insecure Output</td>
-        <td class="status-not">NOT ASSESSABLE</td>
-        <td class="status-not">Requires response inspection</td>
-      </tr>
-      <tr>
-        <td>LLM03: Training Data Poisoning</td>
-        <td class="status-not">NOT ASSESSABLE</td>
-        <td class="status-not">Requires model-level access</td>
-      </tr>
-      <tr>
-        <td>LLM04: Denial of Service</td>
-        <td class="status-assessed">ASSESSED</td>
-        <td>Request rate + payload size monitoring</td>
-      </tr>
-      <tr>
-        <td>LLM05: Supply Chain</td>
-        <td class="status-assessed">ASSESSED</td>
-        <td>Endpoint + provider inventory</td>
-      </tr>
-      <tr>
-        <td>LLM06: Sensitive Info Disclosure</td>
-        <td class="status-assessed">ASSESSED</td>
-        <td>Credential + data flow detection</td>
-      </tr>
-      <tr>
-        <td>LLM07: Insecure Plugin Design</td>
-        <td class="status-assessed">ASSESSED</td>
-        <td>Tool fingerprinting + endpoint mapping</td>
-      </tr>
-      <tr>
-        <td>LLM08: Excessive Agency</td>
-        <td class="status-not">NOT ASSESSABLE</td>
-        <td class="status-not">Requires application-layer context</td>
-      </tr>
-      <tr>
-        <td>LLM09: Overreliance</td>
-        <td class="status-not">NOT ASSESSABLE</td>
-        <td class="status-not">Requires human workflow analysis</td>
-      </tr>
-      <tr>
-        <td>LLM10: Model Theft</td>
-        <td class="status-assessed">ASSESSED</td>
-        <td>Anomalous extraction pattern detection</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="spacer-md"></div>
-  <hr>
-  <div class="spacer-md"></div>
-
-  <div class="quote-block">
-    <p>A security tool you can't audit is a liability. A compliance score you can't verify is theatre.</p>
-  </div>
-
-  <div class="spacer-md"></div>
-  <hr>
-  <div class="spacer-md"></div>
-
-  <p>PowerGrabber is an open-source network observation tool. Every detection method is documented. Every limitation is stated. Every score can be reproduced from raw packet data.</p>
-
-  <p>If that sounds like less than what other vendors promise, it is. That is the point.</p>
-
-  <div class="spacer-lg"></div>
-
-  <div class="footer">
-    <a href="index.html">Back to PowerGrabber AI</a>
-    <div class="footer-note">No gradients were harmed in the making of this page.</div>
-  </div>
-
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

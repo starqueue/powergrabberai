@@ -3,365 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OWASP AI Compliance in One Scorecard — PowerGrabber AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>PowerGrabber — LLM Certainty (Navy Formal)</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background: #ffffff; color: #1e293b; line-height: 1.6; }
-h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; color: #1e293b; }
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-/* Navigation */
-.nav { background: #1e293b; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; }
-.nav a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; }
-.nav a:hover { color: #ffffff; }
-.nav .brand { color: #ffffff; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+body{font-family:'Inter',sans-serif;background:#fff;color:#475569}
+nav{padding:20px 48px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#1e293b;font-family:'Playfair Display',sans-serif;}
+nav a{color:#1e293b;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#475569;opacity:.5;border-bottom:1px solid #e2e8f0}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Playfair Display',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#0f172a;margin-bottom:16px;}
+.hero h1 span{color:#1e293b}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#475569;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#1e293b;color:#fff;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #1e293b33}
+.btn-ghost{background:transparent;color:#1e293b;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #1e293b;transition:all .3s}
+.btn-ghost:hover{background:#1e293b11}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#1e293b;margin-bottom:12px}
+h2{font-family:'Playfair Display',sans-serif;font-size:1.6rem;font-weight:700;color:#0f172a;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#475569;margin-bottom:14px}
+strong{color:#0f172a}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#1e293b}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#1e293b;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #e2e8f0}
+.steps li::before{content:counter(step)'.';color:#1e293b;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#475569;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:22px}
+.team-card h3{color:#1e293b;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#1e293b}
+.price-card h3{font-size:.7rem;font-weight:600;color:#1e293b;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#475569;opacity:.6}
+.price-card p{font-size:.8rem;color:#475569;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #e2e8f0;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#1e293b;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #e2e8f0;color:#475569;opacity:.5;font-size:.85rem}
+footer a{color:#1e293b;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-/* Hero */
-.hero { background: #1e293b; padding: 80px 40px 60px; text-align: center; }
-.hero h1 { color: #ffffff; font-size: 48px; font-weight: 900; line-height: 1.15; max-width: 800px; margin: 0 auto 20px; }
-.hero .subtitle { color: #94a3b8; font-size: 18px; max-width: 640px; margin: 0 auto 32px; font-weight: 300; }
-.hero .badge { display: inline-block; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #e2e8f0; padding: 8px 20px; border-radius: 4px; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; }
-
-/* Main content */
-.content { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
-.section-title { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
-.section-desc { font-size: 16px; color: #475569; margin-bottom: 40px; max-width: 700px; line-height: 1.7; }
-
-/* Scorecard */
-.scorecard { border: 2px solid #1e293b; border-radius: 2px; margin-bottom: 60px; overflow: hidden; }
-.scorecard-header { background: #1e293b; color: #ffffff; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; }
-.scorecard-header h3 { font-size: 20px; font-weight: 600; color: #ffffff; }
-.scorecard-header .meta { font-size: 13px; color: #94a3b8; text-align: right; }
-.scorecard-header .meta span { display: block; }
-.scorecard-body { padding: 0; }
-
-.sc-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.sc-table thead th { background: #f1f5f9; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: #475569; border-bottom: 1px solid #e2e8f0; }
-.sc-table tbody td { padding: 11px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-.sc-table tbody tr:hover { background: #f8fafc; }
-
-.sc-table .id-col { font-family: 'Inter', monospace; font-weight: 600; color: #1e293b; width: 90px; }
-.sc-table .name-col { color: #334155; }
-.sc-table .source-col { font-size: 12px; color: #64748b; width: 140px; }
-
-.status { display: inline-block; padding: 3px 12px; border-radius: 2px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.status-pass { background: #dcfce7; color: #166534; }
-.status-warning { background: #fef9c3; color: #854d0e; }
-.status-fail { background: #fee2e2; color: #991b1b; }
-.status-monitoring { background: #e0e7ff; color: #3730a3; }
-.status-na { background: #f1f5f9; color: #64748b; }
-
-.sc-section-row td { background: #f8fafc; font-weight: 600; font-size: 13px; color: #1e293b; letter-spacing: 0.5px; padding: 10px 16px; border-bottom: 1px solid #e2e8f0; }
-
-/* Status legend */
-.legend { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 60px; padding: 28px 32px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; }
-.legend-item { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 180px; }
-.legend-item .status { flex-shrink: 0; }
-.legend-item .legend-text { font-size: 13px; color: #475569; line-height: 1.5; }
-.legend-item .legend-text strong { color: #1e293b; display: block; font-size: 14px; margin-bottom: 2px; }
-
-/* Coverage section */
-.coverage { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 60px; align-items: start; }
-.coverage-visual { background: #1e293b; border-radius: 2px; padding: 32px; color: #ffffff; }
-.coverage-visual h4 { font-size: 18px; margin-bottom: 20px; color: #ffffff; }
-.coverage-bar-outer { background: #334155; height: 40px; border-radius: 2px; overflow: hidden; margin-bottom: 12px; position: relative; }
-.coverage-bar-inner { background: linear-gradient(90deg, #22c55e, #4ade80); height: 100%; width: 45%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
-.coverage-labels { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; }
-.coverage-stat { display: flex; gap: 24px; margin-top: 24px; }
-.coverage-stat div { text-align: center; flex: 1; }
-.coverage-stat .num { font-size: 36px; font-weight: 700; font-family: 'Playfair Display', serif; color: #ffffff; }
-.coverage-stat .label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
-.coverage-text h4 { font-size: 24px; margin-bottom: 16px; }
-.coverage-text p { color: #475569; font-size: 15px; line-height: 1.75; margin-bottom: 16px; }
-.coverage-text .trust-note { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 16px; font-size: 14px; color: #92400e; line-height: 1.6; }
-
-/* Export formats */
-.exports { margin-bottom: 60px; }
-.export-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.export-card { border: 1px solid #e2e8f0; padding: 24px; text-align: center; border-radius: 2px; transition: border-color 0.2s; }
-.export-card:hover { border-color: #1e293b; }
-.export-card .format { font-family: 'Inter', monospace; font-size: 24px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
-.export-card .desc { font-size: 13px; color: #64748b; line-height: 1.5; }
-
-/* CTA */
-.cta { background: #1e293b; padding: 60px 40px; text-align: center; border-radius: 2px; margin-bottom: 60px; }
-.cta h2 { color: #ffffff; font-size: 32px; margin-bottom: 12px; }
-.cta p { color: #94a3b8; font-size: 16px; margin-bottom: 28px; }
-.cta a { display: inline-block; background: #ffffff; color: #1e293b; padding: 14px 36px; text-decoration: none; font-weight: 600; font-size: 15px; border-radius: 2px; transition: background 0.2s; }
-.cta a:hover { background: #f1f5f9; }
-
-/* Footer */
-.footer { background: #0f172a; padding: 32px 40px; text-align: center; color: #64748b; font-size: 13px; }
-.footer a { color: #94a3b8; text-decoration: none; }
-
-@media (max-width: 768px) {
-  .hero h1 { font-size: 32px; }
-  .coverage { grid-template-columns: 1fr; }
-  .export-grid { grid-template-columns: repeat(2, 1fr); }
-  .legend { flex-direction: column; gap: 16px; }
-  .sc-table { font-size: 12px; }
-  .sc-table thead th, .sc-table tbody td { padding: 8px 10px; }
-}
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <span class="brand">PowerGrabber AI</span>
-  <a href="index.html">&larr; Back to Home</a>
-</nav>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
 <section class="hero">
-  <div class="badge">OWASP Top 10 for LLM Applications &amp; Agentic Security</div>
-  <h1>OWASP AI Compliance in One Scorecard</h1>
-  <p class="subtitle">Automated, evidence-based compliance scoring across all 20 OWASP AI risk categories. No questionnaires. No guesswork. Just HTTP metadata and honest answers.</p>
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
 </section>
 
-<div class="content">
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
 
-  <h2 class="section-title">The Scorecard</h2>
-  <p class="section-desc">A single scan of your organisation's AI traffic produces this compliance artefact. Every status is backed by observable evidence from HTTP headers, response codes, and endpoint metadata.</p>
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
 
-  <div class="scorecard">
-    <div class="scorecard-header">
-      <div>
-        <h3>OWASP AI Compliance Scorecard</h3>
-        <span style="font-size:13px;color:#94a3b8;">PowerGrabber AI &mdash; Automated Assessment</span>
-      </div>
-      <div class="meta">
-        <span>Report Date: 2026-04-08</span>
-        <span>Scan Duration: 24 hours</span>
-        <span>Endpoints Observed: 14</span>
-      </div>
-    </div>
-    <div class="scorecard-body">
-      <table class="sc-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Risk Category</th>
-            <th>Status</th>
-            <th>Evidence Source</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="sc-section-row"><td colspan="4">OWASP Top 10 for LLM Applications 2025</td></tr>
-          <tr>
-            <td class="id-col">LLM01</td>
-            <td class="name-col">Prompt Injection</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires body inspection</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM02</td>
-            <td class="name-col">Sensitive Information Disclosure</td>
-            <td><span class="status status-warning">Warning</span></td>
-            <td class="source-col">Origin-destination mapping</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM03</td>
-            <td class="name-col">Supply Chain Vulnerabilities</td>
-            <td><span class="status status-pass">Pass</span></td>
-            <td class="source-col">Model version headers</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM04</td>
-            <td class="name-col">Data and Model Poisoning</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires training data access</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM05</td>
-            <td class="name-col">Improper Output Handling</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires body inspection</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM06</td>
-            <td class="name-col">Excessive Agency</td>
-            <td><span class="status status-monitoring">Monitoring</span></td>
-            <td class="source-col">Tool-call frequency patterns</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM07</td>
-            <td class="name-col">System Prompt Leakage</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires body inspection</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM08</td>
-            <td class="name-col">Vector and Embedding Weaknesses</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires embedding access</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM09</td>
-            <td class="name-col">Misinformation</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires output evaluation</td>
-          </tr>
-          <tr>
-            <td class="id-col">LLM10</td>
-            <td class="name-col">Unbounded Consumption</td>
-            <td><span class="status status-fail">Fail</span></td>
-            <td class="source-col">Rate-limit &amp; token headers</td>
-          </tr>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
 
-          <tr class="sc-section-row"><td colspan="4">OWASP Top 10 for Agentic Security 2025</td></tr>
-          <tr>
-            <td class="id-col">ASI01</td>
-            <td class="name-col">Agentic Identity &amp; Access Abuse</td>
-            <td><span class="status status-warning">Warning</span></td>
-            <td class="source-col">Auth header patterns</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI02</td>
-            <td class="name-col">Tool &amp; Function Exploitation</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires function-call body</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI03</td>
-            <td class="name-col">Unchained Agency</td>
-            <td><span class="status status-monitoring">Monitoring</span></td>
-            <td class="source-col">Sequential request chains</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI04</td>
-            <td class="name-col">Cascading Hallucination Attacks</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires output evaluation</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI05</td>
-            <td class="name-col">Memory &amp; Context Manipulation</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires session body data</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI06</td>
-            <td class="name-col">Uncontrolled Agentic Autonomy</td>
-            <td><span class="status status-pass">Pass</span></td>
-            <td class="source-col">Request chain analysis</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI07</td>
-            <td class="name-col">Inadequate Sandboxing</td>
-            <td><span class="status status-na">Not Assessable</span></td>
-            <td class="source-col">Requires host-level access</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI08</td>
-            <td class="name-col">Agentic Supply Chain Compromise</td>
-            <td><span class="status status-pass">Pass</span></td>
-            <td class="source-col">Endpoint &amp; version inventory</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI09</td>
-            <td class="name-col">Logging &amp; Monitoring Gaps</td>
-            <td><span class="status status-pass">Pass</span></td>
-            <td class="source-col">Metadata capture validation</td>
-          </tr>
-          <tr>
-            <td class="id-col">ASI10</td>
-            <td class="name-col">Multi-Agent Trust Exploitation</td>
-            <td><span class="status status-warning">Warning</span></td>
-            <td class="source-col">Cross-agent traffic mapping</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
 
-  <h2 class="section-title">Five Scoring Statuses</h2>
-  <p class="section-desc">Every assessment maps to one of five statuses. There are no ambiguous traffic-light colours &mdash; each status has a precise definition.</p>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
 
-  <div class="legend">
-    <div class="legend-item">
-      <span class="status status-pass">Pass</span>
-      <div class="legend-text"><strong>Pass</strong>Observable evidence confirms controls are in place and functioning correctly.</div>
-    </div>
-    <div class="legend-item">
-      <span class="status status-warning">Warning</span>
-      <div class="legend-text"><strong>Warning</strong>Evidence suggests partial controls or potential risk indicators that require review.</div>
-    </div>
-    <div class="legend-item">
-      <span class="status status-fail">Fail</span>
-      <div class="legend-text"><strong>Fail</strong>Observable evidence confirms a control failure or active risk condition.</div>
-    </div>
-    <div class="legend-item">
-      <span class="status status-monitoring">Monitoring</span>
-      <div class="legend-text"><strong>Monitoring</strong>Baseline data is being collected. Assessment will be available after sufficient observation.</div>
-    </div>
-    <div class="legend-item">
-      <span class="status status-na">Not Assessable</span>
-      <div class="legend-text"><strong>Not Assessable</strong>This risk cannot be evaluated from HTTP metadata alone. Requires body inspection or other data sources.</div>
-    </div>
-  </div>
-
-  <h2 class="section-title">Honest Coverage: 9 of 20</h2>
-  <p class="section-desc">PowerGrabber assessess 9 of 20 OWASP items from HTTP metadata. The other 11 are marked NOT ASSESSABLE. Here is why that honesty matters.</p>
-
-  <div class="coverage">
-    <div class="coverage-visual">
-      <h4>Assessment Coverage</h4>
-      <div class="coverage-bar-outer">
-        <div class="coverage-bar-inner">45%</div>
-      </div>
-      <div class="coverage-labels">
-        <span>0 items</span>
-        <span>9 assessable</span>
-        <span>20 total</span>
-      </div>
-      <div class="coverage-stat">
-        <div><div class="num">9</div><div class="label">Assessable</div></div>
-        <div><div class="num">11</div><div class="label">Not Assessable</div></div>
-        <div><div class="num">0</div><div class="label">Guesses</div></div>
-      </div>
-    </div>
-    <div class="coverage-text">
-      <h4>Why Honesty Builds Trust</h4>
-      <p>Most compliance tools stretch thin signals into confident verdicts. PowerGrabber takes the opposite approach: if we cannot see inside request bodies, we will not pretend we can assess prompt injection (LLM01) or system prompt leakage (LLM07).</p>
-      <p>The 9 items we <em>can</em> assess are grounded in observable, repeatable HTTP metadata: rate-limit headers, response status codes, endpoint patterns, model version strings, authentication headers, and traffic flow graphs.</p>
-      <div class="trust-note">
-        <strong>For auditors:</strong> A scorecard that says "NOT ASSESSABLE" for 11 items is more trustworthy than one that claims PASS for all 20. Your auditors will agree.
-      </div>
-    </div>
-  </div>
-
-  <h2 class="section-title">Export Formats</h2>
-  <p class="section-desc">Scorecards are generated as structured data, ready for your GRC platform, CI/CD pipeline, or board report.</p>
-
-  <div class="export-grid">
-    <div class="export-card">
-      <div class="format">JSON</div>
-      <div class="desc">Machine-readable structured output. Ideal for API integrations and automated pipelines.</div>
-    </div>
-    <div class="export-card">
-      <div class="format">CSV</div>
-      <div class="desc">Spreadsheet-compatible tabular data. Import directly into Excel or Google Sheets.</div>
-    </div>
-    <div class="export-card">
-      <div class="format">SARIF</div>
-      <div class="desc">Static Analysis Results Interchange Format. Native GitHub Advanced Security integration.</div>
-    </div>
-    <div class="export-card">
-      <div class="format">Markdown</div>
-      <div class="desc">Human-readable report format. Paste directly into Confluence, Notion, or wiki pages.</div>
-    </div>
-  </div>
-
-  <div class="cta">
-    <h2>Generate Your First Scorecard</h2>
-    <p>One scan. Twenty risk categories. Zero body inspection. Complete in under 60 seconds.</p>
-    <a href="index.html">Learn More About PowerGrabber AI</a>
-  </div>
-
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<footer class="footer">
-  <a href="index.html">PowerGrabber AI</a> &mdash; OWASP AI compliance from HTTP metadata alone.
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

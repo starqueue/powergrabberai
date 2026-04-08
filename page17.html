@@ -3,362 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerGrabber AI — One API Key, Four Tools, Zero Accountability</title>
+<title>PowerGrabber — LLM Certainty (Forensic Amber)</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 
-body{
-  font-family:'IBM Plex Sans',sans-serif;
-  background:#111827;
-  color:#d1d5db;
-  min-height:100vh;
-  line-height:1.7;
-}
-
-nav{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:20px 48px;
-  border-bottom:1px solid #1f2937;
-}
-.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#f59e0b}
-.logo span{color:#6b7280}
-nav a{color:#f59e0b;text-decoration:none;font-size:.85rem;opacity:.8;transition:opacity .2s}
-nav a:hover{opacity:1}
-
-.hero{
-  max-width:900px;margin:0 auto;padding:80px 32px 48px;text-align:center;
-}
-.badge{
-  display:inline-block;background:rgba(245,158,11,.12);color:#f59e0b;
-  padding:6px 18px;border-radius:4px;font-size:.75rem;font-weight:600;
-  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px;
-  border:1px solid rgba(245,158,11,.25);
-}
-.hero h1{
-  font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.2rem);
-  font-weight:700;line-height:1.2;color:#f9fafb;margin-bottom:20px;
-}
-.hero h1 em{font-style:normal;color:#f59e0b}
-.hero p{font-size:1.05rem;color:#9ca3af;max-width:680px;margin:0 auto;line-height:1.8}
-
-.case-file{
-  max-width:880px;margin:48px auto;padding:0 32px;
-}
-.case-file h2{
-  font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;
-  color:#f59e0b;margin-bottom:12px;
-  display:flex;align-items:center;gap:12px;
-}
-.case-file h2::before{
-  content:'';display:block;width:4px;height:28px;background:#f59e0b;border-radius:2px;
-}
-
-.evidence-box{
-  background:#0d1117;border:1px solid #f59e0b33;border-radius:8px;
-  padding:32px;margin:24px 0 48px;position:relative;
-  box-shadow:0 0 40px rgba(245,158,11,.04);
-}
-.evidence-box::before{
-  content:'EVIDENCE';position:absolute;top:-10px;left:24px;
-  background:#111827;padding:0 12px;font-size:.65rem;font-weight:600;
-  letter-spacing:2px;color:#f59e0b;
-}
-
-.connection-diagram{
-  display:flex;flex-direction:column;gap:0;margin:24px 0;
-}
-.conn-row{
-  display:flex;align-items:center;gap:0;padding:12px 0;
-}
-.conn-node{
-  background:#1a2332;border:1px solid #374151;border-radius:6px;
-  padding:10px 18px;font-family:'Space Grotesk',sans-serif;font-size:.85rem;
-  font-weight:600;color:#e5e7eb;white-space:nowrap;min-width:140px;text-align:center;
-}
-.conn-node.tool{border-color:#3b82f6;color:#60a5fa}
-.conn-node.key{border-color:#f59e0b;color:#f59e0b;background:#1a1a0d}
-.conn-node.org{border-color:#8b5cf6;color:#a78bfa}
-.conn-line{
-  flex:1;height:1px;border-top:2px dashed #374151;min-width:30px;position:relative;
-}
-.conn-line.active{border-color:#f59e0b}
-.conn-line .arrow{
-  position:absolute;right:-2px;top:-5px;
-  width:0;height:0;border-left:6px solid #374151;border-top:4px solid transparent;border-bottom:4px solid transparent;
-}
-.conn-line.active .arrow{border-left-color:#f59e0b}
-
-.diagram-container{
-  background:#0a0f18;border:1px solid #1f2937;border-radius:8px;padding:32px;margin:24px 0;
-}
-.diagram-title{
-  font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#6b7280;margin-bottom:20px;
-}
-.diagram-grid{
-  display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:8px;
-}
-.d-tool{
-  background:#111827;border:1px solid #374151;border-radius:8px;padding:16px;text-align:center;
-}
-.d-tool-name{font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:#60a5fa;margin-bottom:4px}
-.d-tool-detail{font-size:.7rem;color:#6b7280}
-.d-arrow{text-align:center;color:#f59e0b;font-size:1.2rem}
-.d-key{
-  background:rgba(245,158,11,.08);border:2px solid #f59e0b;border-radius:8px;padding:16px;text-align:center;
-}
-.d-key-label{font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;color:#f59e0b;margin-bottom:4px}
-.d-key-val{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#fbbf24}
-
-.full-diagram{
-  display:flex;flex-direction:column;align-items:center;gap:12px;margin:20px 0;
-}
-.fd-row{display:flex;align-items:center;gap:16px;width:100%;justify-content:center;flex-wrap:wrap}
-.fd-box{
-  background:#111827;border:1px solid #374151;border-radius:6px;padding:12px 20px;
-  font-size:.85rem;text-align:center;min-width:120px;
-}
-.fd-box.amber{border-color:#f59e0b;color:#fbbf24}
-.fd-box.blue{border-color:#3b82f6;color:#60a5fa}
-.fd-box.purple{border-color:#8b5cf6;color:#a78bfa}
-.fd-box.red{border-color:#ef4444;color:#f87171}
-.fd-connector{color:#4b5563;font-size:.75rem}
-.fd-vert{color:#4b5563;font-size:.75rem}
-
-.scorecard{
-  background:#0d1117;border:1px solid #374151;border-radius:8px;overflow:hidden;margin:24px 0;
-}
-.sc-header{
-  background:#1a2332;padding:14px 20px;border-bottom:1px solid #374151;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.sc-header span{font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:600;color:#e5e7eb}
-.sc-header .tag{
-  font-size:.65rem;padding:3px 10px;border-radius:3px;font-weight:600;letter-spacing:1px;
-}
-.tag-warn{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
-.tag-pass{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
-.tag-fail{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
-.sc-body{padding:16px 20px;font-family:'Space Grotesk',monospace;font-size:.8rem;line-height:2}
-.sc-line{display:flex;gap:12px}
-.sc-label{color:#6b7280;min-width:180px}
-.sc-val{color:#e5e7eb}
-.sc-val.amber{color:#f59e0b}
-.sc-val.red{color:#ef4444}
-
-pre.output{
-  background:#0a0f18;border:1px solid #1f2937;border-radius:6px;padding:20px;
-  font-family:'Space Grotesk',monospace;font-size:.78rem;line-height:1.9;
-  color:#9ca3af;overflow-x:auto;margin:16px 0;
-}
-pre.output .warn{color:#f59e0b;font-weight:600}
-pre.output .fail{color:#ef4444;font-weight:600}
-pre.output .pass{color:#22c55e}
-pre.output .dim{color:#4b5563}
-pre.output .highlight{color:#fbbf24}
-
-.explanation{
-  max-width:880px;margin:0 auto;padding:0 32px 64px;
-}
-.exp-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin:32px 0;
-}
-.exp-card{
-  background:#0d1117;border:1px solid #1f2937;border-radius:8px;padding:24px;
-}
-.exp-card h3{
-  font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;
-  color:#f59e0b;margin-bottom:12px;display:flex;align-items:center;gap:8px;
-}
-.exp-card h3 .icon{font-size:1.2rem}
-.exp-card p{font-size:.88rem;color:#9ca3af;line-height:1.7}
-
-.how-section{
-  max-width:880px;margin:0 auto;padding:0 32px 64px;
-}
-.how-section h2{
-  font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;
-  color:#f9fafb;margin-bottom:32px;text-align:center;
-}
-.how-steps{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;
-}
-.how-step{
-  background:#0d1117;border:1px solid #1f2937;border-radius:8px;padding:24px;
-  position:relative;
-}
-.how-step .num{
-  font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:#f59e0b;
-  opacity:.3;position:absolute;top:12px;right:16px;
-}
-.how-step h4{font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:#e5e7eb;margin-bottom:8px}
-.how-step p{font-size:.82rem;color:#6b7280;line-height:1.6}
-
-.cta{
-  text-align:center;padding:64px 32px 80px;
-  border-top:1px solid #1f2937;
-}
-.cta h2{
-  font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:#f9fafb;margin-bottom:16px;
-}
-.cta p{color:#6b7280;margin-bottom:32px;font-size:1rem}
-.cta-btn{
-  display:inline-block;background:#f59e0b;color:#111827;
-  padding:14px 36px;border-radius:6px;text-decoration:none;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;
-  transition:background .2s;
-}
-.cta-btn:hover{background:#d97706}
-
-footer{
-  text-align:center;padding:32px;border-top:1px solid #1f2937;
-  font-size:.75rem;color:#4b5563;
-}
+body{font-family:'IBM Plex Sans',sans-serif;background:#111827;color:#9ca3af}
+nav{padding:20px 48px;border-bottom:1px solid rgba(245,158,11,0.15);display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#f59e0b;font-family:'Space Grotesk',sans-serif;}
+nav a{color:#f59e0b;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;opacity:.5;border-bottom:1px solid rgba(245,158,11,0.15)}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#f9fafb;margin-bottom:16px;}
+.hero h1 span{color:#f59e0b}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#9ca3af;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#f59e0b;color:#111827;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #f59e0b33}
+.btn-ghost{background:transparent;color:#f59e0b;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #f59e0b;transition:all .3s}
+.btn-ghost:hover{background:#f59e0b11}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#f59e0b;margin-bottom:12px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:#f9fafb;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#9ca3af;margin-bottom:14px}
+strong{color:#f9fafb}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid rgba(245,158,11,0.15);color:#f9fafb;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.15);border-radius:6px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#f59e0b}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#f59e0b;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid rgba(245,158,11,0.15)}
+.steps li::before{content:counter(step)'.';color:#f59e0b;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#9ca3af;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.15);border-radius:6px;padding:22px}
+.team-card h3{color:#f59e0b;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.15);border-radius:6px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#f59e0b}
+.price-card h3{font-size:.7rem;font-weight:600;color:#f59e0b;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#f9fafb;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#9ca3af;opacity:.6}
+.price-card p{font-size:.8rem;color:#9ca3af;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid rgba(245,158,11,0.15);margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#f59e0b;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(245,158,11,0.15);color:#9ca3af;opacity:.5;font-size:.85rem}
 footer a{color:#f59e0b;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<nav>
-  <div class="logo">PowerGrabber<span>.ai</span></div>
-  <a href="index.html">&larr; Back to Home</a>
-</nav>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
 
-<div class="hero">
-  <div class="badge">OWASP ASI03 &middot; Credential Forensics</div>
-  <h1>One API Key. Four Tools.<br><em>Zero Accountability.</em></h1>
-  <p>When the same OpenAI key shows up in Cursor, Claude Code, a VS Code extension, and a rogue CLI script, who made the $400 call that blew the budget? Without tool-level credential tracking, nobody knows.</p>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
+
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
+
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
+
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
+
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<div class="case-file">
-  <h2>The Forensic Case</h2>
-
-  <div class="evidence-box">
-    <div class="diagram-title">Credential Reuse Pattern &mdash; Detected by PowerGrabber Proxy</div>
-
-    <div class="full-diagram">
-      <div class="fd-row">
-        <div class="fd-box blue">Cursor IDE<br><span style="font-size:.7rem;color:#6b7280">pid: 44821</span></div>
-        <div class="fd-box blue">Claude Code<br><span style="font-size:.7rem;color:#6b7280">pid: 51003</span></div>
-        <div class="fd-box blue">VS Code Ext<br><span style="font-size:.7rem;color:#6b7280">pid: 38712</span></div>
-        <div class="fd-box blue">CLI Script<br><span style="font-size:.7rem;color:#6b7280">pid: 62190</span></div>
-      </div>
-      <div class="fd-vert">&darr;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;</div>
-      <div class="fd-row">
-        <div class="fd-box amber" style="min-width:280px">
-          <div style="font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Shared API Key Prefix</div>
-          <div style="font-family:'Space Grotesk',monospace;font-size:1.1rem;font-weight:700">sk-proj-a...7xQ</div>
-        </div>
-      </div>
-      <div class="fd-vert">&darr;</div>
-      <div class="fd-row">
-        <div class="fd-box purple" style="min-width:240px">
-          <div style="font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Org ID (from headers)</div>
-          <div style="font-family:'Space Grotesk',monospace;font-size:.9rem">org-Rk9x...mNv4</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="case-file">
-  <h2>Why Shared Keys Break Accountability</h2>
-
-  <div class="exp-grid">
-    <div class="exp-card">
-      <h3><span class="icon">&#128270;</span> No Attribution</h3>
-      <p>When four tools share one key, the OpenAI usage dashboard shows one line item. A $400 spike could be Cursor autocomplete, a runaway script, or an employee's side project. You cannot attribute cost to the tool that caused it.</p>
-    </div>
-    <div class="exp-card">
-      <h3><span class="icon">&#128274;</span> No Revocation Granularity</h3>
-      <p>If one tool is compromised, revoking the key kills all four tools. There is no way to surgically disable the bad actor without collateral damage to every team using the same credential.</p>
-    </div>
-    <div class="exp-card">
-      <h3><span class="icon">&#128200;</span> No Rate Control</h3>
-      <p>One tool hitting rate limits means every tool gets throttled. Shared keys create shared blast radius. A poorly-written script can take down your entire AI-assisted development workflow.</p>
-    </div>
-    <div class="exp-card">
-      <h3><span class="icon">&#128209;</span> No Audit Trail</h3>
-      <p>SOC 2 and ISO 27001 require per-system access logs. A shared key means your audit trail says "OpenAI was accessed 34,000 times" but cannot say which application made each request.</p>
-    </div>
-  </div>
-</div>
-
-<div class="case-file">
-  <h2>ASI03 Scorecard Output</h2>
-
-  <p style="color:#6b7280;margin-bottom:16px;font-size:.9rem">PowerGrabber runs OWASP ASI03 (Excessive Agency / Credential Hygiene) checks automatically. Here is the actual scorecard output when shared key reuse is detected:</p>
-
-  <pre class="output"><span class="dim">$ powergrabber scorecard --check ASI03</span>
-
-<span class="dim">============================================</span>
-  <span class="warn">OWASP ASI03 &mdash; Credential Hygiene Report</span>
-<span class="dim">============================================</span>
-
-<span class="dim">Check:</span>  Unique API keys per tool
-<span class="dim">Status:</span> <span class="warn">WARNING</span>
-
-<span class="dim">Finding:</span>
-  Key prefix <span class="highlight">sk-proj-a...7xQ</span> observed on <span class="warn">4 distinct tools</span>:
-    &bull; Cursor IDE          (44,821 requests / 7 days)
-    &bull; Claude Code CLI     (12,003 requests / 7 days)
-    &bull; VS Code Extension   ( 8,441 requests / 7 days)
-    &bull; Unknown CLI (pid 62190) ( 1,209 requests / 7 days)
-
-  Org ID: <span class="highlight">org-Rk9x...mNv4</span> (extracted from OpenAI-Organization header)
-
-<span class="dim">Risk:</span>
-  &bull; No tool-level cost attribution possible
-  &bull; Key revocation affects all 4 tools simultaneously
-  &bull; Shared rate-limit pool across tools
-  &bull; Audit trail cannot distinguish request origins
-
-<span class="dim">Recommendation:</span>
-  Issue per-tool API keys via OpenAI project-scoped keys.
-  Use PowerGrabber policy rules to alert on new key-prefix/tool pairs.
-
-<span class="dim">============================================</span>
-  Overall ASI03 Score: <span class="warn">62 / 100 (WARNING)</span>
-<span class="dim">============================================</span></pre>
-</div>
-
-<div class="how-section">
-  <h2>How PowerGrabber Detects This &mdash; Without Storing Keys</h2>
-
-  <div class="how-steps">
-    <div class="how-step">
-      <div class="num">01</div>
-      <h4>Prefix Extraction</h4>
-      <p>The proxy reads only the first 10 characters of each Authorization header value. The full key is never logged, stored, or written to disk. Only the prefix is retained for matching.</p>
-    </div>
-    <div class="how-step">
-      <div class="num">02</div>
-      <h4>Org ID from Headers</h4>
-      <p>OpenAI requests include an <code style="color:#f59e0b">OpenAI-Organization</code> header. PowerGrabber extracts the org ID to correlate which organisation the key belongs to, without needing the key itself.</p>
-    </div>
-    <div class="how-step">
-      <div class="num">03</div>
-      <h4>Tool Fingerprinting</h4>
-      <p>Each request is tagged with the originating process (PID, binary name, command line). When the same key prefix appears across multiple tool fingerprints, a cross-tool reuse event is emitted.</p>
-    </div>
-    <div class="how-step">
-      <div class="num">04</div>
-      <h4>Policy Evaluation</h4>
-      <p>TOML policy rules can trigger on <code style="color:#f59e0b">credential.reuse_count &gt; 1</code>. Alerts fire via webhook, Slack, or local log, giving your IAM team immediate visibility.</p>
-    </div>
-  </div>
-</div>
-
-<div class="cta">
-  <h2>Stop sharing keys in the dark.</h2>
-  <p>PowerGrabber gives your security team credential visibility without credential exposure.</p>
-  <a href="index.html" class="cta-btn">See All Capabilities</a>
-</div>
-
-<footer>
-  PowerGrabber AI &mdash; Credential forensics for AI tool sprawl. <a href="index.html">Home</a>
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

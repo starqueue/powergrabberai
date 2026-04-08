@@ -3,501 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerGrabber — The Compliance Shield</title>
+<title>PowerGrabber — LLM Certainty (Dark Enterprise)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+body{font-family:'DM Sans',sans-serif;background:#0b0f19;color:#94a3b8}
+nav{padding:20px 48px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#e2e8f0;letter-spacing:1px}
+nav a{color:#64748b;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#475569;border-bottom:1px solid #1e293b}
+.hero{min-height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-size:clamp(2.5rem,5.5vw,4.5rem);font-weight:700;color:#f1f5f9;margin-bottom:16px}
+.hero h1 span{background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{font-size:1.05rem;max-width:680px;line-height:1.8;color:#64748b;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#3b82f6;color:#fff;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{background:#2563eb;box-shadow:0 4px 20px rgba(59,130,246,0.3)}
+.btn-ghost{background:transparent;color:#94a3b8;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #334155;transition:all .3s}
+.btn-ghost:hover{border-color:#64748b;color:#e2e8f0}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#60a5fa;margin-bottom:12px}
+h2{font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-bottom:20px}
+p,li{font-size:.95rem;line-height:1.8;color:#94a3b8;margin-bottom:14px}
+strong{color:#e2e8f0}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #1e293b;color:#cbd5e1}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(30,41,59,0.5);border:1px solid #1e293b;border-radius:8px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#3b82f6}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#60a5fa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #1e293b}
+.steps li::before{content:counter(step)'.';color:#60a5fa;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#64748b;font-size:.85rem;background:#1e293b;padding:4px 12px;border-radius:4px}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(30,41,59,0.5);border:1px solid #1e293b;border-radius:8px;padding:22px}
+.team-card h3{color:#60a5fa;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(30,41,59,0.5);border:1px solid #1e293b;border-radius:8px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#3b82f6}
+.price-card h3{font-size:.7rem;font-weight:600;color:#60a5fa;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#64748b}
+.price-card p{font-size:.8rem;color:#94a3b8;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #1e293b;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#60a5fa;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #1e293b;color:#475569;font-size:.85rem}
+footer a{color:#60a5fa;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f0a1a;
-    color: #d4d0e0;
-  }
-
-  /* Floating particles */
-  .particles {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .particle {
-    position: absolute;
-    width: 4px; height: 4px;
-    background: rgba(139,92,246,0.3);
-    border-radius: 50%;
-    animation: float linear infinite;
-  }
-
-  .particle:nth-child(1) { left: 10%; animation-duration: 20s; animation-delay: 0s; top: 100%; }
-  .particle:nth-child(2) { left: 25%; animation-duration: 25s; animation-delay: 3s; top: 100%; width: 6px; height: 6px; }
-  .particle:nth-child(3) { left: 45%; animation-duration: 18s; animation-delay: 1s; top: 100%; }
-  .particle:nth-child(4) { left: 60%; animation-duration: 22s; animation-delay: 5s; top: 100%; width: 3px; height: 3px; }
-  .particle:nth-child(5) { left: 80%; animation-duration: 28s; animation-delay: 2s; top: 100%; }
-  .particle:nth-child(6) { left: 35%; animation-duration: 19s; animation-delay: 7s; top: 100%; width: 5px; height: 5px; }
-  .particle:nth-child(7) { left: 70%; animation-duration: 24s; animation-delay: 4s; top: 100%; }
-  .particle:nth-child(8) { left: 90%; animation-duration: 21s; animation-delay: 6s; top: 100%; width: 4px; height: 4px; }
-
-  @keyframes float {
-    from { transform: translateY(0); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    to { transform: translateY(-100vh); opacity: 0; }
-  }
-
-  .content { position: relative; z-index: 1; }
-
-  /* Nav */
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 48px;
-  }
-
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.3rem;
-    color: #c084fc;
-  }
-
-  nav a {
-    color: #7c3aed;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  /* Hero */
-  .hero {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 120px 32px 80px;
-    text-align: center;
-  }
-
-  .hero-chip {
-    display: inline-block;
-    background: rgba(124,58,237,0.15);
-    color: #a78bfa;
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    margin-bottom: 32px;
-    border: 1px solid rgba(124,58,237,0.2);
-  }
-
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    color: #fff;
-    line-height: 1.2;
-    margin-bottom: 20px;
-  }
-
-  .hero h1 em {
-    font-style: normal;
-    background: linear-gradient(135deg, #7c3aed, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #8b85a0;
-    max-width: 600px;
-    margin: 0 auto 40px;
-  }
-
-  .hero-cta {
-    display: inline-block;
-    background: linear-gradient(135deg, #7c3aed, #9333ea);
-    color: #fff;
-    padding: 14px 40px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s;
-    box-shadow: 0 4px 20px rgba(124,58,237,0.3);
-  }
-  .hero-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(124,58,237,0.5);
-  }
-
-  /* Compliance concerns section */
-  .concerns {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 80px 32px;
-  }
-
-  .concerns h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .concern-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .concern-item {
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    background: rgba(124,58,237,0.04);
-    border: 1px solid rgba(124,58,237,0.1);
-    border-radius: 12px;
-    padding: 28px 32px;
-    transition: all 0.3s;
-  }
-
-  .concern-item:hover {
-    background: rgba(124,58,237,0.08);
-    border-color: rgba(124,58,237,0.3);
-    transform: translateX(8px);
-  }
-
-  .concern-number {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: rgba(124,58,237,0.3);
-    flex-shrink: 0;
-    width: 48px;
-    text-align: center;
-    line-height: 1;
-  }
-
-  .concern-content h3 {
-    color: #c084fc;
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
-  .concern-content p {
-    color: #8b85a0;
-    line-height: 1.6;
-    font-size: 0.9rem;
-  }
-
-  /* How it works — vertical timeline */
-  .timeline-section {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 80px 32px;
-  }
-
-  .timeline-section h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .timeline {
-    position: relative;
-    padding-left: 48px;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 16px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, #7c3aed, rgba(124,58,237,0.1));
-  }
-
-  .timeline-step {
-    position: relative;
-    margin-bottom: 40px;
-  }
-
-  .timeline-step::before {
-    content: '';
-    position: absolute;
-    left: -40px;
-    top: 4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #7c3aed;
-    border: 3px solid #0f0a1a;
-    box-shadow: 0 0 12px rgba(124,58,237,0.5);
-  }
-
-  .timeline-step h3 {
-    color: #fff;
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
-  .timeline-step p {
-    color: #8b85a0;
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
-
-  /* Regulations grid */
-  .regulations {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 60px 32px 80px;
-  }
-
-  .regulations h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 12px;
-  }
-
-  .regulations .subtitle {
-    text-align: center;
-    color: #8b85a0;
-    margin-bottom: 40px;
-  }
-
-  .reg-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-  }
-
-  .reg-card {
-    background: rgba(124,58,237,0.05);
-    border: 1px solid rgba(124,58,237,0.1);
-    border-radius: 10px;
-    padding: 24px 20px;
-    text-align: center;
-    transition: all 0.3s;
-  }
-
-  .reg-card:hover {
-    border-color: #7c3aed;
-    background: rgba(124,58,237,0.1);
-  }
-
-  .reg-card .reg-name {
-    font-weight: 700;
-    color: #c084fc;
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-  }
-
-  .reg-card p {
-    color: #8b85a0;
-    font-size: 0.8rem;
-    line-height: 1.5;
-  }
-
-  /* Testimonial-style quote */
-  .quote-section {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 60px 32px;
-    text-align: center;
-  }
-
-  .quote-mark {
-    font-family: 'DM Serif Display', serif;
-    font-size: 4rem;
-    color: rgba(124,58,237,0.3);
-    line-height: 1;
-  }
-
-  blockquote {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    color: #e0dce8;
-    line-height: 1.5;
-    margin: 16px 0;
-    font-style: italic;
-  }
-
-  .quote-author {
-    color: #8b85a0;
-    font-size: 0.9rem;
-  }
-
-  /* CTA */
-  .final-cta {
-    text-align: center;
-    padding: 80px 32px 120px;
-  }
-
-  .final-cta h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 16px;
-  }
-
-  .final-cta p {
-    color: #8b85a0;
-    margin-bottom: 32px;
-    font-size: 1rem;
-  }
-
-  footer {
-    text-align: center;
-    padding: 40px;
-    border-top: 1px solid rgba(124,58,237,0.1);
-    color: #4a4560;
-    font-size: 0.85rem;
-  }
-
-  footer a { color: #7c3aed; text-decoration: none; }
-
-  @media (max-width: 640px) {
-    nav { padding: 16px 20px; }
-    .concern-item { flex-direction: column; gap: 12px; }
-    .concern-number { width: auto; }
-  }
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<div class="particles">
-  <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
-  <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
+
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
+
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
+
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
+
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
+
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<div class="content">
-  <nav>
-    <div class="logo">PowerGrabber</div>
-    <a href="index.html">&larr; All Concepts</a>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-chip">Enterprise Compliance</div>
-    <h1>Shadow AI is your next <em>audit finding</em></h1>
-    <p>Employees are feeding sensitive data into LLMs every day. GDPR, HIPAA, SOX — they all care. PowerGrabber gives you a complete audit trail of every AI API interaction across every browser in your organization.</p>
-    <a href="#" class="hero-cta">Schedule a Compliance Review</a>
-  </section>
-
-  <section class="concerns">
-    <h2>The Compliance Nightmare Nobody Planned For</h2>
-    <div class="concern-list">
-      <div class="concern-item">
-        <div class="concern-number">01</div>
-        <div class="concern-content">
-          <h3>Customer PII in LLM Prompts</h3>
-          <p>A support agent pastes a customer's full name, address, and account details into ChatGPT to draft a response. That data now lives on OpenAI's servers. Under GDPR, you just transferred personal data to a third-party processor without consent or a DPA.</p>
-        </div>
-      </div>
-      <div class="concern-item">
-        <div class="concern-number">02</div>
-        <div class="concern-content">
-          <h3>Source Code in AI Assistants</h3>
-          <p>Developers paste proprietary algorithms, database schemas, and API keys into coding assistants. Trade secrets disclosed. IP protections weakened. And you have zero visibility that it happened.</p>
-        </div>
-      </div>
-      <div class="concern-item">
-        <div class="concern-number">03</div>
-        <div class="concern-content">
-          <h3>Financial Data Exposure</h3>
-          <p>An analyst uploads quarterly projections to an AI for formatting. Material non-public information now sits in an external system. SOX and SEC reporting obligations just got complicated.</p>
-        </div>
-      </div>
-      <div class="concern-item">
-        <div class="concern-number">04</div>
-        <div class="concern-content">
-          <h3>Health Records in AI Tools</h3>
-          <p>Clinical staff use AI to summarize patient notes. PHI transferred to a non-BAA system. HIPAA violation. Potential fines from $100 to $50,000 per violation, up to $1.5M per year.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="timeline-section">
-    <h2>How PowerGrabber Protects You</h2>
-    <div class="timeline">
-      <div class="timeline-step">
-        <h3>Browser Extension Captures Traffic</h3>
-        <p>Lightweight extension uses the webRequest API to observe every HTTP request. Works on Chrome, Firefox, Edge, Safari, Opera. No network proxy needed. No TLS interception.</p>
-      </div>
-      <div class="timeline-step">
-        <h3>Real-Time WebSocket Streaming</h3>
-        <p>Events stream instantly to a local Rust backend over an authenticated WebSocket. 32-character token auth, 10-second handshake timeout, 500 events/sec rate limit.</p>
-      </div>
-      <div class="timeline-step">
-        <h3>Automatic Credential Redaction</h3>
-        <p>Sensitive headers (Authorization, Cookie, API keys) are scrubbed before storage. URL parameters like tokens, passwords, and session IDs are sanitized. Your audit logs don't become a liability.</p>
-      </div>
-      <div class="timeline-step">
-        <h3>LLM API Detection</h3>
-        <p>Automatically identifies calls to OpenAI, Anthropic, Google AI, Cohere, Mistral, HuggingFace, and more. Know exactly which AI services your organization is using — approved or not.</p>
-      </div>
-      <div class="timeline-step">
-        <h3>Structured Audit Output</h3>
-        <p>JSONL output format for SIEM integration. Human-readable text mode for investigation. Every event includes timestamp, tab URL, request ID, and full header map.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="regulations">
-    <h2>Frameworks That Care About AI Data Flow</h2>
-    <p class="subtitle">PowerGrabber helps demonstrate compliance with:</p>
-    <div class="reg-grid">
-      <div class="reg-card">
-        <div class="reg-name">GDPR</div>
-        <p>Article 30 records of processing. Know when personal data goes to AI processors.</p>
-      </div>
-      <div class="reg-card">
-        <div class="reg-name">HIPAA</div>
-        <p>PHI disclosure monitoring. Detect when health records reach non-BAA systems.</p>
-      </div>
-      <div class="reg-card">
-        <div class="reg-name">SOX</div>
-        <p>Internal control evidence. Prove financial data stays within approved systems.</p>
-      </div>
-      <div class="reg-card">
-        <div class="reg-name">SOC 2</div>
-        <p>Monitoring controls. Demonstrate continuous oversight of data egress channels.</p>
-      </div>
-      <div class="reg-card">
-        <div class="reg-name">EU AI Act</div>
-        <p>AI system inventory. Know exactly which AI services your organization uses.</p>
-      </div>
-      <div class="reg-card">
-        <div class="reg-name">CCPA</div>
-        <p>Consumer data tracking. Monitor when California resident data reaches AI services.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="quote-section">
-    <div class="quote-mark">&ldquo;</div>
-    <blockquote>The board asked us how we monitor AI usage across the company. Before PowerGrabber, the honest answer was 'we don't.' Now we have real-time visibility into every LLM API call.</blockquote>
-    <div class="quote-author">&mdash; Hypothetical CISO, illustrating the problem PowerGrabber solves</div>
-  </section>
-
-  <section class="final-cta">
-    <h2>Your next audit is coming.</h2>
-    <p>Will you have answers about AI data flows?</p>
-    <a href="#" class="hero-cta">Get Started</a>
-  </section>
-
-  <footer>
-    <a href="index.html">&larr; Back to all concepts</a> &nbsp;&middot;&nbsp; PowerGrabber &mdash; Browser-native LLM traffic governance
-  </footer>
-</div>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

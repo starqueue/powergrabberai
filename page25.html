@@ -3,475 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Credential Sprawl Across AI Tools — PowerGrabber AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>PowerGrabber — LLM Certainty (Violet Identity)</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Space Grotesk', sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
-a { color: #a78bfa; text-decoration: none; }
-a:hover { text-decoration: underline; }
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-.back-link {
-  position: fixed; top: 20px; left: 24px; z-index: 100;
-  background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3);
-  padding: 8px 18px; border-radius: 8px; font-size: 14px;
-  backdrop-filter: blur(8px); transition: background 0.2s;
-}
-.back-link:hover { background: rgba(139,92,246,0.3); text-decoration: none; }
+body{font-family:'Space Grotesk',sans-serif;background:#0f172a;color:#a78bfa}
+nav{padding:20px 48px;border-bottom:1px solid rgba(139,92,246,0.12);display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#8b5cf6;font-family:'Space Grotesk',sans-serif;}
+nav a{color:#8b5cf6;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#a78bfa;opacity:.5;border-bottom:1px solid rgba(139,92,246,0.12)}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#f5f3ff;margin-bottom:16px;}
+.hero h1 span{color:#8b5cf6}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#a78bfa;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#8b5cf6;color:#0f172a;padding:12px 32px;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #8b5cf633}
+.btn-ghost{background:transparent;color:#8b5cf6;padding:12px 32px;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #8b5cf6;transition:all .3s}
+.btn-ghost:hover{background:#8b5cf611}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8b5cf6;margin-bottom:12px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:#f5f3ff;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#a78bfa;margin-bottom:14px}
+strong{color:#f5f3ff}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid rgba(139,92,246,0.12);color:#f5f3ff;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.12);border-radius:8px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#8b5cf6}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#8b5cf6;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid rgba(139,92,246,0.12)}
+.steps li::before{content:counter(step)'.';color:#8b5cf6;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#a78bfa;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.12);border-radius:8px;padding:22px}
+.team-card h3{color:#8b5cf6;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.12);border-radius:8px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#8b5cf6}
+.price-card h3{font-size:.7rem;font-weight:600;color:#8b5cf6;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#f5f3ff;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#a78bfa;opacity:.6}
+.price-card p{font-size:.8rem;color:#a78bfa;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid rgba(139,92,246,0.12);margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#8b5cf6;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(139,92,246,0.12);color:#a78bfa;opacity:.5;font-size:.85rem}
+footer a{color:#8b5cf6;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-header {
-  text-align: center; padding: 100px 24px 60px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.15) 0%, transparent 60%);
-}
-header h1 { font-size: 48px; font-weight: 700; color: #fff; margin-bottom: 16px; }
-header h1 span { color: #8b5cf6; }
-header p.subtitle {
-  font-size: 20px; color: #94a3b8; max-width: 680px; margin: 0 auto 24px;
-}
-header .badge {
-  display: inline-block; background: rgba(139,92,246,0.15); border: 1px solid #8b5cf6;
-  color: #c4b5fd; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;
-  letter-spacing: 0.5px; text-transform: uppercase;
-}
-
-.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-
-/* Credential Graph Section */
-.graph-section { padding: 80px 0; }
-.graph-section h2 { font-size: 32px; color: #fff; margin-bottom: 12px; }
-.graph-section .lead { color: #94a3b8; font-size: 17px; margin-bottom: 48px; max-width: 700px; }
-
-.credential-graph {
-  position: relative; width: 100%; min-height: 520px;
-  background: rgba(15,23,42,0.6); border: 1px solid rgba(139,92,246,0.2);
-  border-radius: 16px; padding: 40px; overflow: hidden;
-}
-.credential-graph::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at 30% 40%, rgba(139,92,246,0.06) 0%, transparent 50%),
-              radial-gradient(circle at 70% 60%, rgba(139,92,246,0.04) 0%, transparent 50%);
-}
-
-/* SVG lines drawn as pseudo-elements aren't great, so we use a real SVG */
-.graph-svg {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-}
-.graph-svg line {
-  stroke: rgba(139,92,246,0.25); stroke-width: 1.5;
-  stroke-dasharray: 6 4; animation: dashMove 20s linear infinite;
-}
-@keyframes dashMove { to { stroke-dashoffset: -200; } }
-
-.node {
-  position: absolute; z-index: 2; text-align: center;
-  background: rgba(30,41,59,0.9); border: 1px solid rgba(139,92,246,0.4);
-  border-radius: 12px; padding: 14px 18px; min-width: 160px;
-  backdrop-filter: blur(4px); transition: border-color 0.3s, transform 0.3s;
-}
-.node:hover { border-color: #8b5cf6; transform: scale(1.04); }
-.node .icon { font-size: 24px; margin-bottom: 6px; }
-.node .label { font-size: 13px; font-weight: 600; color: #fff; }
-.node .detail { font-size: 11px; color: #94a3b8; margin-top: 4px; }
-
-.node.credential { border-color: rgba(139,92,246,0.6); background: rgba(139,92,246,0.1); }
-.node.tool { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.08); }
-.node.warning { border-color: rgba(245,158,11,0.6); background: rgba(245,158,11,0.08); }
-
-/* For the graph, we position nodes absolutely using percentages on larger screens */
-.n1 { top: 8%; left: 5%; }
-.n2 { top: 8%; left: 60%; }
-.n3 { top: 42%; left: 28%; }
-.n4 { top: 42%; left: 65%; }
-.n5 { top: 75%; left: 10%; }
-.n6 { top: 75%; left: 45%; }
-.n7 { top: 75%; left: 78%; }
-
-/* Key Inventory Table */
-.inventory-section { padding: 60px 0 80px; }
-.inventory-section h2 { font-size: 28px; color: #fff; margin-bottom: 32px; }
-
-.key-table {
-  width: 100%; border-collapse: collapse; font-size: 14px;
-  background: rgba(30,41,59,0.5); border-radius: 12px; overflow: hidden;
-  border: 1px solid rgba(139,92,246,0.15);
-}
-.key-table thead th {
-  background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 14px 18px;
-  text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase;
-  letter-spacing: 0.8px; border-bottom: 1px solid rgba(139,92,246,0.2);
-}
-.key-table tbody td {
-  padding: 14px 18px; border-bottom: 1px solid rgba(139,92,246,0.08);
-  vertical-align: top;
-}
-.key-table tbody tr:hover { background: rgba(139,92,246,0.05); }
-.key-prefix {
-  font-family: 'Space Grotesk', monospace; font-weight: 600; color: #a78bfa;
-  background: rgba(139,92,246,0.1); padding: 3px 8px; border-radius: 4px;
-  display: inline-block; font-size: 13px;
-}
-.provider-tag {
-  display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
-}
-.provider-openai { background: rgba(16,163,127,0.15); color: #34d399; }
-.provider-anthropic { background: rgba(139,92,246,0.15); color: #c4b5fd; }
-.tools-list { display: flex; flex-wrap: wrap; gap: 6px; }
-.tool-chip {
-  background: rgba(59,130,246,0.12); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2);
-  padding: 2px 10px; border-radius: 6px; font-size: 12px;
-}
-.status-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
-}
-.status-ok { background: rgba(34,197,94,0.12); color: #4ade80; }
-.status-warn { background: rgba(245,158,11,0.12); color: #fbbf24; }
-.status-critical { background: rgba(239,68,68,0.12); color: #f87171; }
-
-/* Personal vs Corporate Detection */
-.detection-section { padding: 60px 0 80px; }
-.detection-section h2 { font-size: 28px; color: #fff; margin-bottom: 12px; }
-.detection-section .lead { color: #94a3b8; margin-bottom: 36px; max-width: 700px; }
-
-.heuristic-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-.heuristic-card {
-  background: rgba(30,41,59,0.6); border: 1px solid rgba(139,92,246,0.15);
-  border-radius: 12px; padding: 28px; transition: border-color 0.3s;
-}
-.heuristic-card:hover { border-color: rgba(139,92,246,0.4); }
-.heuristic-card h3 { font-size: 16px; color: #c4b5fd; margin-bottom: 12px; }
-.heuristic-card p { font-size: 14px; color: #94a3b8; }
-.heuristic-card .signal {
-  display: flex; align-items: center; gap: 8px; margin-top: 14px;
-  padding: 10px 14px; background: rgba(139,92,246,0.06); border-radius: 8px;
-  font-size: 13px; color: #e2e8f0; border-left: 3px solid #8b5cf6;
-}
-
-/* Rotation & Sharing Alerts */
-.alerts-section { padding: 60px 0 80px; }
-.alerts-section h2 { font-size: 28px; color: #fff; margin-bottom: 32px; }
-
-.alert-timeline { position: relative; padding-left: 32px; }
-.alert-timeline::before {
-  content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
-  width: 2px; background: linear-gradient(to bottom, #8b5cf6, rgba(139,92,246,0.1));
-}
-.alert-item {
-  position: relative; margin-bottom: 28px; padding: 20px 24px;
-  background: rgba(30,41,59,0.5); border: 1px solid rgba(139,92,246,0.12);
-  border-radius: 10px;
-}
-.alert-item::before {
-  content: ''; position: absolute; left: -28px; top: 24px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: #8b5cf6; border: 2px solid #0f172a;
-}
-.alert-item.alert-warn::before { background: #f59e0b; }
-.alert-item.alert-crit::before { background: #ef4444; }
-.alert-time { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 500; }
-.alert-title { font-size: 15px; color: #fff; font-weight: 600; margin-bottom: 6px; }
-.alert-desc { font-size: 13px; color: #94a3b8; }
-
-/* ASI03 Scorecard */
-.scorecard-section { padding: 60px 0 100px; }
-.scorecard-section h2 { font-size: 28px; color: #fff; margin-bottom: 12px; }
-.scorecard-section .lead { color: #94a3b8; margin-bottom: 36px; }
-
-.scorecard-box {
-  background: rgba(30,41,59,0.6); border: 2px solid rgba(245,158,11,0.4);
-  border-radius: 16px; padding: 36px; position: relative; overflow: hidden;
-}
-.scorecard-box::before {
-  content: 'ASI03'; position: absolute; top: -10px; right: -10px;
-  font-size: 120px; font-weight: 700; color: rgba(245,158,11,0.04);
-  pointer-events: none;
-}
-.scorecard-header {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px; margin-bottom: 28px;
-}
-.scorecard-header h3 { font-size: 22px; color: #fff; }
-.scorecard-verdict {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(245,158,11,0.15); color: #fbbf24;
-  padding: 8px 20px; border-radius: 8px; font-weight: 700; font-size: 16px;
-  border: 1px solid rgba(245,158,11,0.3);
-}
-.scorecard-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;
-}
-.sc-item {
-  background: rgba(15,23,42,0.5); padding: 16px; border-radius: 10px;
-  border: 1px solid rgba(139,92,246,0.1);
-}
-.sc-item .sc-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-.sc-item .sc-value { font-size: 15px; color: #e2e8f0; font-weight: 500; }
-.sc-item .sc-value.warn { color: #fbbf24; }
-.sc-item .sc-value.fail { color: #f87171; }
-.sc-item .sc-value.pass { color: #4ade80; }
-
-footer {
-  text-align: center; padding: 48px 24px; border-top: 1px solid rgba(139,92,246,0.1);
-  color: #64748b; font-size: 13px;
-}
-
-@media (max-width: 768px) {
-  header h1 { font-size: 32px; }
-  .credential-graph { min-height: auto; padding: 20px; }
-  .node { position: relative !important; top: auto !important; left: auto !important;
-    margin-bottom: 12px; display: block; min-width: auto; }
-  .graph-svg { display: none; }
-  .key-table { font-size: 12px; }
-  .key-table thead th, .key-table tbody td { padding: 10px 12px; }
-}
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<a href="index.html" class="back-link">Back to PowerGrabber AI</a>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
 
-<header>
-  <div class="badge">Identity &amp; Access Management</div>
-  <h1>Credential <span>Sprawl</span> Across AI Tools</h1>
-  <p class="subtitle">Your developers use 5 AI tools. How many API keys are in play? Which are corporate? Which are personal? PowerGrabber AI maps the full credential landscape.</p>
-</header>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
 
-<div class="container">
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
 
-  <!-- Credential Graph Visualization -->
-  <section class="graph-section">
-    <h2>Credential-to-Tool Graph</h2>
-    <p class="lead">Every node is a credential or tool. Every edge is an observed relationship. PowerGrabber AI builds this map passively from browser traffic.</p>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
 
-    <div class="credential-graph">
-      <svg class="graph-svg" viewBox="0 0 1000 500" preserveAspectRatio="none">
-        <!-- Lines connecting credentials to tools -->
-        <line x1="150" y1="80" x2="350" y2="240" />
-        <line x1="150" y1="80" x2="700" y2="240" />
-        <line x1="700" y1="80" x2="700" y2="240" />
-        <line x1="700" y1="80" x2="510" y2="400" />
-        <line x1="350" y1="240" x2="150" y2="400" />
-        <line x1="350" y1="240" x2="510" y2="400" />
-        <line x1="700" y1="240" x2="510" y2="400" />
-        <line x1="700" y1="240" x2="850" y2="400" />
-      </svg>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
 
-      <div class="node credential n1">
-        <div class="icon">&#x1f511;</div>
-        <div class="label">sk-proj-a...</div>
-        <div class="detail">OpenAI &middot; Corporate</div>
-      </div>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
 
-      <div class="node credential n2">
-        <div class="icon">&#x1f511;</div>
-        <div class="label">sk-proj-x...</div>
-        <div class="detail">OpenAI &middot; Personal?</div>
-      </div>
-
-      <div class="node tool n3">
-        <div class="icon">&#x2328;</div>
-        <div class="label">Cursor IDE</div>
-        <div class="detail">348 requests/day</div>
-      </div>
-
-      <div class="node tool n4">
-        <div class="icon">&#x1f310;</div>
-        <div class="label">ChatGPT Web UI</div>
-        <div class="detail">127 requests/day</div>
-      </div>
-
-      <div class="node tool n5">
-        <div class="icon">&#x1f4bc;</div>
-        <div class="label">Internal CRM</div>
-        <div class="detail">89 requests/day</div>
-      </div>
-
-      <div class="node credential n6">
-        <div class="icon">&#x1f511;</div>
-        <div class="label">sk-ant-api03-...</div>
-        <div class="detail">Anthropic &middot; Corporate</div>
-      </div>
-
-      <div class="node tool n7">
-        <div class="icon">&#x1f4bb;</div>
-        <div class="label">Claude Code</div>
-        <div class="detail">512 requests/day</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- API Key Inventory Table -->
-  <section class="inventory-section">
-    <h2>API Key Inventory by Observable Prefix</h2>
-
-    <table class="key-table">
-      <thead>
-        <tr>
-          <th>Key Prefix</th>
-          <th>Provider</th>
-          <th>Observed In Tools</th>
-          <th>Account Type</th>
-          <th>Rotation Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="key-prefix">sk-proj-a...</span></td>
-          <td><span class="provider-tag provider-openai">OpenAI</span></td>
-          <td>
-            <div class="tools-list">
-              <span class="tool-chip">Cursor IDE</span>
-              <span class="tool-chip">Internal CRM</span>
-            </div>
-          </td>
-          <td><span class="status-badge status-ok">Corporate</span></td>
-          <td><span class="status-badge status-ok">Rotated 12d ago</span></td>
-        </tr>
-        <tr>
-          <td><span class="key-prefix">sk-proj-x...</span></td>
-          <td><span class="provider-tag provider-openai">OpenAI</span></td>
-          <td>
-            <div class="tools-list">
-              <span class="tool-chip">ChatGPT Web UI</span>
-            </div>
-          </td>
-          <td><span class="status-badge status-warn">Personal?</span></td>
-          <td><span class="status-badge status-critical">Never rotated</span></td>
-        </tr>
-        <tr>
-          <td><span class="key-prefix">sk-ant-api03-...</span></td>
-          <td><span class="provider-tag provider-anthropic">Anthropic</span></td>
-          <td>
-            <div class="tools-list">
-              <span class="tool-chip">Claude Code</span>
-              <span class="tool-chip">Internal Search</span>
-            </div>
-          </td>
-          <td><span class="status-badge status-ok">Corporate</span></td>
-          <td><span class="status-badge status-warn">84 days old</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- Personal vs Corporate Detection -->
-  <section class="detection-section">
-    <h2>Personal vs. Corporate Account Detection</h2>
-    <p class="lead">PowerGrabber AI uses multiple heuristics to flag when a personal AI account is being used for corporate work &mdash; a compliance risk hiding in plain sight.</p>
-
-    <div class="heuristic-cards">
-      <div class="heuristic-card">
-        <h3>Org ID Mismatch</h3>
-        <p>Keys tied to a different organization ID than the corporate account on file. The <code>sk-proj-x...</code> key routes to org-7Kq... which does not match your corporate org-2Xm...</p>
-        <div class="signal">Detected: Different org ID &rarr; likely personal account</div>
-      </div>
-      <div class="heuristic-card">
-        <h3>Billing Pattern Analysis</h3>
-        <p>API keys on per-token billing that don't appear in corporate cost allocation dashboards suggest shadow spending on personal credit cards.</p>
-        <div class="signal">Detected: Key not in corporate billing &rarr; personal spend</div>
-      </div>
-      <div class="heuristic-card">
-        <h3>Usage Time Correlation</h3>
-        <p>Keys used exclusively outside business hours or on weekends may indicate personal accounts being used for side projects &mdash; or after-hours corporate data exfiltration.</p>
-        <div class="signal">Detected: 91% weekend usage &rarr; flagged for review</div>
-      </div>
-      <div class="heuristic-card">
-        <h3>Cross-tool Key Sharing</h3>
-        <p>The same key appearing in multiple unrelated tools (CRM + coding IDE) suggests it was manually copied &mdash; not provisioned through your secrets manager.</p>
-        <div class="signal">Detected: Key in 2+ tools without vault origin</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Key Rotation & Shared Key Alerts -->
-  <section class="alerts-section">
-    <h2>Rotation Detection &amp; Shared Key Alerts</h2>
-
-    <div class="alert-timeline">
-      <div class="alert-item">
-        <div class="alert-time">2026-04-08 09:14 UTC</div>
-        <div class="alert-title">Key rotation detected: sk-proj-a...</div>
-        <div class="alert-desc">New key prefix observed for Cursor IDE traffic. Previous key <code>sk-proj-a7Kq...</code> replaced by <code>sk-proj-aBm2...</code>. Rotation interval: 12 days. Within policy.</div>
-      </div>
-      <div class="alert-item alert-warn">
-        <div class="alert-time">2026-04-08 08:41 UTC</div>
-        <div class="alert-title">Stale key warning: sk-ant-api03-...</div>
-        <div class="alert-desc">Anthropic API key has not been rotated in 84 days. Corporate policy requires 90-day rotation. 6 days remaining before policy violation.</div>
-      </div>
-      <div class="alert-item alert-crit">
-        <div class="alert-time">2026-04-07 14:22 UTC</div>
-        <div class="alert-title">Shared key alert: sk-proj-x... used from new tool</div>
-        <div class="alert-desc">Personal OpenAI key previously seen only in ChatGPT Web UI now also observed in a Zapier automation. Key is being copied across tools without centralized management.</div>
-      </div>
-      <div class="alert-item alert-crit">
-        <div class="alert-time">2026-04-06 11:05 UTC</div>
-        <div class="alert-title">Never-rotated key: sk-proj-x...</div>
-        <div class="alert-desc">Key has been in continuous use for 214 days with no rotation. Classified as personal account. Corporate data may be processed through unmanaged credentials.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ASI03 Scorecard -->
-  <section class="scorecard-section">
-    <h2>OWASP ASI03 Scorecard: Excessive Permissions</h2>
-    <p class="lead">Credential sprawl is a direct indicator of ASI03 risk. Unmanaged keys mean unmanaged permissions.</p>
-
-    <div class="scorecard-box">
-      <div class="scorecard-header">
-        <h3>ASI03 &mdash; Excessive Permissions Assessment</h3>
-        <div class="scorecard-verdict">&#x26a0; WARNING</div>
-      </div>
-
-      <div class="scorecard-grid">
-        <div class="sc-item">
-          <div class="sc-label">Total API Keys Observed</div>
-          <div class="sc-value">3 keys across 2 providers</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Corporate-Managed Keys</div>
-          <div class="sc-value pass">2 of 3 (67%)</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Personal / Unmanaged Keys</div>
-          <div class="sc-value warn">1 key &mdash; sk-proj-x...</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Keys Shared Across Tools</div>
-          <div class="sc-value warn">2 keys used in 2+ tools</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Rotation Policy Compliance</div>
-          <div class="sc-value warn">1 key approaching violation</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Never-Rotated Keys</div>
-          <div class="sc-value fail">1 key &mdash; 214 days stale</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Permission Scope Visibility</div>
-          <div class="sc-value warn">Scopes not observable from traffic</div>
-        </div>
-        <div class="sc-item">
-          <div class="sc-label">Recommendation</div>
-          <div class="sc-value">Revoke personal key, enforce vault-based provisioning, enable scope-limited keys</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<footer>
-  <p>PowerGrabber AI &mdash; Credential visibility for identity &amp; access management teams.</p>
-  <p style="margin-top: 8px;"><a href="index.html">Back to Home</a></p>
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

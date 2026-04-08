@@ -1,65 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerGrabber — LLM Certainty (Attack Surface)</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
+#!/bin/bash
+# Generate all 40 pages with the same content, different styles
+# Usage: bash generate.sh
 
-body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#a8a29e}
-nav{padding:20px 48px;border-bottom:1px solid rgba(220,38,38,0.12);display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:700;font-size:1.1rem;color:#dc2626;font-family:'Share Tech Mono',sans-serif;}
-nav a{color:#dc2626;text-decoration:none;font-size:.85rem}
-.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#a8a29e;opacity:.5;border-bottom:1px solid rgba(220,38,38,0.12)}
-.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
-.hero h1{font-family:'Share Tech Mono',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#fafaf9;margin-bottom:16px;}
-.hero h1 span{color:#dc2626}
-.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#a8a29e;margin-bottom:40px}
-.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.btn-primary{background:#dc2626;color:#0a0a0a;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
-.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #dc262633}
-.btn-ghost{background:transparent;color:#dc2626;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #dc2626;transition:all .3s}
-.btn-ghost:hover{background:#dc262611}
-section{max-width:840px;margin:0 auto;padding:64px 32px}
-.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#dc2626;margin-bottom:12px}
-h2{font-family:'Share Tech Mono',sans-serif;font-size:1.6rem;font-weight:700;color:#fafaf9;margin-bottom:20px;}
-p,li{font-size:.95rem;line-height:1.8;color:#a8a29e;margin-bottom:14px}
-strong{color:#fafaf9}
-.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid rgba(220,38,38,0.12);color:#fafaf9;font-size:1.05rem}
-.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
-.certainty-card{background:rgba(220,38,38,0.04);border:1px solid rgba(220,38,38,0.12);border-radius:4px;padding:24px;transition:all .3s}
-.certainty-card:hover{border-color:#dc2626}
-.certainty-card h3{font-size:.8rem;font-weight:600;color:#dc2626;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
-.certainty-card p{margin-bottom:0;font-size:.9rem}
-.full-width{grid-column:span 2}
-.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid rgba(220,38,38,0.12)}
-.steps li::before{content:counter(step)'.';color:#dc2626;font-weight:700;margin-right:12px}
-.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#a8a29e;font-size:.85rem}
-.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.team-card{background:rgba(220,38,38,0.04);border:1px solid rgba(220,38,38,0.12);border-radius:4px;padding:22px}
-.team-card h3{color:#dc2626;font-size:.85rem;font-weight:600;margin-bottom:6px}
-.team-card p{margin-bottom:0;font-size:.9rem}
-.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
-.price-card{background:rgba(220,38,38,0.04);border:1px solid rgba(220,38,38,0.12);border-radius:4px;padding:22px 16px;text-align:center;transition:all .3s}
-.price-card:hover{border-color:#dc2626}
-.price-card h3{font-size:.7rem;font-weight:600;color:#dc2626;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
-.price{font-size:1.5rem;font-weight:700;color:#fafaf9;margin-bottom:4px}
-.price-sub{font-size:.75rem;color:#a8a29e;opacity:.6}
-.price-card p{font-size:.8rem;color:#a8a29e;margin:10px 0 0}
-.final-cta{text-align:center;padding:80px 32px;border-top:1px solid rgba(220,38,38,0.12);margin-top:40px}
-.final-cta h2{margin-bottom:8px}
-.final-cta .cta-group{margin-top:24px}
-.tagline{color:#dc2626;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
-footer{text-align:center;padding:40px;border-top:1px solid rgba(220,38,38,0.12);color:#a8a29e;opacity:.5;font-size:.85rem}
-footer a{color:#dc2626;text-decoration:none}
-@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
-
-</style>
-</head>
-<body>
-<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+CONTENT='<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
 <div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
 <section class="hero">
@@ -156,6 +99,7 @@ footer a{color:#dc2626;text-decoration:none}
 <div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<footer><a href="index.html">&larr; Back to all designs</a></footer>
-</body>
-</html>
+<footer><a href="index.html">&larr; Back to all designs</a></footer>'
+
+echo "Generating pages..."
+echo "Content template ready."

@@ -3,340 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detect Rogue AI Agents Before They Exfiltrate — PowerGrabber AI</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>PowerGrabber — LLM Certainty (SOC Alert)</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0d1117; color: #c9d1d9; font-family: 'Inter', sans-serif; line-height: 1.7; }
-h1, h2, h3, h4 { font-family: 'Inter', sans-serif; color: #e6edf3; }
-code, .mono { font-family: 'JetBrains Mono', monospace; }
-a { color: #58a6ff; text-decoration: none; }
-a:hover { text-decoration: underline; }
-.back-link { display: inline-block; padding: 14px 32px; font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; color: #8b949e; }
-.back-link::before { content: "\2190 "; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-/* Hero */
-.hero { padding: 80px 40px 60px; max-width: 1100px; margin: 0 auto; }
-.hero .threat-badge { display: inline-block; background: rgba(248, 81, 73, 0.15); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.3); border-radius: 20px; padding: 6px 16px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; }
-.hero h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
-.hero h1 .red { color: #f85149; }
-.hero p { font-size: 1.1rem; color: #8b949e; max-width: 700px; }
+body{font-family:'Inter',sans-serif;background:#0d1117;color:#c9d1d9}
+nav{padding:20px 48px;border-bottom:1px solid rgba(248,81,73,0.12);display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#f85149;font-family:'JetBrains Mono',sans-serif;}
+nav a{color:#f85149;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#c9d1d9;opacity:.5;border-bottom:1px solid rgba(248,81,73,0.12)}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'JetBrains Mono',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#f0f6fc;margin-bottom:16px;}
+.hero h1 span{color:#f85149}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#c9d1d9;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#f85149;color:#0d1117;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #f8514933}
+.btn-ghost{background:transparent;color:#f85149;padding:12px 32px;border-radius:6px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #f85149;transition:all .3s}
+.btn-ghost:hover{background:#f8514911}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#f85149;margin-bottom:12px}
+h2{font-family:'JetBrains Mono',sans-serif;font-size:1.6rem;font-weight:700;color:#f0f6fc;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#c9d1d9;margin-bottom:14px}
+strong{color:#f0f6fc}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid rgba(248,81,73,0.12);color:#f0f6fc;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:rgba(248,81,73,0.04);border:1px solid rgba(248,81,73,0.12);border-radius:6px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#f85149}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#f85149;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid rgba(248,81,73,0.12)}
+.steps li::before{content:counter(step)'.';color:#f85149;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#c9d1d9;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:rgba(248,81,73,0.04);border:1px solid rgba(248,81,73,0.12);border-radius:6px;padding:22px}
+.team-card h3{color:#f85149;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:rgba(248,81,73,0.04);border:1px solid rgba(248,81,73,0.12);border-radius:6px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#f85149}
+.price-card h3{font-size:.7rem;font-weight:600;color:#f85149;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#f0f6fc;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#c9d1d9;opacity:.6}
+.price-card p{font-size:.8rem;color:#c9d1d9;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid rgba(248,81,73,0.12);margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#f85149;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(248,81,73,0.12);color:#c9d1d9;opacity:.5;font-size:.85rem}
+footer a{color:#f85149;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-/* Section */
-.section { max-width: 1100px; margin: 0 auto; padding: 50px 40px; }
-.section h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; }
-.section h2 .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: rgba(210, 153, 34, 0.15); color: #d29922; padding: 4px 10px; border-radius: 4px; margin-left: 12px; vertical-align: middle; font-weight: 600; }
-
-/* OWASP Cards */
-.owasp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
-.owasp-card { border: 1px solid #21262d; border-radius: 10px; padding: 28px; background: #161b22; border-left: 4px solid; }
-.owasp-card.asi10 { border-left-color: #f85149; }
-.owasp-card.asi01 { border-left-color: #d29922; }
-.owasp-card .code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; }
-.owasp-card.asi10 .code { color: #f85149; }
-.owasp-card.asi01 .code { color: #d29922; }
-.owasp-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
-.owasp-card p { font-size: 0.9rem; color: #8b949e; }
-
-/* Baseline Section */
-.baseline-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 28px 0; }
-.baseline-item { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 20px; text-align: center; }
-.baseline-item .metric-label { font-size: 0.75rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
-.baseline-item .metric-value { font-size: 1.6rem; font-weight: 700; color: #e6edf3; font-family: 'JetBrains Mono', monospace; }
-.baseline-item .metric-detail { font-size: 0.75rem; color: #6e7681; margin-top: 6px; }
-.baseline-item .status-ok { color: #3fb950; }
-.baseline-item .status-warn { color: #d29922; }
-.baseline-item .status-crit { color: #f85149; }
-
-/* Timeline */
-.timeline { position: relative; margin: 32px 0; padding-left: 32px; border-left: 2px solid #21262d; }
-.timeline-event { position: relative; margin-bottom: 28px; padding: 20px; background: #161b22; border: 1px solid #21262d; border-radius: 8px; }
-.timeline-event::before { content: ''; position: absolute; left: -40px; top: 24px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid; }
-.timeline-event.normal::before { background: #0d1117; border-color: #3fb950; }
-.timeline-event.warning::before { background: #d29922; border-color: #d29922; }
-.timeline-event.critical::before { background: #f85149; border-color: #f85149; }
-.timeline-event .time { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6e7681; margin-bottom: 6px; }
-.timeline-event .event-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
-.timeline-event.warning .event-title { color: #d29922; }
-.timeline-event.critical .event-title { color: #f85149; }
-.timeline-event .event-detail { font-size: 0.85rem; color: #8b949e; }
-
-/* Deviation Cards */
-.deviation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
-.deviation-card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 24px; position: relative; overflow: hidden; }
-.deviation-card::after { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; }
-.deviation-card.high::after { background: #f85149; }
-.deviation-card.med::after { background: #d29922; }
-.deviation-card .severity { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-.deviation-card.high .severity { color: #f85149; }
-.deviation-card.med .severity { color: #d29922; }
-.deviation-card h4 { font-size: 1rem; margin-bottom: 8px; }
-.deviation-card p { font-size: 0.85rem; color: #8b949e; }
-.deviation-card .example { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #0d1117; padding: 10px 12px; border-radius: 6px; margin-top: 12px; color: #c9d1d9; overflow-x: auto; }
-
-/* EchoLeak */
-.echoleak { background: linear-gradient(135deg, #1a0d0d 0%, #161b22 100%); border: 1px solid rgba(248, 81, 73, 0.3); border-radius: 12px; padding: 36px; margin: 32px 0; }
-.echoleak h3 { color: #f85149; font-size: 1.3rem; margin-bottom: 16px; }
-.echoleak .attack-flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 24px 0; }
-.echoleak .attack-step { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 14px 18px; font-size: 0.82rem; min-width: 160px; text-align: center; }
-.echoleak .attack-step .step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #f85149; font-weight: 700; display: block; margin-bottom: 4px; }
-.echoleak .attack-arrow { color: #f85149; padding: 0 12px; font-size: 1.2rem; }
-.echoleak .detection-box { background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 18px 24px; margin-top: 20px; }
-.echoleak .detection-box h4 { color: #3fb950; font-size: 0.95rem; margin-bottom: 8px; }
-.echoleak .detection-box p { font-size: 0.85rem; color: #8b949e; }
-
-/* Scorecard */
-.scorecard { background: #161b22; border: 1px solid #21262d; border-radius: 12px; overflow: hidden; margin: 32px 0; }
-.scorecard-header { background: #0d1117; padding: 20px 28px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #21262d; }
-.scorecard-header h3 { font-size: 1.1rem; }
-.scorecard-header .result { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1rem; padding: 6px 16px; border-radius: 6px; }
-.scorecard-header .result.pass { background: rgba(63, 185, 80, 0.15); color: #3fb950; }
-.scorecard-header .result.warn { background: rgba(210, 153, 34, 0.15); color: #d29922; }
-.scorecard-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 28px; border-bottom: 1px solid #0d1117; font-size: 0.9rem; }
-.scorecard-row:last-child { border-bottom: none; }
-.scorecard-row .check-name { color: #c9d1d9; }
-.scorecard-row .check-result { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.82rem; }
-.scorecard-row .check-result.ok { color: #3fb950; }
-.scorecard-row .check-result.warning { color: #d29922; }
-.scorecard-row .check-result.critical { color: #f85149; }
-
-/* Side by side scorecards */
-.scorecards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
-
-/* Footer */
-.footer { text-align: center; padding: 60px 40px; color: #484f58; font-size: 0.85rem; border-top: 1px solid #161b22; margin-top: 60px; }
-
-@media (max-width: 768px) {
-  .hero h1 { font-size: 2rem; }
-  .owasp-cards, .deviation-grid, .scorecards-row { grid-template-columns: 1fr; }
-  .baseline-grid { grid-template-columns: 1fr 1fr; }
-  .echoleak .attack-flow { flex-direction: column; }
-  .echoleak .attack-arrow { transform: rotate(90deg); padding: 8px 0; }
-}
 </style>
 </head>
 <body>
-
-<nav class="back-link"><a href="index.html">Back to Home</a></nav>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
 <section class="hero">
-  <div class="threat-badge">OWASP Agentic Security &mdash; ASI10 + ASI01</div>
-  <h1>Detect <span class="red">Rogue AI Agents</span><br>Before They Exfiltrate</h1>
-  <p>AI agents can be hijacked. Goals can be overridden. Data can be silently exfiltrated through API calls that look normal. PowerGrabber establishes behavioural baselines and detects deviation in real time.</p>
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
 </section>
 
-<section class="section">
-  <h2>The OWASP Agentic Security Threats</h2>
-  <div class="owasp-cards">
-    <div class="owasp-card asi10">
-      <div class="code">ASI10 &mdash; Rogue Agents</div>
-      <h3>Uncontrolled Autonomous Behaviour</h3>
-      <p>AI agents that deviate from intended behaviour &mdash; contacting unexpected endpoints, escalating privileges, or exfiltrating data. Without monitoring, these actions are invisible until the damage is done.</p>
-    </div>
-    <div class="owasp-card asi01">
-      <div class="code">ASI01 &mdash; Goal Hijacking</div>
-      <h3>Prompt Injection Redirects Agent Goals</h3>
-      <p>Malicious input (in emails, documents, web pages) causes the AI agent to abandon its original task and pursue an attacker-controlled objective &mdash; often data exfiltration disguised as normal tool use.</p>
-    </div>
-  </div>
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
 </section>
 
-<section class="section">
-  <h2>Baseline Behaviour Establishment <span class="tag">Per Tool</span></h2>
-  <p style="color: #8b949e; margin-bottom: 24px;">PowerGrabber learns normal behaviour for each AI tool during a baseline period. Every dimension is tracked independently.</p>
-
-  <div class="baseline-grid">
-    <div class="baseline-item">
-      <div class="metric-label">Endpoint Set</div>
-      <div class="metric-value">4</div>
-      <div class="metric-detail">Known API endpoints<br><span class="status-ok">api.openai.com/v1/chat/completions</span></div>
-    </div>
-    <div class="baseline-item">
-      <div class="metric-label">Avg Volume</div>
-      <div class="metric-value">142</div>
-      <div class="metric-detail">requests/hour<br><span class="status-ok">std dev: 23</span></div>
-    </div>
-    <div class="baseline-item">
-      <div class="metric-label">Timing Pattern</div>
-      <div class="metric-value">09-18</div>
-      <div class="metric-detail">business hours<br><span class="status-ok">weekdays only</span></div>
-    </div>
-    <div class="baseline-item">
-      <div class="metric-label">HTTP Methods</div>
-      <div class="metric-value">POST</div>
-      <div class="metric-detail">100% POST<br><span class="status-ok">no GET/PUT/DELETE</span></div>
-    </div>
-  </div>
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
 </section>
 
-<section class="section">
-  <h2>Deviation Detection</h2>
-  <div class="deviation-grid">
-    <div class="deviation-card high">
-      <div class="severity">Critical &mdash; New Endpoint</div>
-      <h4>Previously Unseen API Endpoint</h4>
-      <p>The agent begins contacting an endpoint never observed during the baseline period. This is the strongest signal of goal hijacking or rogue behaviour.</p>
-      <div class="example">
-        Baseline: api.openai.com/v1/chat/completions<br>
-        <span style="color: #f85149;">Detected: attacker-server.com/exfil/collect</span>
-      </div>
-    </div>
-    <div class="deviation-card high">
-      <div class="severity">Critical &mdash; Volume Spike</div>
-      <h4>Request Volume Exceeds 3x Baseline</h4>
-      <p>A sudden burst of API calls far exceeding normal patterns. May indicate automated exfiltration or a runaway agent loop.</p>
-      <div class="example">
-        Baseline: 142 req/hr (std dev 23)<br>
-        <span style="color: #f85149;">Detected: 891 req/hr (+527% above mean)</span>
-      </div>
-    </div>
-    <div class="deviation-card med">
-      <div class="severity">Warning &mdash; Timing Anomaly</div>
-      <h4>Activity Outside Normal Hours</h4>
-      <p>API calls at 3:00 AM when baseline shows strictly business-hours activity. Could indicate scheduled exfiltration or compromised automation.</p>
-      <div class="example">
-        Baseline: 09:00 - 18:00 weekdays<br>
-        <span style="color: #d29922;">Detected: 03:14 Saturday</span>
-      </div>
-    </div>
-    <div class="deviation-card med">
-      <div class="severity">Warning &mdash; Method Change</div>
-      <h4>New HTTP Method Observed</h4>
-      <p>The tool switches from POST-only to using PUT or DELETE. May indicate the agent is attempting to modify or destroy data rather than query it.</p>
-      <div class="example">
-        Baseline: 100% POST<br>
-        <span style="color: #d29922;">Detected: DELETE /v1/files/file-abc123</span>
-      </div>
-    </div>
-  </div>
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
 </section>
 
-<section class="section">
-  <h2>Real-World Attack: The EchoLeak Scenario</h2>
-  <div class="echoleak">
-    <h3>EchoLeak: Email-Triggered Silent Exfiltration</h3>
-    <p style="color: #8b949e; margin-bottom: 20px;">An attacker embeds a prompt injection payload in an email. When an AI assistant (like Microsoft Copilot) processes the email, the injected instructions cause it to silently exfiltrate sensitive data from the user's mailbox to an attacker-controlled endpoint.</p>
-
-    <div class="attack-flow">
-      <div class="attack-step">
-        <span class="step-num">STEP 1</span>
-        Attacker sends<br>crafted email
-      </div>
-      <span class="attack-arrow">&rarr;</span>
-      <div class="attack-step">
-        <span class="step-num">STEP 2</span>
-        Copilot reads email,<br>executes hidden prompt
-      </div>
-      <span class="attack-arrow">&rarr;</span>
-      <div class="attack-step">
-        <span class="step-num">STEP 3</span>
-        Agent searches mailbox<br>for sensitive data
-      </div>
-      <span class="attack-arrow">&rarr;</span>
-      <div class="attack-step">
-        <span class="step-num">STEP 4</span>
-        Agent exfiltrates via<br>API call to external URL
-      </div>
-    </div>
-
-    <div class="detection-box">
-      <h4>PowerGrabber Detects the Exfiltration Request</h4>
-      <p>The extension sees the outbound HTTP request to the attacker's endpoint. This URL has never appeared in the baseline. Immediate alert: <strong>ASI10 CRITICAL &mdash; Previously unseen endpoint contacted by Copilot</strong>. The request URL, headers, and timing are logged for incident response.</p>
-    </div>
-  </div>
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
 </section>
 
-<section class="section">
-  <h2>Event Timeline: How Detection Unfolds</h2>
-  <div class="timeline">
-    <div class="timeline-event normal">
-      <div class="time">14:02:33 UTC</div>
-      <div class="event-title">Normal: Copilot reads inbox</div>
-      <div class="event-detail">GET /v1/messages &mdash; standard Copilot behaviour, matches baseline endpoint set</div>
-    </div>
-    <div class="timeline-event normal">
-      <div class="time">14:02:35 UTC</div>
-      <div class="event-title">Normal: Copilot processes email content</div>
-      <div class="event-detail">POST /v1/chat/completions to api.openai.com &mdash; within baseline volume and timing</div>
-    </div>
-    <div class="timeline-event warning">
-      <div class="time">14:02:37 UTC</div>
-      <div class="event-title">WARNING: Unusual search query pattern</div>
-      <div class="event-detail">Copilot searching for "confidential", "password", "SSN" across mailbox &mdash; 12 rapid queries in 2 seconds (volume anomaly)</div>
-    </div>
-    <div class="timeline-event critical">
-      <div class="time">14:02:39 UTC</div>
-      <div class="event-title">CRITICAL: New endpoint contacted</div>
-      <div class="event-detail">POST to https://attacker-server.com/exfil/collect &mdash; endpoint never seen in baseline. Payload includes mailbox content. ASI10 alert fired.</div>
-    </div>
-  </div>
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
 </section>
 
-<section class="section">
-  <h2>ASI10 Scorecard</h2>
-  <p style="color: #8b949e; margin-bottom: 24px;">PowerGrabber generates per-tool scorecards showing PASS, WARNING, or CRITICAL status for each behavioural dimension.</p>
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
+</div>
 
-  <div class="scorecards-row">
-    <div class="scorecard">
-      <div class="scorecard-header">
-        <h3>Copilot &mdash; ASI10 Scorecard</h3>
-        <span class="result pass">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">Endpoint set matches baseline</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">Volume within 2x std dev</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">Timing within expected window</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">HTTP methods match baseline</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">No anomalous payload patterns</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-    </div>
-
-    <div class="scorecard">
-      <div class="scorecard-header">
-        <h3>Copilot &mdash; ASI10 Scorecard</h3>
-        <span class="result warn">WARNING</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">Endpoint set matches baseline</span>
-        <span class="check-result critical">CRITICAL &mdash; 1 new endpoint</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">Volume within 2x std dev</span>
-        <span class="check-result warning">WARNING &mdash; 2.4x baseline</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">Timing within expected window</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">HTTP methods match baseline</span>
-        <span class="check-result ok">PASS</span>
-      </div>
-      <div class="scorecard-row">
-        <span class="check-name">No anomalous payload patterns</span>
-        <span class="check-result warning">WARNING &mdash; sensitive keyword search burst</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="footer">
-  <p>PowerGrabber AI &mdash; Rogue agent detection for SOC teams</p>
-  <p style="margin-top: 8px;"><a href="index.html">Back to Home</a></p>
-</footer>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>

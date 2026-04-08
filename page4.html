@@ -3,476 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerGrabber — The Data Flow</title>
+<title>PowerGrabber — LLM Certainty (Editorial Serif)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+body{font-family:'Source Sans 3',sans-serif;background:#f9f7f3;color:#57534e}
+nav{padding:20px 48px;border-bottom:1px solid #e7e5e4;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;font-size:1.1rem;color:#b45309;font-family:'Playfair Display',sans-serif;}
+nav a{color:#b45309;text-decoration:none;font-size:.85rem}
+.tagline-bar{text-align:center;padding:12px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#57534e;opacity:.5;border-bottom:1px solid #e7e5e4}
+.hero{min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px}
+.hero h1{font-family:'Playfair Display',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:700;color:#1c1917;margin-bottom:16px;}
+.hero h1 span{color:#b45309}
+.subtitle{font-size:1.05rem;max-width:660px;line-height:1.8;color:#57534e;margin-bottom:40px}
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#b45309;color:#f9f7f3;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .3s;border:none}
+.btn-primary:hover{opacity:.85;box-shadow:0 4px 16px #b4530933}
+.btn-ghost{background:transparent;color:#b45309;padding:12px 32px;border-radius:4px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid #b45309;transition:all .3s}
+.btn-ghost:hover{background:#b4530911}
+section{max-width:840px;margin:0 auto;padding:64px 32px}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:12px}
+h2{font-family:'Playfair Display',sans-serif;font-size:1.6rem;font-weight:700;color:#1c1917;margin-bottom:20px;}
+p,li{font-size:.95rem;line-height:1.8;color:#57534e;margin-bottom:14px}
+strong{color:#1c1917}
+.questions{list-style:none;padding:0}.questions li{padding:14px 0;border-bottom:1px solid #e7e5e4;color:#1c1917;font-size:1.05rem}
+.certainty-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.certainty-card{background:#fff;border:1px solid #e7e5e4;border-radius:4px;padding:24px;transition:all .3s}
+.certainty-card:hover{border-color:#b45309}
+.certainty-card h3{font-size:.8rem;font-weight:600;color:#b45309;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.certainty-card p{margin-bottom:0;font-size:.9rem}
+.full-width{grid-column:span 2}
+.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;padding:14px 0;border-bottom:1px solid #e7e5e4}
+.steps li::before{content:counter(step)'.';color:#b45309;font-weight:700;margin-right:12px}
+.browsers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px}.browsers span{color:#57534e;font-size:.85rem}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.team-card{background:#fff;border:1px solid #e7e5e4;border-radius:4px;padding:22px}
+.team-card h3{color:#b45309;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.team-card p{margin-bottom:0;font-size:.9rem}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.price-card{background:#fff;border:1px solid #e7e5e4;border-radius:4px;padding:22px 16px;text-align:center;transition:all .3s}
+.price-card:hover{border-color:#b45309}
+.price-card h3{font-size:.7rem;font-weight:600;color:#b45309;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.price{font-size:1.5rem;font-weight:700;color:#1c1917;margin-bottom:4px}
+.price-sub{font-size:.75rem;color:#57534e;opacity:.6}
+.price-card p{font-size:.8rem;color:#57534e;margin:10px 0 0}
+.final-cta{text-align:center;padding:80px 32px;border-top:1px solid #e7e5e4;margin-top:40px}
+.final-cta h2{margin-bottom:8px}
+.final-cta .cta-group{margin-top:24px}
+.tagline{color:#b45309;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
+footer{text-align:center;padding:40px;border-top:1px solid #e7e5e4;color:#57534e;opacity:.5;font-size:.85rem}
+footer a{color:#b45309;text-decoration:none}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
 
-  body {
-    font-family: 'IBM Plex Sans', sans-serif;
-    background: #0a1628;
-    color: #94a3b8;
-    overflow-x: hidden;
-  }
-
-  /* Animated grid background */
-  .grid-bg {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 0;
-    background-image:
-      linear-gradient(rgba(45,212,191,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(45,212,191,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-
-  /* Animated data lines */
-  .data-lines {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .data-line {
-    position: absolute;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(45,212,191,0.4), transparent);
-    animation: dataFlow 4s linear infinite;
-  }
-
-  .data-line:nth-child(1) { top: 20%; width: 200px; animation-delay: 0s; animation-duration: 3s; }
-  .data-line:nth-child(2) { top: 40%; width: 150px; animation-delay: 1s; animation-duration: 4s; }
-  .data-line:nth-child(3) { top: 60%; width: 180px; animation-delay: 2s; animation-duration: 3.5s; }
-  .data-line:nth-child(4) { top: 80%; width: 120px; animation-delay: 0.5s; animation-duration: 5s; }
-  .data-line:nth-child(5) { top: 30%; width: 160px; animation-delay: 1.5s; animation-duration: 4.5s; }
-
-  @keyframes dataFlow {
-    from { left: -200px; }
-    to { left: calc(100% + 200px); }
-  }
-
-  .content { position: relative; z-index: 1; }
-
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 48px;
-    border-bottom: 1px solid rgba(45,212,191,0.1);
-  }
-
-  .logo {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    color: #2dd4bf;
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
-
-  nav a { color: #2dd4bf; text-decoration: none; font-size: 0.85rem; }
-
-  /* Hero — left-aligned with topology diagram */
-  .hero {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 100px 48px;
-    align-items: center;
-  }
-
-  .hero-text h1 {
-    font-size: clamp(2rem, 4vw, 3rem);
-    color: #f1f5f9;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
-  }
-
-  .hero-text h1 span { color: #2dd4bf; }
-
-  .hero-text p {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 32px;
-    font-weight: 300;
-  }
-
-  .hero-cta {
-    display: inline-block;
-    background: transparent;
-    color: #2dd4bf;
-    padding: 12px 32px;
-    border: 2px solid #2dd4bf;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-    text-decoration: none;
-    letter-spacing: 1px;
-    transition: all 0.3s;
-  }
-  .hero-cta:hover {
-    background: #2dd4bf;
-    color: #0a1628;
-  }
-
-  /* Network topology diagram */
-  .topology {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1;
-    max-width: 480px;
-    justify-self: center;
-  }
-
-  .topo-node {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border: 2px solid rgba(45,212,191,0.3);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.65rem;
-    color: #2dd4bf;
-    background: rgba(10,22,40,0.9);
-    transition: all 0.3s;
-  }
-
-  .topo-node:hover {
-    border-color: #2dd4bf;
-    box-shadow: 0 0 20px rgba(45,212,191,0.2);
-  }
-
-  .topo-icon { font-size: 1.4rem; margin-bottom: 4px; }
-
-  .topo-node.center {
-    width: 100px; height: 100px;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    border-color: #2dd4bf;
-    box-shadow: 0 0 30px rgba(45,212,191,0.2);
-    z-index: 2;
-    font-size: 0.55rem;
-    font-weight: 600;
-  }
-
-  .topo-node.n1 { left: 50%; top: 0; transform: translateX(-50%); }
-  .topo-node.n2 { right: 0; top: 25%; }
-  .topo-node.n3 { right: 5%; bottom: 10%; }
-  .topo-node.n4 { left: 5%; bottom: 10%; }
-  .topo-node.n5 { left: 0; top: 25%; }
-
-  /* SVG lines connecting nodes */
-  .topo-lines {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 1;
-  }
-
-  .topo-lines line {
-    stroke: rgba(45,212,191,0.15);
-    stroke-width: 1;
-    stroke-dasharray: 4 4;
-    animation: dashMove 2s linear infinite;
-  }
-
-  @keyframes dashMove {
-    to { stroke-dashoffset: -16; }
-  }
-
-  /* Flow section */
-  .flow-section {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 80px 48px;
-  }
-
-  .flow-section h2 {
-    font-size: 1.8rem;
-    color: #f1f5f9;
-    margin-bottom: 48px;
-    text-align: center;
-  }
-
-  .flow-pipeline {
-    display: flex;
-    gap: 0;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .flow-stage {
-    flex: 1;
-    min-width: 160px;
-    max-width: 200px;
-    padding: 24px 16px;
-    text-align: center;
-    border: 1px solid rgba(45,212,191,0.1);
-    background: rgba(45,212,191,0.02);
-    position: relative;
-  }
-
-  .flow-stage:not(:last-child)::after {
-    content: '>';
-    position: absolute;
-    right: -12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #2dd4bf;
-    font-size: 1.2rem;
-    z-index: 2;
-  }
-
-  .flow-stage h3 {
-    color: #2dd4bf;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .flow-stage p {
-    font-size: 0.8rem;
-    line-height: 1.5;
-    color: #64748b;
-  }
-
-  /* Metrics */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    max-width: 900px;
-    margin: 0 auto;
-    background: rgba(45,212,191,0.1);
-  }
-
-  .metric {
-    background: #0a1628;
-    padding: 40px 24px;
-    text-align: center;
-  }
-
-  .metric-value {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #2dd4bf;
-    margin-bottom: 8px;
-  }
-
-  .metric-label {
-    font-size: 0.8rem;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  /* Event types */
-  .events-section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 80px 48px;
-  }
-
-  .events-section h2 {
-    font-size: 1.8rem;
-    color: #f1f5f9;
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  .event-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-  }
-
-  .event-table th {
-    text-align: left;
-    padding: 12px 16px;
-    border-bottom: 2px solid rgba(45,212,191,0.2);
-    color: #2dd4bf;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-
-  .event-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(45,212,191,0.05);
-    color: #94a3b8;
-  }
-
-  .event-table tr:hover td {
-    background: rgba(45,212,191,0.03);
-  }
-
-  .event-tag {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  .tag-req { background: rgba(45,212,191,0.1); color: #2dd4bf; }
-  .tag-res { background: rgba(96,165,250,0.1); color: #60a5fa; }
-  .tag-done { background: rgba(34,197,94,0.1); color: #22c55e; }
-  .tag-err { background: rgba(248,113,113,0.1); color: #f87171; }
-  .tag-cache { background: rgba(251,191,36,0.1); color: #fbbf24; }
-
-  footer {
-    text-align: center;
-    padding: 60px 32px;
-    border-top: 1px solid rgba(45,212,191,0.1);
-    margin-top: 80px;
-  }
-  footer a { color: #2dd4bf; text-decoration: none; font-size: 0.85rem; }
-
-  @media (max-width: 768px) {
-    .hero { grid-template-columns: 1fr; padding: 60px 24px; }
-    .topology { max-width: 300px; }
-    .topo-node { width: 60px; height: 60px; font-size: 0.55rem; }
-    .topo-node.center { width: 80px; height: 80px; }
-    .metrics { grid-template-columns: 1fr; }
-    .flow-pipeline { flex-direction: column; align-items: center; }
-    .flow-stage::after { display: none; }
-    nav { padding: 16px 20px; }
-  }
 </style>
 </head>
 <body>
+<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr; All Designs</a></nav>
+<div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
-<div class="grid-bg"></div>
-<div class="data-lines">
-  <div class="data-line"></div>
-  <div class="data-line"></div>
-  <div class="data-line"></div>
-  <div class="data-line"></div>
-  <div class="data-line"></div>
+<section class="hero">
+<h1>LLM <span>Certainty.</span></h1>
+<p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+</section>
+
+<section>
+<div class="section-label">The Questions</div>
+<ul class="questions">
+<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
+<li>What are they putting in?</li>
+<li>Are our secrets leaving the company?</li>
+<li>How much are we spending on AI &mdash; and who is spending it?</li>
+<li>Are we legal?</li>
+<li>Are we compliant?</li>
+<li>Are we secure?</li>
+<li>Do we have records?</li>
+</ul>
+</section>
+
+<section>
+<div class="section-label">Certainty</div>
+<h2>Certainty looks like this.</h2>
+<div class="certainty-grid">
+<div class="certainty-card">
+<h3>Complete Visibility</h3>
+<p><strong>You know which AI tools are in use.</strong> Every AI service accessed through the browser or at the API level is captured, identified, and logged. ChatGPT, Claude, Gemini, Claude Code, and every other LLM interaction &mdash; visible, attributed, recorded.</p>
+</div>
+<div class="certainty-card">
+<h3>Audit Record</h3>
+<p><strong>You have the record your auditor will ask for.</strong> Every interaction logged as structured, compliance-ready data. Timestamped. Searchable. Exportable. The documentation the EU AI Act, GDPR, and your own governance framework require &mdash; generated automatically, continuously, not reconstructed under pressure.</p>
+</div>
+<div class="certainty-card">
+<h3>Policy Enforcement</h3>
+<p><strong>Your AI policy has an enforcement layer.</strong> A policy without observability is a document. PowerGrabber gives your policy teeth &mdash; not by restricting what people do, but by making what they do visible.</p>
+</div>
+<div class="certainty-card">
+<h3>Compliance Evidence</h3>
+<p><strong>Your compliance team can demonstrate, not just assert.</strong> There is a significant difference between telling a regulator that AI usage is governed and showing them the capture record that proves it. PowerGrabber produces the latter.</p>
+</div>
+<div class="certainty-card full-width">
+<h3>Full Record</h3>
+<p><strong>You know exactly what is leaving your organisation through AI tools.</strong> Not approximately. Not based on assumption. A precise, structured, searchable record of every prompt, every interaction, every API call &mdash; from every endpoint, every browser, every AI application in use across your organisation.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="section-label">How It Works</div>
+<h2>How PowerGrabber works.</h2>
+<ol class="steps">
+<li>Install PowerGrabber on any macOS, Windows, or Linux machine.</li>
+<li>Install the PowerGrabber browser extension.</li>
+<li>Everything is captured to a database.</li>
+<li>The PowerGrabber dashboard gives complete visibility &mdash; who is using what, what is being sent, stats, alerts, and a full audit log.</li>
+<li>For organisations that need to go further, PowerGrabber logs to databases, S3, Git, and file systems.</li>
+</ol>
+<div class="browsers"><span>Chrome</span><span>Firefox</span><span>Edge</span><span>Safari</span><span>Opera</span></div>
+</section>
+
+<section>
+<div class="section-label">Teams</div>
+<h2>Built for the teams who need it.</h2>
+<div class="teams-grid">
+<div class="team-card"><h3>Compliance and GRC</h3><p>Continuous, automated capture of LLM interactions across the organisation. Audit-ready records without manual effort.</p></div>
+<div class="team-card"><h3>Security and IT</h3><p>Complete visibility into AI tool usage across every endpoint. Shadow AI surfaced. Usage attributed. Anomalies identifiable.</p></div>
+<div class="team-card"><h3>Legal and Privacy</h3><p>Documentation of AI data flows for GDPR, EU AI Act, HIPAA, and emerging AI regulatory obligations.</p></div>
+<div class="team-card"><h3>Engineering and DevOps</h3><p>Full observability into LLM API usage &mdash; including developer tools like Claude Code and Cursor &mdash; for governance, cost attribution, and compliance.</p></div>
+</div>
+</section>
+
+<section>
+<div class="section-label">Pricing</div>
+<h2>Pricing</h2>
+<div class="pricing-grid">
+<div class="price-card"><h3>Free</h3><div class="price">$0</div><p>Core capture. Single endpoint. CLI output.</p></div>
+<div class="price-card"><h3>Pro</h3><div class="price">$19</div><div class="price-sub">/month</div><p>Advanced capture, structured logging, SQLite storage, HAR export.</p></div>
+<div class="price-card"><h3>Team</h3><div class="price">$49</div><div class="price-sub">/user/month</div><p>Shared dashboard, compliance reporting, CI/CD integration.</p></div>
+<div class="price-card"><h3>Enterprise</h3><div class="price">$10K+</div><div class="price-sub">/year</div><p>Multi-endpoint, SIEM integration, compliance dashboards, MDM, SSO.</p></div>
+</div>
+</section>
+
+<div class="final-cta">
+<h2>Download PowerGrabber &mdash; Free</h2>
+<div class="cta-group">
+<a href="#" class="btn-primary">Download Free</a>
+<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</div>
+<div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
-<div class="content">
-  <nav>
-    <div class="logo">// POWERGRABBER</div>
-    <a href="index.html">&larr; All Concepts</a>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-text">
-      <h1>See the <span>data flow</span> between your browser and every AI</h1>
-      <p>PowerGrabber intercepts HTTP traffic at the browser's network stack. Every request, every response, every header — captured in real time via a lightweight extension and streamed to a local Rust backend.</p>
-      <a href="#" class="hero-cta">View the Architecture</a>
-    </div>
-    <div class="topology">
-      <svg class="topo-lines" viewBox="0 0 480 480">
-        <line x1="240" y1="80" x2="240" y2="190"/>
-        <line x1="400" y1="170" x2="290" y2="220"/>
-        <line x1="380" y1="380" x2="280" y2="270"/>
-        <line x1="100" y1="380" x2="200" y2="270"/>
-        <line x1="80" y1="170" x2="190" y2="220"/>
-      </svg>
-      <div class="topo-node n1"><span class="topo-icon">&#127760;</span>Chrome</div>
-      <div class="topo-node n2"><span class="topo-icon">&#128038;</span>Firefox</div>
-      <div class="topo-node n3"><span class="topo-icon">&#9881;</span>Edge</div>
-      <div class="topo-node n4"><span class="topo-icon">&#127911;</span>Opera</div>
-      <div class="topo-node n5"><span class="topo-icon">&#129517;</span>Safari</div>
-      <div class="topo-node center"><span class="topo-icon">&#9889;</span>POWER<br>GRABBER</div>
-    </div>
-  </section>
-
-  <section class="flow-section">
-    <h2>The Capture Pipeline</h2>
-    <div class="flow-pipeline">
-      <div class="flow-stage">
-        <h3>Intercept</h3>
-        <p>webRequest API hooks into 5 browser events before they leave the network stack</p>
-      </div>
-      <div class="flow-stage">
-        <h3>Merge</h3>
-        <p>Request + headers combined in a pending map with 500ms periodic flush</p>
-      </div>
-      <div class="flow-stage">
-        <h3>Stream</h3>
-        <p>WebSocket push to local Rust backend. 1000-event buffer when offline</p>
-      </div>
-      <div class="flow-stage">
-        <h3>Validate</h3>
-        <p>URL length, header count, timestamp bounds, request ID checks</p>
-      </div>
-      <div class="flow-stage">
-        <h3>Redact</h3>
-        <p>8 header types + 14 URL param patterns sanitized before storage</p>
-      </div>
-    </div>
-  </section>
-
-  <div class="metrics">
-    <div class="metric">
-      <div class="metric-value">5</div>
-      <div class="metric-label">Event Types</div>
-    </div>
-    <div class="metric">
-      <div class="metric-value">22</div>
-      <div class="metric-label">Fields Captured</div>
-    </div>
-    <div class="metric">
-      <div class="metric-value">0</div>
-      <div class="metric-label">TLS Interception</div>
-    </div>
-  </div>
-
-  <section class="events-section">
-    <h2>Captured Event Types</h2>
-    <table class="event-table">
-      <thead>
-        <tr><th>Event</th><th>Source</th><th>Key Fields</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="event-tag tag-req">request_started</span></td>
-          <td>onBeforeRequest + onSendHeaders</td>
-          <td>method, url, headers, tab_url, resource_type</td>
-        </tr>
-        <tr>
-          <td><span class="event-tag tag-res">response_received</span></td>
-          <td>onHeadersReceived</td>
-          <td>status_code, response_headers, url</td>
-        </tr>
-        <tr>
-          <td><span class="event-tag tag-done">loading_finished</span></td>
-          <td>onCompleted</td>
-          <td>from_cache, status_code</td>
-        </tr>
-        <tr>
-          <td><span class="event-tag tag-err">loading_failed</span></td>
-          <td>onErrorOccurred</td>
-          <td>error, canceled flag</td>
-        </tr>
-        <tr>
-          <td><span class="event-tag tag-cache">served_from_cache</span></td>
-          <td>Protocol parsing</td>
-          <td>request_id, timestamp</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <footer>
-    <a href="index.html">&larr; Back to all concepts</a>
-  </footer>
-</div>
-
+<footer><a href="index.html">&larr; Back to all designs</a></footer>
 </body>
 </html>
