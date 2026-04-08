@@ -7,69 +7,38 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e0e0e0;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:#fafaf9;color:#1c1917;min-height:100vh}
 .hero{text-align:center;padding:80px 20px 40px}
-.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:#fff;margin-bottom:16px}
-.hero p{font-size:1.1rem;color:#888;max-width:600px;margin:0 auto;line-height:1.6}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1200px;margin:40px auto;padding:0 24px 80px}
-.card{border-radius:10px;overflow:hidden;transition:transform .3s,box-shadow .3s;text-decoration:none;color:inherit;display:block}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.5)}
-.card-inner{padding:24px 20px;min-height:100px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid #222;border-radius:10px;background:#111}
-.card-num{font-size:.7rem;color:#666;letter-spacing:2px;margin-bottom:6px}
-.card h2{font-size:1rem;font-weight:600;color:#fff;margin-bottom:4px}
-.card p{font-size:.8rem;color:#888;line-height:1.4}
-.card .arrow{align-self:flex-end;color:#666;margin-top:8px;transition:transform .2s}
-.card:hover .arrow{transform:translateX(4px);color:#fff}
-footer{text-align:center;padding:40px 20px;color:#555;font-size:.85rem;border-top:1px solid #1a1a1a}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;color:#1c1917;margin-bottom:16px}
+.hero p{font-size:1.1rem;color:#78716c;max-width:540px;margin:0 auto;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1000px;margin:40px auto;padding:0 24px 80px}
+.card{border-radius:8px;overflow:hidden;transition:transform .3s,box-shadow .3s;text-decoration:none;color:inherit;display:block}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.card-inner{padding:24px 20px;min-height:100px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid #e7e5e4;border-radius:8px;background:#fff}
+.card-num{font-size:.7rem;color:#a8a29e;letter-spacing:2px;margin-bottom:6px}
+.card h2{font-size:1rem;font-weight:600;color:#1c1917;margin-bottom:4px}
+.card p{font-size:.85rem;color:#78716c;line-height:1.4}
+.card .arrow{align-self:flex-end;color:#a8a29e;margin-top:8px;transition:transform .2s}
+.card:hover .arrow{transform:translateX(4px);color:#1c1917}
+footer{text-align:center;padding:40px 20px;color:#a8a29e;font-size:.85rem;border-top:1px solid #e7e5e4}
 </style>
 </head>
 <body>
 <div class="hero">
 <h1>PowerGrabber AI</h1>
-<p>40 visual treatments of the same product page. Same copy, different design. PowerGrabber: LLM Certainty.</p>
+<p>9 design variations. Same copy. PowerGrabber: LLM Certainty.</p>
 </div>
 <div class="grid">
-<a href="page1.html" class="card"><div class="card-inner"><div><div class="card-num">01</div><h2>Radar Dark</h2><p>Orbitron, red accent, dark bg</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page2.html" class="card"><div class="card-inner"><div><div class="card-num">02</div><h2>Clean SaaS</h2><p>Inter, blue on white, rounded cards</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page3.html" class="card"><div class="card-inner"><div><div class="card-num">03</div><h2>Dark Enterprise</h2><p>DM Sans, blue-gray gradient, muted</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page4.html" class="card"><div class="card-inner"><div><div class="card-num">04</div><h2>Editorial Serif</h2><p>Playfair Display, warm cream bg, amber</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page5.html" class="card"><div class="card-inner"><div><div class="card-num">05</div><h2>Purple Gradient</h2><p>DM Sans, violet on dark purple</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page6.html" class="card"><div class="card-inner"><div><div class="card-num">06</div><h2>Teal Minimal</h2><p>Inter, teal accent, mint bg</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page7.html" class="card"><div class="card-inner"><div><div class="card-num">07</div><h2>Terminal Green</h2><p>Share Tech Mono, green on black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page8.html" class="card"><div class="card-inner"><div><div class="card-num">08</div><h2>Indigo Space</h2><p>Outfit, indigo on deep navy</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page9.html" class="card"><div class="card-inner"><div><div class="card-num">09</div><h2>Orange Racing</h2><p>Barlow, orange on near-black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page10.html" class="card"><div class="card-inner"><div><div class="card-num">10</div><h2>Open Teal</h2><p>Literata serif, teal on mint bg</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page11.html" class="card"><div class="card-inner"><div><div class="card-num">11</div><h2>GitHub Dark</h2><p>JetBrains Mono, blue on GitHub dark</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page12.html" class="card"><div class="card-inner"><div><div class="card-num">12</div><h2>Finance Light</h2><p>Inter + Space Mono, indigo on light gray</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page13.html" class="card"><div class="card-inner"><div><div class="card-num">13</div><h2>Navy Formal</h2><p>Playfair Display, navy on white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page14.html" class="card"><div class="card-inner"><div><div class="card-num">14</div><h2>Clinical Blue</h2><p>Source Sans, sky blue on near-white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page15.html" class="card"><div class="card-inner"><div><div class="card-num">15</div><h2>Incident Red</h2><p>Barlow, red accent on black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page16.html" class="card"><div class="card-inner"><div><div class="card-num">16</div><h2>Catalogue Teal</h2><p>Outfit, teal on mint bg</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page17.html" class="card"><div class="card-inner"><div><div class="card-num">17</div><h2>Forensic Amber</h2><p>Space Grotesk, amber on charcoal</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page18.html" class="card"><div class="card-inner"><div><div class="card-num">18</div><h2>Blueprint Cyan</h2><p>Fira Code, cyan on deep blue</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page19.html" class="card"><div class="card-inner"><div><div class="card-num">19</div><h2>Executive Black</h2><p>Outfit, white on pure black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page20.html" class="card"><div class="card-inner"><div><div class="card-num">20</div><h2>EU Regulatory</h2><p>Libre Baskerville, EU blue on white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page21.html" class="card"><div class="card-inner"><div><div class="card-num">21</div><h2>Green Architecture</h2><p>IBM Plex, green on dark slate</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page22.html" class="card"><div class="card-inner"><div><div class="card-num">22</div><h2>SOC Alert</h2><p>JetBrains Mono, red on GitHub dark</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page23.html" class="card"><div class="card-inner"><div><div class="card-num">23</div><h2>Team Colours</h2><p>DM Sans, violet on light gray</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page24.html" class="card"><div class="card-inner"><div><div class="card-num">24</div><h2>Monitor Cyan</h2><p>Fira Code, cyan on dark navy</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page25.html" class="card"><div class="card-inner"><div><div class="card-num">25</div><h2>Violet Identity</h2><p>Space Grotesk, violet on slate</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page26.html" class="card"><div class="card-inner"><div><div class="card-num">26</div><h2>Cloud Orange</h2><p>Barlow, orange on warm black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page27.html" class="card"><div class="card-inner"><div><div class="card-num">27</div><h2>Audit Formal</h2><p>Lora serif, navy on white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page28.html" class="card"><div class="card-inner"><div><div class="card-num">28</div><h2>Attack Surface</h2><p>Share Tech Mono, red on black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page29.html" class="card"><div class="card-inner"><div><div class="card-num">29</div><h2>Budget Amber</h2><p>Inter, amber on light blue-gray</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page30.html" class="card"><div class="card-inner"><div><div class="card-num">30</div><h2>Honest Monochrome</h2><p>Inter, black on white, no decoration</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page31.html" class="card"><div class="card-inner"><div><div class="card-num">31</div><h2>Stripe Clean</h2><p>Inter, Stripe purple on white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page32.html" class="card"><div class="card-inner"><div><div class="card-num">32</div><h2>Vercel Dark</h2><p>Inter, white on pure black</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page33.html" class="card"><div class="card-inner"><div><div class="card-num">33</div><h2>Notion Editorial</h2><p>Georgia serif, brown on warm white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page34.html" class="card"><div class="card-inner"><div><div class="card-num">34</div><h2>Warm Terracotta</h2><p>Libre Baskerville, terracotta on cream</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page35.html" class="card"><div class="card-inner"><div><div class="card-num">35</div><h2>Brutalist Mono</h2><p>Space Grotesk, all-caps, black/white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page36.html" class="card"><div class="card-inner"><div><div class="card-num">36</div><h2>Gradient Mesh</h2><p>Syne, violet on dark, rounded cards</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page37.html" class="card"><div class="card-inner"><div><div class="card-num">37</div><h2>Documentation</h2><p>Inter, blue on white, docs-style</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page38.html" class="card"><div class="card-inner"><div><div class="card-num">38</div><h2>Warm Cream</h2><p>Libre Baskerville, brown on cream</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page39.html" class="card"><div class="card-inner"><div><div class="card-num">39</div><h2>Split Navy</h2><p>DM Sans, royal blue on white</p></div><div class="arrow">&rarr;</div></div></a>
-<a href="page40.html" class="card"><div class="card-inner"><div><div class="card-num">40</div><h2>Glassmorphism</h2><p>Inter, blue on dark slate, frosted cards</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page1.html" class="card"><div class="card-inner"><div><div class="card-num">01</div><h2>Radar Dark</h2><p>Orbitron, red accent, dark background</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page2.html" class="card"><div class="card-inner"><div><div class="card-num">02</div><h2>Editorial Serif</h2><p>Playfair Display, amber on warm cream</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page3.html" class="card"><div class="card-inner"><div><div class="card-num">03</div><h2>Open Teal</h2><p>Literata serif, teal on mint</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page4.html" class="card"><div class="card-inner"><div><div class="card-num">04</div><h2>Navy Formal</h2><p>Playfair Display, navy on white</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page5.html" class="card"><div class="card-inner"><div><div class="card-num">05</div><h2>EU Regulatory</h2><p>Libre Baskerville, EU blue on white</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page6.html" class="card"><div class="card-inner"><div><div class="card-num">06</div><h2>Audit Formal</h2><p>Lora serif, navy on white</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page7.html" class="card"><div class="card-inner"><div><div class="card-num">07</div><h2>Notion Editorial</h2><p>Georgia serif, brown on warm white</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page8.html" class="card"><div class="card-inner"><div><div class="card-num">08</div><h2>Warm Terracotta</h2><p>Libre Baskerville, terracotta on cream</p></div><div class="arrow">&rarr;</div></div></a>
+<a href="page9.html" class="card"><div class="card-inner"><div><div class="card-num">09</div><h2>Warm Cream</h2><p>Libre Baskerville, brown on cream</p></div><div class="arrow">&rarr;</div></div></a>
 </div>
-<footer>PowerGrabber AI &mdash; LLM Certainty &mdash; 40 design variations, identical copy</footer>
+<footer>PowerGrabber AI &mdash; LLM Certainty</footer>
 </body>
 </html>
