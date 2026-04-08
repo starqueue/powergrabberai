@@ -150,13 +150,13 @@ PowerGrabber sits at the browser layer, but many AI coding tools also make brows
 
 ---
 
-## Part 3: 20 Feature Ideas for PowerGrabber
+## Part 3: Feature Set for PowerGrabber
 
-These features leverage PowerGrabber's unique position — inside the browser network stack — to address OWASP AI security risks and provide visibility into the AI coding tool ecosystem.
+The weak ideas from the original 20 have been removed. What remains are features that PowerGrabber can genuinely deliver from HTTP metadata (URLs, headers, status codes, timing) without request/response body access. The OWASP Compliance Scorecard has been expanded into a detailed, practical section because this is what enterprise clients actually ask for.
 
-### Idea 1: LLM API Endpoint Detection & Classification Engine
+### Feature 1: LLM API Endpoint Detection & Classification Engine
 
-**OWASP Coverage:** LLM10 (Unbounded Consumption), ASI02 (Tool Misuse)
+**Foundation feature — everything else depends on this.**
 
 Build a detection engine that automatically identifies and classifies HTTP requests to known LLM API endpoints. Maintain a registry of:
 
@@ -177,9 +177,7 @@ Each request tagged with: provider name, endpoint type (chat, embedding, image, 
 
 ---
 
-### Idea 2: AI Coding Tool Traffic Fingerprinting
-
-**OWASP Coverage:** ASI10 (Rogue Agents), ASI03 (Agent Identity)
+### Feature 2: AI Coding Tool Traffic Fingerprinting
 
 Detect and attribute traffic from specific AI coding tools based on their known network signatures:
 
@@ -199,19 +197,17 @@ This gives organizations a complete inventory of which AI coding tools are in ac
 
 ---
 
-### Idea 3: AI API Cost Estimation Engine
-
-**OWASP Coverage:** LLM10 (Unbounded Consumption / Denial of Wallet)
+### Feature 3: AI API Cost Estimation Engine
 
 Estimate per-request and aggregate costs using response headers that major providers include:
 
-- **OpenAI:** `x-ratelimit-remaining-tokens`, `x-ratelimit-limit-tokens`, response body token usage (where visible)
+- **OpenAI:** `x-ratelimit-remaining-tokens`, `x-ratelimit-limit-tokens`
 - **Anthropic:** `x-ratelimit-*` headers, `anthropic-ratelimit-*` headers
 - **Google:** Response metadata includes token counts
 
 Maintain a pricing table (configurable, user-updateable) mapping provider + model + token count to dollar cost. Track:
 
-- Cost per request (estimated)
+- Cost per request (estimated from token delta between consecutive rate-limit headers)
 - Cost per provider per hour/day/month
 - Cost per originating tab/domain
 - Running total across all providers
@@ -221,13 +217,10 @@ Output: Running cost ticker in text mode, detailed cost breakdown in JSON mode. 
 
 ---
 
-### Idea 4: Shadow AI Discovery Report
-
-**OWASP Coverage:** LLM06 (Excessive Agency), ASI02 (Tool Misuse)
+### Feature 4: Shadow AI Discovery
 
 Automated reporting of unauthorized AI service usage. Maintain a configurable allowlist of approved AI services and endpoints. Flag any AI API traffic not on the list.
 
-Report format:
 ```
 SHADOW AI DISCOVERY REPORT — 2026-04-08
 ========================================
@@ -242,112 +235,7 @@ Configurable via a policy file defining approved/denied providers. Denial emits 
 
 ---
 
-### Idea 5: Agentic Request Chain Tracing
-
-**OWASP Coverage:** ASI01 (Goal Hijack), ASI02 (Tool Misuse), ASI08 (Cascading Failures)
-
-Track sequences of requests that form agentic tool-use chains. When an AI coding tool makes an API call that triggers a response, then makes follow-up calls to other APIs, this forms a chain. Detect and log:
-
-- **Chain start:** Initial request to LLM API
-- **Chain links:** Subsequent requests triggered within a time window from the same tab/origin
-- **Chain depth:** How many sequential API calls in the chain
-- **Chain breadth:** How many distinct endpoints contacted
-- **Anomaly detection:** Chains that are unusually long, contact unexpected endpoints, or show error cascades
-
-Example chain: Claude Code → `api.anthropic.com` → (tool call) → `api.github.com` → (tool call) → `registry.npmjs.org` → (tool call) → `api.anthropic.com`
-
-This maps the actual tool-use behavior of agentic systems, making OWASP ASI02 (Tool Misuse) and ASI08 (Cascading Failures) visible.
-
----
-
-### Idea 6: MCP Server Traffic Monitor
-
-**OWASP Coverage:** ASI04 (Agentic Supply Chain Compromise)
-
-Model Context Protocol (MCP) servers are the connection point between AI assistants and external tools/APIs/data. OWASP has published specific guidance on securing MCP servers. PowerGrabber can:
-
-- Detect HTTP-based MCP server traffic (MCP uses HTTP+SSE or stdio transports)
-- Log which MCP servers are being contacted
-- Track tool discovery requests (MCP `tools/list` calls)
-- Monitor for MCP server "swap attacks" (CVE-2025-54136 pattern — tool descriptions changing between authorization and execution)
-- Flag MCP traffic to unknown/unauthorized servers
-
-Maintain a registry of known MCP server endpoints. Alert on first-seen MCP servers. Log all tool invocations through MCP.
-
----
-
-### Idea 7: Rate Limit & Quota Dashboard
-
-**OWASP Coverage:** LLM10 (Unbounded Consumption)
-
-Extract and track rate-limit headers from LLM API responses:
-
-```
-x-ratelimit-limit-requests: 10000
-x-ratelimit-remaining-requests: 9456
-x-ratelimit-limit-tokens: 2000000
-x-ratelimit-remaining-tokens: 1834211
-x-ratelimit-reset-requests: 6ms
-x-ratelimit-reset-tokens: 234ms
-retry-after: 2
-```
-
-Track per provider:
-- Current request/token consumption rate
-- Remaining quota percentage
-- Time to quota reset
-- 429 (rate limited) response frequency
-- Projected exhaustion time at current rate
-
-Alert when: remaining quota drops below configurable threshold, 429 responses exceed threshold, consumption rate spikes suddenly.
-
----
-
-### Idea 8: Model Extraction Attack Detection
-
-**OWASP Coverage:** ML05 (Model Theft), LLM10 (Unbounded Consumption)
-
-Detect patterns characteristic of model extraction attacks:
-
-- **High-volume systematic queries:** Unusually high request rate to a single inference endpoint with minimal variation
-- **Distillation patterns:** Requests that appear to be systematically probing the model's decision boundary
-- **Embedding extraction:** High volume of embedding requests with synthetic inputs
-- **API scraping:** Requests with incrementing or systematically varied parameters
-
-Detection heuristics:
-- Request rate to single model endpoint exceeds N/minute (configurable)
-- Request patterns show low entropy in varied parameters
-- Same model endpoint hit from multiple tabs in parallel
-- Request volume dramatically exceeds normal usage baseline
-
----
-
-### Idea 9: OWASP AI Compliance Scorecard
-
-**OWASP Coverage:** All LLM01-LLM10, ASI01-ASI10
-
-Generate a compliance scorecard based on observed traffic patterns:
-
-```
-OWASP AI COMPLIANCE SCORECARD
-==============================
-LLM01 Prompt Injection:      MONITORING — 0 suspicious patterns detected
-LLM02 Sensitive Disclosure:   WARNING — 3 large response transfers to unknown AI endpoints
-LLM03 Supply Chain:           PASS — all model downloads from approved sources
-LLM06 Excessive Agency:       WARNING — Cursor made 847 API calls in 1 hour
-LLM10 Unbounded Consumption:  FAIL — 2 providers at >90% rate limit
-ASI02 Tool Misuse:            WARNING — Claude Code contacted 12 unique APIs in one session
-ASI04 Supply Chain:           MONITORING — 2 new MCP servers detected this week
-ASI07 Inter-Agent Comms:      PASS — all agent traffic uses TLS
-```
-
-Score calculated from: observed traffic patterns, header analysis, endpoint inventory, rate limit status, anomaly counts. Exportable as JSON for SIEM integration.
-
----
-
-### Idea 10: AI Data Flow Mapping
-
-**OWASP Coverage:** LLM02 (Sensitive Disclosure), ASI01 (Goal Hijack)
+### Feature 5: AI Data Flow Mapping
 
 Build a directed graph of data flows between browser tabs/origins and AI endpoints:
 
@@ -369,31 +257,7 @@ Map which internal applications/domains send data to which AI providers. Flag se
 
 ---
 
-### Idea 11: Vector Database & RAG Traffic Monitor
-
-**OWASP Coverage:** LLM08 (Vector and Embedding Weaknesses), ASI06 (Memory Poisoning)
-
-Detect and monitor traffic to vector databases and RAG infrastructure:
-
-**Known Endpoints:**
-- Pinecone: `*.pinecone.io`
-- Weaviate: `*.weaviate.network`, `*.semi.technology`
-- Qdrant: `*.qdrant.io`, Qdrant Cloud endpoints
-- ChromaDB: Chroma Cloud endpoints
-- Milvus: Zilliz Cloud endpoints
-- Supabase pgvector: `*.supabase.co` with vector-specific paths
-
-Track:
-- Which vector databases are in use
-- Upsert (write) vs query (read) ratio — high writes from unexpected sources may indicate poisoning
-- Cross-origin access patterns — which applications read/write to which vector stores
-- Embedding API calls (OpenAI `/v1/embeddings`, Cohere `/v1/embed`) correlated with vector DB writes
-
----
-
-### Idea 12: AI Traffic Policy Engine
-
-**OWASP Coverage:** LLM06 (Excessive Agency), ASI02 (Tool Misuse)
+### Feature 6: AI Traffic Policy Engine
 
 Configurable rule engine for AI traffic governance:
 
@@ -435,9 +299,7 @@ Rules evaluated against every captured event. Matching rules emit structured ale
 
 ---
 
-### Idea 13: Credential Exposure Detection in AI Context
-
-**OWASP Coverage:** LLM02 (Sensitive Disclosure), LLM07 (System Prompt Leakage), ASI03 (Privilege Abuse)
+### Feature 7: Credential Exposure Detection in AI Context
 
 Enhance the existing redaction system to also detect and alert (not just redact) credential patterns visible in URLs and headers:
 
@@ -451,75 +313,7 @@ Alert events include: credential type detected, provider, originating tab, times
 
 ---
 
-### Idea 14: AI Extension Update & Integrity Monitor
-
-**OWASP Coverage:** LLM03 (Supply Chain), ASI04 (Agentic Supply Chain)
-
-Monitor browser extension update traffic and integrity:
-
-- Detect extension update checks to Chrome Web Store, Firefox AMO, Edge Add-ons
-- Log version changes for AI-related extensions (Copilot, Cursor, Cline, etc.)
-- Flag extensions making unexpected API calls post-update
-- Detect new extensions being installed that request AI-related permissions
-- Track `chrome-extension://` and `moz-extension://` origin traffic patterns
-
-The ShadowPrompt attack on Claude Code's Chrome extension demonstrated that compromised extensions can inject prompts silently. Monitoring extension network behavior detects this class of attack.
-
----
-
-### Idea 15: Multi-Agent Communication Auditor
-
-**OWASP Coverage:** ASI07 (Insecure Inter-Agent Communication), ASI08 (Cascading Failures)
-
-In multi-agent architectures, agents communicate via HTTP APIs. Detect and audit:
-
-- **Unencrypted inter-agent traffic:** HTTP (not HTTPS) between agent endpoints
-- **Missing authentication:** Agent-to-agent requests without Authorization headers
-- **Replay patterns:** Identical request payloads sent repeatedly (potential replay attack)
-- **Agent-in-the-middle indicators:** Requests routed through unexpected intermediaries
-- **Error cascades:** Sequence of 4xx/5xx responses across multiple agent endpoints within a time window
-
-Log all inter-agent communication with: source agent identifier, destination agent, auth present (yes/no), encryption (TLS/plain), response status, latency.
-
----
-
-### Idea 16: AI Session Forensics Recorder
-
-**OWASP Coverage:** ASI01 (Goal Hijack), ASI10 (Rogue Agents)
-
-Record complete AI interaction sessions for forensic analysis:
-
-- Group related requests into "sessions" based on tab, time window, and provider
-- Each session records: start/end time, total requests, providers contacted, endpoints hit, error count, rate limit events, credential detections, policy violations
-- Sessions exportable as structured JSONL for SIEM ingestion or standalone analysis
-- Bookmark/tag sessions for investigation
-- Compare session patterns: "this Claude Code session contacted 3x more unique endpoints than the 30-day average"
-
-For incident response: when a security event occurs, the session log provides a complete timeline of what the AI agent did at the network layer.
-
----
-
-### Idea 17: Prompt-to-Execution Pipeline Monitor
-
-**OWASP Coverage:** LLM05 (Improper Output Handling), ASI05 (Unexpected Code Execution)
-
-Detect when LLM API responses are followed by execution-like activity:
-
-**Pattern:** Request to LLM API → Response received → Within N seconds, request to:
-- Package registry (npmjs.org, pypi.org, crates.io) — LLM suggested installing a package
-- GitHub API (creating repos, pushing code, opening issues) — LLM-driven automation
-- Cloud provider APIs (AWS, GCP, Azure) — LLM-directed infrastructure changes
-- Internal APIs — LLM output being passed to downstream systems
-
-**Detection:** Temporal correlation between LLM response events and subsequent requests to known execution targets. Alert when the gap is suspiciously short (automated pipeline) or when the execution target is sensitive.
-
-This detects the OWASP LLM05 scenario where LLM output flows directly into execution without human review.
-
----
-
-### Idea 18: AI Model Inventory & Drift Tracker
-
-**OWASP Coverage:** LLM03 (Supply Chain), ASI04 (Agentic Supply Chain)
+### Feature 8: AI Model Inventory & Drift Tracker
 
 Automatically build and maintain an inventory of AI models in use:
 
@@ -533,37 +327,10 @@ Output: Model inventory report with provider, model ID, first seen date, last se
 
 ---
 
-### Idea 19: AI Supply Chain Download Monitor
-
-**OWASP Coverage:** LLM03 (Supply Chain), ML06 (AI Supply Chain Attacks), ASI04 (Agentic Supply Chain)
-
-Monitor downloads from AI model hubs and ML package registries:
-
-**Known Sources:**
-- HuggingFace: `huggingface.co/api/models/*`, `cdn-lfs.huggingface.co/*`
-- PyPI (ML packages): `pypi.org`, `files.pythonhosted.org` — track downloads of torch, transformers, tensorflow, langchain, llamaindex, etc.
-- npm (AI packages): `registry.npmjs.org` — track openai, @anthropic-ai/sdk, langchain, etc.
-- Docker Hub: `registry-1.docker.io` — ML model containers
-- ONNX Model Zoo, TensorFlow Hub, PyTorch Hub
-
-Track:
-- What's being downloaded (package names, model names where visible in URL)
-- Version information
-- Download size (from Content-Length headers)
-- First-time downloads vs updates
-- Downloads from unofficial/forked registries
-
-Flag: Downloads of known-vulnerable model versions, downloads from non-standard registries, unusually large downloads.
-
----
-
-### Idea 20: Real-Time AI Security Dashboard Protocol
-
-**OWASP Coverage:** All
+### Feature 9: Real-Time AI Security Dashboard Protocol
 
 Define a structured event protocol for real-time dashboard consumption. Instead of just JSONL to stdout, emit enriched security events over a secondary WebSocket for dashboard consumption:
 
-**Event Types:**
 ```json
 {"type": "ai_request", "provider": "openai", "model": "gpt-4o", "endpoint_type": "chat", "tab_url": "...", "cost_estimate": 0.003}
 {"type": "ai_response", "provider": "openai", "status": 200, "ratelimit_remaining": 456, "tokens_used": 1234}
@@ -571,13 +338,519 @@ Define a structured event protocol for real-time dashboard consumption. Instead 
 {"type": "shadow_ai_alert", "provider": "cohere", "tab_url": "Internal CRM", "severity": "warning"}
 {"type": "policy_violation", "rule": "healthcare-origin-block", "tab_url": "Patient Records", "endpoint": "api.openai.com"}
 {"type": "cost_threshold", "provider": "openai", "daily_total": 147.32, "threshold": 100.00}
-{"type": "chain_anomaly", "chain_depth": 12, "unique_endpoints": 8, "duration_ms": 34000}
 {"type": "model_drift", "provider": "anthropic", "old_model": "claude-3.5-sonnet", "new_model": "claude-4-opus"}
-{"type": "mcp_server_detected", "server": "github-mcp.example.com", "first_seen": true}
-{"type": "supply_chain_download", "source": "huggingface", "artifact": "meta-llama/Llama-3.1-8B", "size_mb": 4800}
 ```
 
 This protocol enables building web dashboards, Grafana panels, SIEM integrations, Slack alerts, and custom monitoring pipelines. The Rust backend would expose a second WebSocket endpoint (configurable, separate auth token) that emits these enriched events.
+
+---
+
+### Feature 10: OWASP AI Compliance Scorecard
+
+This is the feature that enterprise clients will ask for by name. The rest of this section is dedicated to making it practical and honest — mapping each OWASP item to what PowerGrabber can actually detect, what evidence it produces, and what score it can legitimately assign.
+
+#### The Principle: Score What You Can See
+
+PowerGrabber captures HTTP metadata: URLs, headers (with sensitive values redacted but presence detected), status codes, timing, tab context, and request/response lifecycle events. It does NOT capture request or response bodies.
+
+This means PowerGrabber can provide genuine compliance evidence for some OWASP items, partial evidence for others, and no meaningful evidence for a few. The scorecard must be honest about this. A score of "NOT ASSESSABLE — requires code review" is more valuable to a compliance team than a fabricated "PASS" based on insufficient data.
+
+#### Scoring Model
+
+Each OWASP item gets one of five statuses:
+
+| Status | Meaning |
+|--------|---------|
+| **PASS** | PowerGrabber has positive evidence that the risk is being managed. Specific, observable criteria met. |
+| **WARNING** | PowerGrabber has detected activity that may indicate a problem. Requires human investigation. |
+| **FAIL** | PowerGrabber has detected clear evidence of a violation. Specific, observable criteria breached. |
+| **MONITORING** | PowerGrabber is actively tracking this risk but has no findings yet. Baseline being established. |
+| **NOT ASSESSABLE** | This risk cannot be meaningfully assessed from HTTP metadata. Requires other controls (code review, architecture audit, access control audit). Stating this clearly is itself valuable to the compliance team — it tells them where to focus other efforts. |
+
+---
+
+#### OWASP Top 10 for LLM Applications (2025) — Item-by-Item Scorecard
+
+##### LLM01: Prompt Injection — NOT ASSESSABLE (with caveats)
+
+**Why PowerGrabber can't score this:** Prompt injection is a content-level attack — it happens inside request and response bodies that PowerGrabber doesn't capture. You can't detect a malicious prompt from a URL and a set of headers.
+
+**What PowerGrabber CAN provide as supporting evidence:**
+- **Indirect injection surface area:** Count how many distinct external data sources (websites, APIs) feed into tabs that also make LLM API calls. A tab that loads content from 47 external domains and then sends it to ChatGPT has a larger indirect injection surface than one that loads from 2.
+- **Injection attack aftermath:** If a prompt injection succeeds in causing an agent to exfiltrate data, PowerGrabber sees the exfiltration request — an unexpected outbound call to an unusual endpoint immediately following an LLM response.
+
+**Scorecard output:**
+```
+LLM01 Prompt Injection:  NOT ASSESSABLE — requires content inspection
+  Supporting data:
+  - 12 tabs observed with mixed external content + LLM API calls (indirect injection surface)
+  - 0 suspicious post-LLM outbound requests detected (no observed exfiltration)
+  Recommendation: Deploy content-level prompt injection scanning at the application layer
+```
+
+##### LLM02: Sensitive Information Disclosure — WARNING/PASS
+
+**What PowerGrabber can genuinely detect:**
+- **Credential presence in AI traffic:** Authorization headers, API keys, cookies present on requests to LLM endpoints (values redacted, but presence is the finding). If someone's browser is sending cookies to `api.openai.com`, that's a configuration problem regardless of the cookie's content.
+- **Sensitive origin → AI endpoint data flows:** Requests from healthcare systems (`*.hospital.org`), financial systems (`*.bank.com`), HR systems to AI API endpoints. The fact that data is flowing from a sensitive system to an AI provider is itself a disclosure risk finding — you don't need to see the body to know it's a problem.
+- **Large response transfers:** Unusually large `Content-Length` values on AI API responses may indicate bulk data extraction (though this is circumstantial).
+- **Credential patterns in URLs:** Tokens, API keys, session IDs in query parameters of AI API requests (the existing redaction system already detects these).
+
+**Scoring criteria:**
+- PASS: No credentials detected in AI traffic, no sensitive-origin → AI flows, no unusual response sizes
+- WARNING: Credentials detected in AI traffic OR sensitive-origin → AI flows detected
+- FAIL: API keys in URL query parameters to AI endpoints (clear exposure)
+
+**Scorecard output:**
+```
+LLM02 Sensitive Information Disclosure:  WARNING
+  Findings:
+  - 3 requests to api.openai.com included Cookie header (should not be present for API calls)
+  - Tab "Patient Records" (*.hospital.org) made 3 requests to api.openai.com
+  - 0 API keys detected in URL query parameters
+  Actions: Investigate Cookie headers on API calls. Review Patient Records → OpenAI data flow.
+```
+
+##### LLM03: Supply Chain — PASS/WARNING
+
+**What PowerGrabber can detect:**
+- **Model source tracking:** Which domains are serving AI models and model artifacts. Are models being downloaded from official sources (huggingface.co, official provider CDNs) or from unknown mirrors/registries?
+- **AI SDK and library versions:** User-Agent headers and URL paths often contain SDK version identifiers. Outdated SDK versions may contain known vulnerabilities.
+- **New/unexpected AI dependencies:** First-time traffic to a previously unseen AI-related endpoint or model hub.
+
+**Scoring criteria:**
+- PASS: All AI traffic goes to known, approved provider endpoints. No traffic to unknown model sources.
+- WARNING: Traffic detected to new/unrecognised AI endpoints. Outdated SDK version detected in User-Agent.
+- FAIL: Traffic to known-compromised endpoints (if a threat intelligence feed is integrated).
+
+**Scorecard output:**
+```
+LLM03 Supply Chain:  PASS
+  Evidence:
+  - All AI API traffic to 3 approved providers (OpenAI, Anthropic, Google)
+  - No traffic to unofficial model registries or unknown AI endpoints
+  - SDK versions: openai-python/1.52.0 (current), anthropic-sdk/0.40.0 (current)
+  - 0 first-seen AI endpoints this reporting period
+```
+
+##### LLM04: Data and Model Poisoning — NOT ASSESSABLE
+
+**Why:** Data poisoning happens at training time on the provider's infrastructure. PowerGrabber has zero visibility into this. Scoring it would be dishonest.
+
+**What PowerGrabber CAN note:**
+- Whether the organisation is uploading data to fine-tuning endpoints (detectable via URL patterns like `/v1/fine_tuning/jobs` on OpenAI). This doesn't detect poisoning but establishes that fine-tuning is happening, which is a prerequisite for the risk.
+
+**Scorecard output:**
+```
+LLM04 Data and Model Poisoning:  NOT ASSESSABLE — training-time risk, not observable from browser
+  Supporting data:
+  - 0 requests to fine-tuning endpoints detected (fine-tuning not in use via browser)
+  Recommendation: If fine-tuning is used, implement data validation pipelines at the training layer
+```
+
+##### LLM05: Improper Output Handling — NOT ASSESSABLE (with supporting data)
+
+**Why PowerGrabber can't score this directly:** Whether an application validates LLM output before executing it is an application architecture question, not observable from HTTP metadata.
+
+**What PowerGrabber CAN detect as circumstantial evidence:**
+- Temporal patterns: LLM API response followed within milliseconds by requests to execution-like endpoints (package registries, cloud APIs, internal services). This is suggestive but not conclusive — a developer might independently install a package right after asking an LLM about it.
+
+**Scorecard output:**
+```
+LLM05 Improper Output Handling:  NOT ASSESSABLE — requires application code review
+  Supporting data:
+  - 14 instances of LLM response followed by package registry request within 5 seconds
+    (may indicate automated pipeline, may be coincidence — requires investigation)
+  Recommendation: Audit applications that consume LLM output for input validation controls
+```
+
+##### LLM06: Excessive Agency — WARNING/PASS
+
+**This is one of PowerGrabber's strongest OWASP items.** Excessive agency manifests directly as network behaviour: an AI agent making too many API calls, contacting too many distinct endpoints, or accessing resources beyond its intended scope.
+
+**What PowerGrabber can detect:**
+- **Request volume per tool per session:** Claude Code making 2,000 API calls in an hour vs its 30-day average of 400/hour
+- **Endpoint diversity per tool:** A coding tool that normally contacts 2 APIs suddenly contacting 8 distinct endpoints
+- **Function breadth:** An AI tool calling both chat and embedding and image and audio endpoints when it should only be calling chat
+- **Tool count per browser:** How many distinct AI tools are active simultaneously (tool sprawl = permission sprawl)
+
+**Scoring criteria:**
+- PASS: All AI tools operating within established baselines for volume and endpoint diversity
+- WARNING: Any tool exceeding 2x its baseline request volume OR contacting unexpected endpoint types
+- FAIL: Tool contacting endpoints completely outside its normal pattern (potential goal hijack manifesting as excessive agency)
+
+**Scorecard output:**
+```
+LLM06 Excessive Agency:  WARNING
+  Findings:
+  - Cursor: 847 requests in last hour (baseline: 320/hr) — 2.6x normal
+  - Cursor: contacted api.openai.com/v1/images/generations (never seen before from this tool)
+  - Claude Code: operating within baseline (134 requests/hr, baseline: 150/hr)
+  - 4 distinct AI coding tools active simultaneously (Cursor, Copilot, Claude Code, Windsurf)
+  Action: Investigate Cursor request spike and image generation endpoint access
+```
+
+##### LLM07: System Prompt Leakage — NOT ASSESSABLE
+
+**Why:** System prompt leakage is a content-level issue. The leaked prompt is in the response body. PowerGrabber can't see response bodies.
+
+**Scorecard output:**
+```
+LLM07 System Prompt Leakage:  NOT ASSESSABLE — requires response content inspection
+  Recommendation: Implement output filtering at the application layer to detect system prompt patterns in responses
+```
+
+##### LLM08: Vector and Embedding Weaknesses — MONITORING (limited)
+
+**What PowerGrabber can detect:**
+- Traffic to known vector database cloud services (Pinecone, Weaviate, Qdrant, ChromaDB, Milvus/Zilliz)
+- Whether embedding endpoints are being called (OpenAI `/v1/embeddings`, Cohere `/v1/embed`)
+- Whether these are correlated (embedding call followed by vector DB write)
+
+**Limitations:** PowerGrabber can tell you that vector databases are in use and how much traffic they get. It cannot assess access control configuration, cross-tenant isolation, or embedding inversion risk — those require infrastructure auditing.
+
+**Scoring criteria:**
+- MONITORING: Vector DB traffic detected, establishing usage baseline
+- WARNING: Vector DB write traffic from unexpected origins
+
+**Scorecard output:**
+```
+LLM08 Vector and Embedding Weaknesses:  MONITORING
+  Observations:
+  - Traffic to *.pinecone.io detected: 234 requests (estimated 180 reads, 54 writes based on HTTP method)
+  - OpenAI /v1/embeddings called 89 times, correlated with Pinecone writes
+  - All vector DB traffic from expected origins (Internal Search Service tab)
+  Recommendation: Audit Pinecone access controls and tenant isolation independently
+```
+
+##### LLM09: Misinformation — NOT ASSESSABLE
+
+**Why:** Misinformation is entirely a content quality problem. PowerGrabber sees that a request to an LLM API returned status 200. It has no idea whether the response contained accurate information.
+
+**Scorecard output:**
+```
+LLM09 Misinformation:  NOT ASSESSABLE — content quality issue, not observable from HTTP metadata
+  Recommendation: Implement human review processes and fact-checking workflows for LLM-generated content
+```
+
+##### LLM10: Unbounded Consumption — PASS/WARNING/FAIL
+
+**This is PowerGrabber's single best OWASP item.** Every indicator of unbounded consumption is directly visible in HTTP metadata.
+
+**What PowerGrabber can detect:**
+- **Request rate per provider:** Requests per minute/hour/day, trend vs baseline
+- **Rate limit consumption:** `x-ratelimit-remaining-*` headers showing quota depletion rate
+- **429 responses:** Rate limit hits — the provider is telling you consumption is too high
+- **Projected quota exhaustion:** At current consumption rate, when will the rate limit be fully consumed?
+- **Denial of Wallet indicators:** Sudden spike in API calls, especially to expensive endpoints (image generation, large models)
+- **Anomalous patterns:** Single tab generating orders of magnitude more requests than normal
+
+**Scoring criteria:**
+- PASS: All providers below 70% rate limit consumption, no 429s in reporting period, request rates within 1.5x baseline
+- WARNING: Any provider above 70% rate limit consumption OR 429 responses detected OR request rate above 2x baseline
+- FAIL: Any provider above 90% rate limit consumption OR 429 rate exceeds 5% of requests OR sudden 10x spike in request volume
+
+**Scorecard output:**
+```
+LLM10 Unbounded Consumption:  FAIL
+  Findings:
+  - OpenAI: 94% of token rate limit consumed (1,882,000 / 2,000,000)
+  - OpenAI: 23 rate-limited (429) responses in last hour (4.8% of requests)
+  - Anthropic: 67% of rate limit consumed (normal range)
+  - Request volume spike: +340% on OpenAI in last 2 hours vs 24h average
+  - Source of spike: Cursor (api2.cursor.sh) — 1,200 requests in 2 hours from "Project Refactor" tab
+  Action: IMMEDIATE — investigate Cursor runaway usage. Consider pausing or rate-limiting Cursor access.
+  Cost impact: Estimated $34.50 excess spend from spike (above daily baseline)
+```
+
+---
+
+#### OWASP Top 10 for Agentic Applications (2026) — Item-by-Item Scorecard
+
+##### ASI01: Agent Goal Hijack — WARNING/PASS (by observable consequence)
+
+**What PowerGrabber can detect:** Not the hijack itself (that's a prompt-level event), but the **consequences** of a successful hijack:
+- Agent making requests to unexpected endpoints (data exfiltration to attacker-controlled servers)
+- Agent making requests to internal APIs it doesn't normally access
+- Sudden change in an agent's traffic pattern (different endpoints, different methods, different volume)
+
+**Scoring criteria:**
+- PASS: All observed agent traffic matches established baselines for endpoints and patterns
+- WARNING: Agent traffic to first-seen or unexpected endpoints detected
+
+**Scorecard output:**
+```
+ASI01 Agent Goal Hijack:  PASS
+  Evidence:
+  - All agent traffic to expected endpoints (no first-seen external domains)
+  - Claude Code: 100% of traffic to api.anthropic.com and api.github.com (normal)
+  - Cursor: 100% of traffic to api2.cursor.sh and api.openai.com (normal)
+  - No outbound requests to suspicious or unrecognised domains from agent processes
+```
+
+##### ASI02: Tool Misuse & Exploitation — WARNING/PASS
+
+**Excellent fit for PowerGrabber.** Tool misuse = tools doing more than they should, and that manifests as network behaviour.
+
+**What PowerGrabber can detect:**
+- **Endpoint diversity per agent:** An agent that normally uses 2 APIs now using 7
+- **HTTP method escalation:** An agent that normally only does GET requests now doing POST/PUT/DELETE
+- **Volume per tool type:** An embedding tool suddenly making chat completions calls
+- **Cross-boundary access:** A coding tool accessing cloud infrastructure APIs (AWS, GCP, Azure console endpoints)
+
+**Scoring criteria:**
+- PASS: All tools operating within their expected endpoint sets and methods
+- WARNING: Any tool accessing endpoint types outside its normal pattern
+- FAIL: Tool accessing sensitive infrastructure APIs (cloud consoles, admin panels, internal services) that it has never accessed before
+
+**Scorecard output:**
+```
+ASI02 Tool Misuse & Exploitation:  WARNING
+  Findings:
+  - Claude Code: accessed registry.npmjs.org 47 times (normal — package management)
+  - Claude Code: accessed console.aws.amazon.com 2 times (UNEXPECTED — never seen before)
+  - Cursor: operating within normal endpoint set
+  Action: Investigate Claude Code accessing AWS console. May indicate tool operating beyond intended scope.
+```
+
+##### ASI03: Agent Identity & Privilege Abuse — WARNING/PASS
+
+**What PowerGrabber can detect:**
+- **Credential presence on agent traffic:** Does the agent's traffic carry Authorization headers? To which endpoints?
+- **Credential reuse across endpoints:** Same authorization pattern (by header structure, not value) used across many different APIs suggests an overprivileged credential
+- **Multiple agents, same credential pattern:** Different tools sending traffic with the same credential prefix pattern to the same provider (shared API key — privilege boundary violation)
+- **401/403 responses:** Agent trying to access something it's not authorised for (may indicate permission probing or stale credentials)
+
+**Scoring criteria:**
+- PASS: Each agent uses credentials only for its expected provider. No cross-agent credential sharing detected. No 401/403 errors suggesting permission probing.
+- WARNING: Credential sharing detected between agents OR 401/403 responses from unexpected endpoints
+- FAIL: Agent sending credentials to endpoints outside its expected scope
+
+**Scorecard output:**
+```
+ASI03 Agent Identity & Privilege Abuse:  WARNING
+  Findings:
+  - OpenAI API key prefix sk-proj-a... used by BOTH Cursor and Claude Code
+    (credential sharing — same key used by 2 different tools, 2 different trust boundaries)
+  - Copilot: using dedicated credential (copilot-proxy auth, expected pattern)
+  - 0 unexpected 401/403 responses (no permission probing detected)
+  Action: Issue separate API keys for Cursor and Claude Code to establish tool-level accountability
+```
+
+##### ASI04: Agentic Supply Chain Compromise — MONITORING/WARNING
+
+**What PowerGrabber can detect (limited to HTTP-transport MCP):**
+- Traffic to MCP servers using HTTP+SSE transport (many MCP servers use stdio, which PowerGrabber can't see — this is an honest limitation)
+- First-seen MCP server endpoints
+- HTTP-based tool discovery requests
+- Downloads of agent plugins, extensions, or configuration from external sources
+
+**Limitations:** Most MCP servers use stdio transport (local process communication), not HTTP. PowerGrabber only sees the HTTP-transported ones. This is a significant gap for this OWASP item.
+
+**Scoring criteria:**
+- MONITORING: Tracking all agent-related HTTP traffic for baseline establishment
+- WARNING: New/unrecognised HTTP endpoints accessed by agent tools
+
+**Scorecard output:**
+```
+ASI04 Agentic Supply Chain Compromise:  MONITORING
+  Observations:
+  - 0 HTTP-based MCP server connections detected (agents may use stdio transport — not visible)
+  - No new agent-related endpoints detected this period
+  Limitation: PowerGrabber cannot observe stdio-based MCP servers or local tool integrations.
+  Recommendation: Audit MCP server configurations and tool manifests through infrastructure review.
+```
+
+##### ASI05: Unexpected Code Execution — NOT ASSESSABLE (with supporting data)
+
+**Why:** Code execution is a local system event. PowerGrabber sees network traffic, not process execution.
+
+**What PowerGrabber CAN provide:**
+- Evidence that code execution may have resulted in network activity: agent process making HTTP requests to endpoints it doesn't normally access (the network consequence of unexpected code execution)
+- Package installation requests (npmjs.org, pypi.org, crates.io) that may indicate LLM-suggested code being installed and run
+
+**Scorecard output:**
+```
+ASI05 Unexpected Code Execution:  NOT ASSESSABLE — local execution not visible at network layer
+  Supporting data:
+  - 23 package registry requests from agent processes (expected for coding tools)
+  - 0 unexpected outbound connections from agent processes
+  Recommendation: Monitor agent system calls via OS-level auditing (auditd, eBPF) for code execution visibility
+```
+
+##### ASI06: Memory & Context Poisoning — NOT ASSESSABLE (with supporting data)
+
+**Why:** Memory poisoning is a data integrity problem inside the agent's storage. PowerGrabber can't inspect what's stored.
+
+**What PowerGrabber CAN detect:**
+- Write traffic to vector databases / RAG stores from unexpected sources (potential poisoning vector)
+- Volume of writes vs reads to memory endpoints (unusual write-heavy patterns may indicate bulk poisoning)
+
+**Scorecard output:**
+```
+ASI06 Memory & Context Poisoning:  NOT ASSESSABLE — data integrity issue, not observable from HTTP metadata
+  Supporting data:
+  - Pinecone write traffic: 54 requests, all from expected origin (Internal Search Service)
+  - No unexpected sources writing to vector stores
+  Recommendation: Implement input validation on RAG pipeline writes. Audit vector store access controls.
+```
+
+##### ASI07: Insecure Inter-Agent Communication — PASS/FAIL (for HTTP-based comms)
+
+**What PowerGrabber can detect for HTTP-based inter-agent communication:**
+- **Encryption:** Is the traffic HTTPS or plain HTTP? (URL scheme check)
+- **Authentication presence:** Does inter-agent traffic carry Authorization headers?
+- **Certificate issues:** Status codes or error patterns indicating TLS problems
+
+**Limitations:** Most inter-agent communication in current frameworks (LangGraph, CrewAI, AutoGen) happens in-process via function calls, not via HTTP. PowerGrabber only scores what goes over the network.
+
+**Scoring criteria:**
+- PASS: All observed agent HTTP traffic uses HTTPS with Authorization headers present
+- WARNING: HTTPS but no Authorization headers on inter-service calls
+- FAIL: Any plain HTTP traffic between agent endpoints
+
+**Scorecard output:**
+```
+ASI07 Insecure Inter-Agent Communication:  PASS
+  Evidence:
+  - All agent HTTP traffic uses HTTPS (0 plain HTTP requests detected)
+  - Authorization headers present on 100% of agent API calls
+  Limitation: In-process agent communication (function calls, message queues) not visible. This score covers HTTP-based communication only.
+```
+
+##### ASI08: Cascading Agent Failures — MONITORING/WARNING
+
+**What PowerGrabber can detect:**
+- **Error cascades:** Sequence of 4xx/5xx responses across multiple endpoints within a short time window
+- **Retry storms:** Same endpoint hit repeatedly with error responses (agent retrying a failed operation)
+- **Correlated failures:** Multiple agents hitting errors simultaneously (shared dependency failure)
+
+**Scoring criteria:**
+- MONITORING: Baseline error rates established, no cascades detected
+- WARNING: 3+ consecutive errors across 2+ endpoints within 60 seconds from the same agent
+- FAIL: Error rate exceeds 20% of requests across all agent traffic for 5+ minutes
+
+**Scorecard output:**
+```
+ASI08 Cascading Agent Failures:  MONITORING
+  Observations:
+  - Agent error rate: 1.2% (within normal range)
+  - Longest error sequence: 2 consecutive 500 responses to api.openai.com (normal transient failure)
+  - No multi-endpoint error cascades detected
+```
+
+##### ASI09: Human-Agent Trust Exploitation — NOT ASSESSABLE
+
+**Why:** This is a human psychology and UI/UX issue. Whether a user blindly trusts an agent's recommendation is not observable from network traffic.
+
+**Scorecard output:**
+```
+ASI09 Human-Agent Trust Exploitation:  NOT ASSESSABLE — human behavior issue, not observable from network traffic
+  Recommendation: Implement mandatory human review gates for high-impact agent actions (financial, infrastructure, data deletion)
+```
+
+##### ASI10: Rogue Agents — PASS/WARNING
+
+**What PowerGrabber can detect:** Rogue behaviour manifests as abnormal network patterns. An agent that has been compromised or has drifted from its intended behaviour will make different network calls than a healthy one.
+
+**What PowerGrabber can detect:**
+- **New endpoint access:** Agent contacting domains/APIs it has never accessed before
+- **Data exfiltration patterns:** Outbound requests to unusual external services, especially those that accept arbitrary data (paste sites, file sharing, attacker-controlled endpoints)
+- **Volume anomalies:** Sudden spike in agent traffic volume
+- **Timing anomalies:** Agent making requests at unusual times (midnight batch operations from a coding tool that's normally used 9-5)
+- **Method anomalies:** Agent switching from read-heavy (GET) to write-heavy (POST/PUT/DELETE) patterns
+
+**Scoring criteria:**
+- PASS: All agent traffic matches established baselines across all dimensions (endpoints, volume, timing, methods)
+- WARNING: Any single dimension deviating significantly from baseline
+- FAIL: Multiple dimensions deviating simultaneously (strong indicator of compromised agent)
+
+**Scorecard output:**
+```
+ASI10 Rogue Agents:  PASS
+  Evidence:
+  - All agents operating within established baselines
+  - Endpoint sets: stable (no new domains)
+  - Volume: within 1.5x of 7-day moving average
+  - Timing: all activity within business hours
+  - Methods: GET/POST ratio stable
+  - 0 requests to known exfiltration targets (paste sites, file sharing services, suspicious domains)
+```
+
+---
+
+#### Full Scorecard Summary Example
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║            POWERGRABBER — OWASP AI COMPLIANCE SCORECARD                ║
+║            Reporting period: 2026-04-01 to 2026-04-08                  ║
+║            Browser instances monitored: 47                              ║
+║            Total AI API requests observed: 34,521                       ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                        ║
+║  OWASP TOP 10 FOR LLM APPLICATIONS (2025)                             ║
+║  ─────────────────────────────────────────                             ║
+║  LLM01  Prompt Injection              NOT ASSESSABLE  (content-level)  ║
+║  LLM02  Sensitive Info Disclosure      ⚠ WARNING      (3 findings)     ║
+║  LLM03  Supply Chain                   ✓ PASS         (all approved)   ║
+║  LLM04  Data and Model Poisoning       NOT ASSESSABLE  (training-time) ║
+║  LLM05  Improper Output Handling       NOT ASSESSABLE  (code review)   ║
+║  LLM06  Excessive Agency               ⚠ WARNING      (1 finding)     ║
+║  LLM07  System Prompt Leakage          NOT ASSESSABLE  (content-level) ║
+║  LLM08  Vector/Embedding Weaknesses    MONITORING      (baseline)      ║
+║  LLM09  Misinformation                 NOT ASSESSABLE  (content-level) ║
+║  LLM10  Unbounded Consumption          ✗ FAIL         (2 findings)    ║
+║                                                                        ║
+║  Assessable: 4/10 | Findings: 6 | Actions required: 3                 ║
+║                                                                        ║
+║  OWASP TOP 10 FOR AGENTIC APPLICATIONS (2026)                         ║
+║  ─────────────────────────────────────────────                         ║
+║  ASI01  Agent Goal Hijack              ✓ PASS         (normal traffic) ║
+║  ASI02  Tool Misuse & Exploitation     ⚠ WARNING      (1 finding)     ║
+║  ASI03  Agent Identity & Privilege     ⚠ WARNING      (key sharing)   ║
+║  ASI04  Agentic Supply Chain           MONITORING      (limited vis.)  ║
+║  ASI05  Unexpected Code Execution      NOT ASSESSABLE  (local exec)    ║
+║  ASI06  Memory & Context Poisoning     NOT ASSESSABLE  (data integrity)║
+║  ASI07  Insecure Inter-Agent Comms     ✓ PASS         (HTTPS + auth)  ║
+║  ASI08  Cascading Agent Failures       MONITORING      (baseline)      ║
+║  ASI09  Human-Agent Trust Exploit.     NOT ASSESSABLE  (human behavior)║
+║  ASI10  Rogue Agents                   ✓ PASS         (normal baselin)║
+║                                                                        ║
+║  Assessable: 5/10 | Findings: 2 | Actions required: 2                 ║
+║                                                                        ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║  OVERALL: 9/20 items assessable from HTTP metadata                     ║
+║  PASS: 5  |  WARNING: 4  |  FAIL: 1  |  NOT ASSESSABLE: 8             ║
+║  MONITORING: 2                                                         ║
+║                                                                        ║
+║  TOP ACTIONS:                                                          ║
+║  1. CRITICAL: Investigate OpenAI rate limit exhaustion (LLM10)         ║
+║  2. HIGH: Investigate Cursor → AWS console access (ASI02)              ║
+║  3. HIGH: Issue separate API keys per tool (ASI03)                     ║
+║  4. MEDIUM: Investigate Patient Records → OpenAI data flow (LLM02)    ║
+║  5. MEDIUM: Investigate Cursor request volume spike (LLM06)            ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+#### Why Clients Want This
+
+1. **Board and executive reporting.** "We scored 5 PASS, 4 WARNING, 1 FAIL across the OWASP AI Top 10" is a sentence a CISO can say to a board. It converts technical monitoring into governance language.
+
+2. **Audit evidence.** When an auditor asks "how do you manage AI risks per OWASP guidance?", the scorecard is a structured, timestamped answer with specific evidence for each item. The NOT ASSESSABLE items are equally valuable — they tell the auditor exactly which risks need other controls.
+
+3. **Prioritised action.** The scorecard doesn't just report status — it ranks the actions needed. "Fix the rate limit problem first, then investigate the AWS access" gives the security team a priority queue, not a wall of alerts.
+
+4. **Trend tracking.** Run the scorecard weekly. "We went from 2 FAILs to 1 FAIL to 0 FAILs over 3 weeks" is measurable progress.
+
+5. **Gap analysis.** The 8 NOT ASSESSABLE items are a precise map of where PowerGrabber's coverage ends and other tools need to begin. This is more valuable than pretending to cover everything — it builds trust and drives complementary tool purchases.
+
+#### Export Formats
+
+- **JSON:** Machine-readable scorecard for SIEM/dashboard ingestion
+- **Markdown/HTML:** Human-readable report for email/Confluence/SharePoint distribution
+- **CSV:** Per-item scores with finding counts for spreadsheet analysis
+- **SARIF:** Static Analysis Results Interchange Format for integration with code security platforms (treating OWASP items as "rules" and findings as "results")
 
 ---
 
