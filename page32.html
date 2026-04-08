@@ -48,13 +48,40 @@ strong{color:#fafafa}
 .price{font-size:1.5rem;font-weight:700;color:#fafafa;margin-bottom:4px}
 .price-sub{font-size:.75rem;color:#888;opacity:.6}
 .price-card p{font-size:.8rem;color:#888;margin:10px 0 0}
+.launch-notify{padding:0 32px}
+.notify-box{max-width:600px;margin:0 auto;text-align:center;background:#111;border:1px solid #fff;border-radius:8px;padding:40px 32px}
+.notify-box h2{margin-bottom:8px}
+.notify-box p{margin-bottom:20px}
+.notify-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.notify-input{padding:12px 16px;border:1px solid #333;border-radius:8px;background:#000;color:#fafafa;font-size:.9rem;min-width:260px;font-family:inherit}
+.notify-input::placeholder{color:#888;opacity:.5}
+.notify-btn{cursor:pointer;white-space:nowrap}
+.feature-group-title{font-size:.95rem;font-weight:600;color:#fff;margin:28px 0 12px;text-transform:uppercase;letter-spacing:1px}
+.feature-list{list-style:none;padding:0}.feature-list li{padding:10px 0;border-bottom:1px solid #333;font-size:.9rem;line-height:1.6}
+.feature-list li::before{content:"\2713\0020";color:#fff;font-weight:700}
+.owasp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.owasp-note{margin-top:20px;font-size:.85rem;font-style:italic;opacity:.7}
 .final-cta{text-align:center;padding:80px 32px;border-top:1px solid #333;margin-top:40px}
 .final-cta h2{margin-bottom:8px}
-.final-cta .cta-group{margin-top:24px}
+.final-cta .notify-form{margin-top:24px}
 .tagline{color:#fff;font-size:.8rem;font-weight:600;letter-spacing:3px;margin-top:24px;text-transform:uppercase}
 footer{text-align:center;padding:40px;border-top:1px solid #333;color:#888;opacity:.5;font-size:.85rem}
 footer a{color:#fff;text-decoration:none}
-@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){nav{padding:16px 20px}.certainty-grid,.teams-grid,.owasp-grid{grid-template-columns:1fr}.full-width{grid-column:span 1}.pricing-grid{grid-template-columns:1fr 1fr}.notify-form{flex-direction:column}.notify-input{min-width:auto;width:100%}}
+
+
+.launch-notify{padding:0 32px}
+.notify-box{max-width:600px;margin:0 auto;text-align:center;padding:40px 32px;border-radius:8px}
+.notify-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.notify-input{padding:12px 16px;border-radius:6px;font-size:.9rem;min-width:260px;font-family:inherit;outline:none}
+.notify-input:focus{outline:2px solid currentColor}
+.notify-btn{cursor:pointer;white-space:nowrap}
+.feature-group-title{font-size:.95rem;font-weight:600;margin:28px 0 12px;text-transform:uppercase;letter-spacing:1px}
+.feature-list{list-style:none;padding:0}.feature-list li{padding:10px 0;font-size:.9rem;line-height:1.6}
+.owasp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.owasp-note{margin-top:20px;font-size:.85rem;font-style:italic;opacity:.7}
+.final-cta .notify-form{margin-top:24px}
+@media(max-width:768px){.owasp-grid{grid-template-columns:1fr}.notify-form{flex-direction:column}.notify-input{min-width:auto;width:100%}}
 
 </style>
 </head>
@@ -65,9 +92,16 @@ footer a{color:#fff;text-decoration:none}
 <section class="hero">
 <h1>LLM <span>Certainty.</span></h1>
 <p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
-<div class="cta-group">
-<a href="#" class="btn-primary">Download Free</a>
-<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
+</section>
+
+<section class="launch-notify">
+<div class="notify-box">
+<h2>PowerGrabber is launching soon.</h2>
+<p>Be the first to know. Enter your email and we will notify you the moment PowerGrabber is available.</p>
+<form class="notify-form" onsubmit="return false;">
+<input type="email" placeholder="you@company.com" class="notify-input" required>
+<button type="submit" class="btn-primary notify-btn">Notify Me</button>
+</form>
 </div>
 </section>
 
@@ -126,6 +160,75 @@ footer a{color:#fff;text-decoration:none}
 </section>
 
 <section>
+<div class="section-label">Features</div>
+<h2>Features</h2>
+
+<h3 class="feature-group-title">Capture</h3>
+<ul class="feature-list">
+<li>Browser-based HTTP traffic capture via webRequest API &mdash; 5 event types covering the full request lifecycle</li>
+<li>API-level capture for non-browser AI tools (Claude Code, Cursor, Copilot, and others)</li>
+<li>Cross-browser: Chrome, Firefox, Edge, Safari, Opera, Brave, Vivaldi, Arc</li>
+<li>Single extension codebase &mdash; Manifest V3 for Chromium, Manifest V2 for Firefox</li>
+<li>macOS, Windows, and Linux</li>
+</ul>
+
+<h3 class="feature-group-title">Security</h3>
+<ul class="feature-list">
+<li>Token-based authentication &mdash; 32-character random token, validated within 10-second window</li>
+<li>Automatic sensitive header redaction &mdash; Authorization, Cookie, Set-Cookie, Proxy-Authorization, X-API-Key, WWW-Authenticate, X-CSRF-Token, X-Auth-Token</li>
+<li>URL query parameter sanitization &mdash; 14 sensitive patterns automatically scrubbed</li>
+<li>Rate limiting &mdash; 500 events/second per connection</li>
+<li>Message size cap, connection limits, input validation</li>
+<li>Self-traffic filtering &mdash; extension ignores its own WebSocket connection</li>
+</ul>
+
+<h3 class="feature-group-title">Architecture</h3>
+<ul class="feature-list">
+<li>Rust backend &mdash; async I/O on tokio, sub-millisecond processing</li>
+<li>Real-time WebSocket streaming from extension to backend</li>
+<li>Backpressure with drop counting &mdash; no blocking, no memory leaks</li>
+<li>1000-event offline buffer when disconnected, with automatic replay on reconnect</li>
+<li>Exponential backoff reconnection (1s to 30s)</li>
+<li>No proxy, no TLS interception, no network topology changes</li>
+</ul>
+
+<h3 class="feature-group-title">Output</h3>
+<ul class="feature-list">
+<li>JSONL structured output (machine-readable)</li>
+<li>Human-readable text output</li>
+<li>SQLite storage, HAR export</li>
+<li>Logging to databases, S3, Git, and file systems</li>
+</ul>
+</section>
+
+<section>
+<div class="section-label">OWASP AI Compliance &mdash; Coming Soon</div>
+<h2>OWASP Features</h2>
+<p>PowerGrabber will include built-in compliance monitoring mapped to the OWASP Top 10 for LLM Applications (2025) and the OWASP Top 10 for Agentic Applications (2026).</p>
+
+<div class="owasp-grid">
+<div class="certainty-card">
+<h3>LLM02 &mdash; Sensitive Information Disclosure</h3>
+<p>Detect credentials present in AI traffic. Map data flows from sensitive internal systems (healthcare, finance, HR) to AI provider endpoints. Flag API keys exposed in URL parameters. Your monitoring catches disclosure risks from HTTP metadata alone.</p>
+</div>
+<div class="certainty-card">
+<h3>LLM03 &mdash; Supply Chain</h3>
+<p>Track which domains serve AI models and artifacts. Detect outdated SDK versions from User-Agent headers. Flag traffic to unknown or unapproved AI endpoints. Know when a new AI dependency appears in your organisation.</p>
+</div>
+<div class="certainty-card">
+<h3>LLM06 &mdash; Excessive Agency</h3>
+<p>Monitor request volume per AI tool against established baselines. Detect when tools contact unexpected endpoint types or access APIs outside their normal scope. Track how many AI tools are active simultaneously across your organisation.</p>
+</div>
+<div class="certainty-card">
+<h3>LLM10 &mdash; Unbounded Consumption</h3>
+<p>Track request rates per provider. Monitor rate-limit header consumption in real time. Detect 429 rate-limit responses. Project quota exhaustion. Identify denial-of-wallet patterns &mdash; sudden spikes in expensive API calls before the invoice arrives.</p>
+</div>
+</div>
+
+<p class="owasp-note">PowerGrabber will assess 9 of 20 OWASP AI items directly from HTTP metadata, provide supporting evidence for 3 more, and honestly report 8 as NOT ASSESSABLE &mdash; because knowing where your coverage ends is as valuable as knowing where it begins.</p>
+</section>
+
+<section>
 <div class="section-label">Teams</div>
 <h2>Built for the teams who need it.</h2>
 <div class="teams-grid">
@@ -148,11 +251,12 @@ footer a{color:#fff;text-decoration:none}
 </section>
 
 <div class="final-cta">
-<h2>Download PowerGrabber &mdash; Free</h2>
-<div class="cta-group">
-<a href="#" class="btn-primary">Download Free</a>
-<a href="#" class="btn-ghost">Talk to us about Enterprise</a>
-</div>
+<h2>PowerGrabber is launching soon.</h2>
+<p class="subtitle">Leave your email. We will let you know.</p>
+<form class="notify-form" onsubmit="return false;">
+<input type="email" placeholder="you@company.com" class="notify-input" required>
+<button type="submit" class="btn-primary notify-btn">Notify Me</button>
+</form>
 <div class="tagline">PowerGrabber. LLM Certainty.</div>
 </div>
 
