@@ -7,7 +7,7 @@ CONTENT = '''<nav><div class="logo">PowerGrabber</div><a href="index.html">&larr
 <div class="tagline-bar">LLM Security &middot; LLM Visibility &middot; LLM Observability &middot; LLM Compliance &middot; LLM Monitoring &middot; LLM Capture</div>
 
 <section class="hero">
-<h1>LLM <span>Certainty.</span></h1>
+<h1>PowerGrabber: LLM <span>Certainty.</span></h1>
 <p class="subtitle">PowerGrabber is a monitoring application for macOS, Windows, and Linux. PowerGrabber captures LLM traffic in two ways: via browser extension for browser-based AI usage such as ChatGPT, Gemini, and Claude, and directly at the API for AI applications such as Claude Code &mdash; logging everything as structured, compliance-ready data.</p>
 </section>
 
