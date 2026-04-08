@@ -81,6 +81,22 @@ footer a{color:#0d9488;text-decoration:none}
 .owasp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 .owasp-note{margin-top:20px;font-size:.85rem;font-style:italic;opacity:.7}
 .final-cta .notify-form{margin-top:24px}
+.email-section{display:flex;justify-content:center;padding:40px 32px}
+.email-wrap{position:relative;max-width:560px;width:100%}
+.email-stamp{position:absolute;bottom:28px;right:28px;border:2px solid rgba(200,16,46,0.55);color:rgba(200,16,46,0.55);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;transform:rotate(-14deg);font-family:monospace;pointer-events:none;z-index:10}
+.email-card{width:100%;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0ddd8;transform:rotate(1deg)}
+.email-chrome{background:#f5f5f5;border-bottom:1px solid #e0ddd8;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.edot{width:10px;height:10px;border-radius:50%}
+.edot.r{background:#ff5f57}.edot.y{background:#ffbd2e}.edot.g{background:#28c840}
+.email-fields{padding:16px 20px 12px;border-bottom:1px solid #f0f0f0;font-size:13px;line-height:2;color:#888}
+.email-fields strong{color:#222;font-weight:500}
+.email-subject{padding:12px 20px;border-bottom:1px solid #f0f0f0;font-size:15px;font-weight:600;color:#111}
+.email-body{padding:20px;font-size:14px;line-height:1.7;color:#222}
+.email-greeting{margin-bottom:16px;color:#555}
+.email-body p{padding:7px 0;border-bottom:1px solid #f5f5f5;color:#222}
+.email-body p:last-of-type{border-bottom:none;font-weight:600;font-size:15px;color:#111;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;text-decoration-color:#c8102e;padding-top:12px}
+.email-signoff{margin-top:20px;color:#888;font-size:13px;line-height:1.8}
+.email-signoff strong{color:#222;font-weight:500}
 @media(max-width:768px){.owasp-grid{grid-template-columns:1fr}.notify-form{flex-direction:column}.notify-input{min-width:auto;width:100%}}
 
 </style>
@@ -105,18 +121,27 @@ footer a{color:#0d9488;text-decoration:none}
 </div>
 </section>
 
-<section>
-<div class="section-label">The Questions</div>
-<ul class="questions">
-<li>Who in our organisation is using AI tools &mdash; and which ones?</li>
-<li>What are they putting in?</li>
-<li>Are our secrets leaving the company?</li>
-<li>How much are we spending on AI &mdash; and who is spending it?</li>
-<li>Are we legal?</li>
-<li>Are we compliant?</li>
-<li>Are we secure?</li>
-<li>Do we have records?</li>
-</ul>
+<section class="email-section">
+<div class="email-wrap">
+<div class="email-stamp">Unanswered</div>
+<div class="email-card">
+<div class="email-chrome"><div class="edot r"></div><div class="edot y"></div><div class="edot g"></div></div>
+<div class="email-fields"><strong>From:</strong> CEO &nbsp;&nbsp; <strong>To:</strong> Executive Leadership Team &nbsp;&nbsp; <strong>Date:</strong> Today 08:14</div>
+<div class="email-subject">AI/LLMs &mdash; Outstanding Questions</div>
+<div class="email-body">
+<div class="email-greeting">Team &mdash;</div>
+<p>Who in our organisation is using AI tools &mdash; and which ones?</p>
+<p>What are they putting in?</p>
+<p>Are our secrets leaving the company?</p>
+<p>How much are we spending on AI &mdash; and who is spending it?</p>
+<p>Are we legal?</p>
+<p>Are we compliant?</p>
+<p>Are we secure?</p>
+<p>Do we know anything?</p>
+<div class="email-signoff"><strong>CEO</strong></div>
+</div>
+</div>
+</div>
 </section>
 
 <section>
